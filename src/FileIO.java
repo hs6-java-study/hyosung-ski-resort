@@ -25,6 +25,7 @@ public class FileIO {
 
     public void memberListWriter(Member member){
         try {
+
             makeFolder(basePath);
             fos = new FileOutputStream(basePath + "memberData.txt",true);
             bos = new BufferedOutputStream(fos);

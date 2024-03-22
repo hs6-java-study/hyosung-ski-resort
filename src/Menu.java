@@ -2,8 +2,8 @@ import java.util.Scanner;
 
 public class Menu {
     public Scanner sc;
-    private ManageMember memberMember;
-    private ManageAdmin manageAdmin;
+    private AuthMember memberMember;
+    private AuthAdmin manageAdmin;
 
     void run(){
         System.out.println("효성 리조트에 오신것을 환영합니다.");
@@ -14,11 +14,11 @@ public class Menu {
 
         switch (pointer){
             case 1:
-                memberMember = new ManageMember();
+                memberMember = new AuthMember();
                 memberMember.run();
                 break;
             case 2:
-                manageAdmin = new ManageAdmin();
+                manageAdmin = new AuthAdmin();
                 manageAdmin.run();
                 break;
             default:
