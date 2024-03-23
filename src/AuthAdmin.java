@@ -1,3 +1,7 @@
+import TestAF.BuildHigh1Room;
+import TestAF.BuildMuJuRoom;
+import TestAF.BuildRoom;
+import TestAF.RoomTest;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -20,6 +24,18 @@ public class AuthAdmin {
             pointer = Integer.parseInt(sc.nextLine());
             switch (pointer){
                 case 1:
+//                    ===========추상 팩토리 Test 실행 코드=============
+//                    BuildRoom mjBuild = new BuildMuJuRoom();
+//                    BuildRoom H1Build = new BuildHigh1Room();
+//
+//                    RoomTest room = mjBuild.orderRoom("standard");
+//                    System.out.println(room.toString());
+//                    RoomTest room2 = mjBuild.orderRoom("deluxe");
+//                    System.out.println(room2.toString());
+//                    RoomTest room3 = H1Build.orderRoom("standard");
+//                    System.out.println(room3.toString());
+//                    RoomTest room4 = H1Build.orderRoom("Family");
+//                    System.out.println(room4.toString());
                     login();
                     break;
                 case 2:
