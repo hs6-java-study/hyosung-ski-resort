@@ -1,4 +1,6 @@
 import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class FileIO {
     final String basePath = "C:\\SkiResort\\";
@@ -18,25 +20,16 @@ public class FileIO {
             } catch (Exception e) {
                 e.getStackTrace();
             }
-        }else {
-            System.out.println("이미 폴더가 존재합니다.");
         }
     }
 
-    public void memberListWriter(Member member){
+    public void memberListWriter(Map<String, Member> memberList){
         try {
-
             makeFolder(basePath);
-            fos = new FileOutputStream(basePath + "memberData.txt",true);
+            fos = new FileOutputStream(basePath + "memberData.txt");
             bos = new BufferedOutputStream(fos);
-
             out = new ObjectOutputStream(bos);
-            Member member2 = new Member("dd","dd","dd",true);
-            Member member3 = new Member("aa","aa","aa",true);
-
-            out.writeObject(member2);
-            out.writeObject(member3);
-
+            out.writeObject(memberList);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -50,19 +43,17 @@ public class FileIO {
         }
     }
 
-    public void memberListReader(){
+    public Map memberListReader(){
+        Map<String, Member> memberList = null;
         try {
             fis = new FileInputStream(basePath + "memberData.txt");
             bis = new BufferedInputStream(fis);
             in = new ObjectInputStream(bis);
-
-            Object users = null;
-            while((users = in.readObject()) != null) {
-                System.out.println(((Member)users).toString());
-            }
+            memberList = (HashMap) in.readObject();
 
         } catch (FileNotFoundException e) {
-            System.out.println("파일이 존재하지 않아요");
+            System.out.println("파일이 존재하지 않아서 생성");
+            return new HashMap<String,Member>();
         } catch (EOFException e) {
             System.out.println("파일의 끝" + e.getMessage());
         } catch (IOException e) {
@@ -80,5 +71,57 @@ public class FileIO {
                 e2.printStackTrace();
             }
         }
+        return memberList;
+    }
+
+    public void adminListWriter(Map<String, Admin> adminList){
+        try {
+            makeFolder(basePath);
+            fos = new FileOutputStream(basePath + "adminData.txt");
+            bos = new BufferedOutputStream(fos);
+            out = new ObjectOutputStream(bos);
+            out.writeObject(adminList);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                out.close();
+                bos.close();
+                fos.close();
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
+        }
+    }
+
+    public Map adminListReader(){
+        Map<String, Admin> adminList = null;
+        try {
+            fis = new FileInputStream(basePath + "adminData.txt");
+            bis = new BufferedInputStream(fis);
+            in = new ObjectInputStream(bis);
+            adminList = (HashMap) in.readObject();
+
+        } catch (FileNotFoundException e) {
+            System.out.println("파일이 존재하지 않아서 생성");
+            return new HashMap<String,Admin>();
+        } catch (EOFException e) {
+            System.out.println("파일의 끝" + e.getMessage());
+        } catch (IOException e) {
+            System.out.println("파일이 읽을 수 없어요");
+        } catch (ClassNotFoundException e) {
+            System.out.println("해당 객체가 존재하지 않아요");
+        } catch (Exception e) {
+            System.out.println("나머지 예외");
+        }finally {
+            try {
+                in.close();
+                bis.close();
+                fis.close();
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
+        }
+        return adminList;
     }
 }
