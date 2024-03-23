@@ -24,7 +24,7 @@ public class AuthMember {
                     login();
                     break;
                 case 2:
-                    singup();
+                    signup();
                     break;
                 case 3:
                     System.out.println("뒤로이동");
@@ -36,7 +36,7 @@ public class AuthMember {
 
     }
 
-    public void singup() {
+    public void signup() {
         System.out.print("ID입력 : ");
         String ID = sc.nextLine();
         member = new Member("asdf","45","gusehd502","456",true);

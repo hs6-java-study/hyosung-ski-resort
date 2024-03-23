@@ -23,7 +23,7 @@ public class AuthAdmin {
                     login();
                     break;
                 case 2:
-                    singup();
+                    signup();
                     break;
                 case 3:
                     System.out.println("뒤로이동");
@@ -34,7 +34,7 @@ public class AuthAdmin {
         }while(pointer != 3);
     }
 
-    public void singup(){
+    public void signup(){
         System.out.print("ID입력 : ");
         String ID = sc.nextLine();
         admin = new Admin("asdf","45","gusehd502",true);
