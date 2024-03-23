@@ -1,17 +1,19 @@
 import java.io.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class FileIO {
     final String basePath = "ResortData\\";
-    FileOutputStream fos ;
-    BufferedOutputStream bos ;
-    ObjectOutputStream out ;
-    FileInputStream fis ;
-    BufferedInputStream bis ;
-    ObjectInputStream in ;
-    Map<String, Boolean> regions ;
-    String path;
+    private FileOutputStream fos ;
+    private BufferedOutputStream bos ;
+    private ObjectOutputStream out ;
+    private FileInputStream fis ;
+    private BufferedInputStream bis ;
+    private ObjectInputStream in ;
+    private Map<String, Boolean> regions ;
+    private String path;
 
     FileIO(){
         fos = null;
@@ -80,9 +82,9 @@ public class FileIO {
             e.printStackTrace();
         }finally {
             try {
-                in.close();
-                bis.close();
-                fis.close();
+                if (in != null) {in.close();}
+                if (bis != null) {bis.close();}
+                if (fis != null) {fis.close();}
             } catch (Exception e2) {
                 e2.printStackTrace();
             }
@@ -125,9 +127,9 @@ public class FileIO {
             e.printStackTrace();
         }finally {
             try {
-                in.close();
-                bis.close();
-                fis.close();
+                if (in != null) {in.close();}
+                if (bis != null) {bis.close();}
+                if (fis != null) {fis.close();}
             } catch (Exception e2) {
                 e2.printStackTrace();
             }
@@ -171,6 +173,52 @@ public class FileIO {
             e.printStackTrace();
         }finally {
             try {
+                if (in != null) {in.close();}
+                if (bis != null) {bis.close();}
+                if (fis != null) {fis.close();}
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
+        }
+        return roomList;
+    }
+
+    public void reservationListWriter(String region, List<Reservation> reservationList){
+        try {
+            path = basePath + region + "\\";
+            makeFolder(path);
+            fos = new FileOutputStream(path + "reservationData.txt");
+            bos = new BufferedOutputStream(fos);
+            out = new ObjectOutputStream(bos);
+            out.writeObject(reservationList);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                out.close();
+                bos.close();
+                fos.close();
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
+        }
+    }
+
+    public List<Reservation> reservationListReader(String region){
+        path = basePath + region + "\\";
+        List<Reservation> reservationList = null;
+        try {
+            fis = new FileInputStream(path + "reservationData.txt");
+            bis = new BufferedInputStream(fis);
+            in = new ObjectInputStream(bis);
+            reservationList = (ArrayList)in.readObject();
+        } catch (FileNotFoundException e) {
+            System.out.println("파일이 존재하지 않아요");
+            return new ArrayList<Reservation>();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            try {
                 in.close();
                 bis.close();
                 fis.close();
@@ -178,6 +226,6 @@ public class FileIO {
                 e2.printStackTrace();
             }
         }
-        return roomList;
+        return reservationList;
     }
 }
