@@ -135,7 +135,7 @@ public class FileIO {
         return adminList;
     }
 
-    public void roomListWriter(String region, Map<String, Room> roomList){
+    public void roomListWriter(String region, Map<Integer, Room> roomList){
         try {
             path = basePath + region + "\\";
             makeFolder(path);
@@ -166,7 +166,7 @@ public class FileIO {
             roomList = (HashMap) in.readObject();
         } catch (FileNotFoundException e) {
             System.out.println("파일이 존재하지 않아서 생성");
-            return new HashMap<String, Room>();
+            return new HashMap<Integer, Room>();
         } catch (Exception e) {
             e.printStackTrace();
         }finally {

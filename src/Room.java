@@ -9,14 +9,16 @@ import java.util.Map;
 @Data
 public class Room implements Serializable {
     private String region;
-    private String roomNumber;
+    private int roomNumber;
     private int capacity;
     private int price;
+    private Map<Date,Boolean> Dates ;
 
-    public Room(String region, String roomNumber, int capacity, int price) {
+    public Room(String region, int roomNumber, int capacity, int price) {
         this.region = region;
         this.roomNumber = roomNumber;
         this.capacity = capacity;
         this.price = price;
+        this.Dates = new HashMap<Date,Boolean>();
     }
 }
