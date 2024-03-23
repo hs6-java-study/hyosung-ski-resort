@@ -2,34 +2,53 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class AuthAdmin {
-    private Map<String, Admin> adminList;
     public Scanner sc;
+    public FileIO fileIo ;
+    private Map<String, Admin> adminList;
+    private MenuAdmin menuAdmin;
     private Admin admin;
-    private MenuAdmin menuadmin;
+    private int pointer;
 
-    public void run(){
-        System.out.println("1. 로그인 / 2. 회원가입 / 3. 뒤로");
+    AuthAdmin(){
         sc = new Scanner(System.in);
-        int pointer = Integer.parseInt(sc.nextLine());
-
-        switch (pointer){
-            case 1:
-                login();
-                break;
-            case 2:
-                break;
-            default:
-                System.out.println("잘못된입력");
-        }
+        fileIo = new FileIO();
     }
 
-    public void singup(){
+    public void run(){
+        do{
+            System.out.println("1. 관리자 로그인 / 2. 관리자 회원가입 / 3. 뒤로");
+            pointer = Integer.parseInt(sc.nextLine());
+            switch (pointer){
+                case 1:
+                    login();
+                    break;
+                case 2:
+                    signup();
+                    break;
+                case 3:
+                    System.out.println("뒤로이동");
+                    break;
+                default:
+                    System.out.println("잘못된입력");
+            }
+        }while(pointer != 3);
+    }
 
+    public void signup(){
+        System.out.print("ID입력 : ");
+        String ID = sc.nextLine();
+        admin = new Admin("asdf","45","gusehd502",true);
+        adminList = fileIo.adminListReader();
+        adminList.put(ID, admin);
+        fileIo.adminListWriter(adminList);
     }
 
     public void login(){
-        menuadmin = new MenuAdmin();
-        menuadmin.run();
-
+        adminList = fileIo.adminListReader();
+        for (Map.Entry ad : adminList.entrySet()){
+            System.out.println("관리자ID : " + ad.getKey() + " / " + "관리자클래스 : " + ad.getValue());
+        }
+        menuAdmin = new MenuAdmin();
+        menuAdmin.run();
     }
 }

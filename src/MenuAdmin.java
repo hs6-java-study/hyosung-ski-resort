@@ -2,6 +2,7 @@ public class MenuAdmin {
     private Admin admin;
 
     public void run(){
+        System.out.println("관리자 메뉴 여기다가 do-while 이랑 switch");
     }
     public void getAllMemberListInfo(){
 
