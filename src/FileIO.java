@@ -16,15 +16,15 @@ public class FileIO {
     private String path;
 
     FileIO(){
-        fos = null;
-        bos = null;
-        out = null;
-        fis = null;
-        bis = null;
-        in = null;
+        this.fos = null;
+        this.bos = null;
+        this.out = null;
+        this.fis = null;
+        this.bis = null;
+        this.in = null;
         this.regions = new HashMap<String, Boolean>() {{
             put("muju", true);
-            put("high1", true);
+            put("gangchon", true);
         }};
     }
 
@@ -183,7 +183,7 @@ public class FileIO {
         return roomList;
     }
 
-    public void reservationListWriter(String region, List<Reservation> reservationList){
+    public void reservationListWriter(String region, Map<Integer,Reservation> reservationList){
         try {
             path = basePath + region + "\\";
             makeFolder(path);
@@ -204,17 +204,17 @@ public class FileIO {
         }
     }
 
-    public List<Reservation> reservationListReader(String region){
+    public Map<Integer,Reservation> reservationListReader(String region){
         path = basePath + region + "\\";
-        List<Reservation> reservationList = null;
+        Map<Integer,Reservation> reservationList = null;
         try {
             fis = new FileInputStream(path + "reservationData.txt");
             bis = new BufferedInputStream(fis);
             in = new ObjectInputStream(bis);
-            reservationList = (ArrayList)in.readObject();
+            reservationList = (HashMap)in.readObject();
         } catch (FileNotFoundException e) {
             System.out.println("파일이 존재하지 않아요");
-            return new ArrayList<Reservation>();
+            return new HashMap<Integer,Reservation>();
         } catch (Exception e) {
             e.printStackTrace();
         }finally {

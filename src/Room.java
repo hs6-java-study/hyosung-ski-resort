@@ -2,6 +2,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,13 +13,13 @@ public class Room implements Serializable {
     private int roomNumber;
     private int capacity;
     private int price;
-    private Map<Date,Boolean> Dates ;
+    private Map<Calendar,Boolean> reservationDates ;
 
     public Room(String region, int roomNumber, int capacity, int price) {
         this.region = region;
         this.roomNumber = roomNumber;
         this.capacity = capacity;
         this.price = price;
-        this.Dates = new HashMap<Date,Boolean>();
+        this.reservationDates = new HashMap<Calendar,Boolean>();
     }
 }
