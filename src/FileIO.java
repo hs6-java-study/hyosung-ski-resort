@@ -1,16 +1,32 @@
 import java.io.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class FileIO {
-    final String basePath = "C:\\SkiResort\\";
-    FileOutputStream fos = null;
-    BufferedOutputStream bos = null;
-    ObjectOutputStream out = null;
-    FileInputStream fis = null;
-    BufferedInputStream bis = null;
-    ObjectInputStream in = null;
-    String path;
+    final String basePath = "ResortData\\";
+    private FileOutputStream fos ;
+    private BufferedOutputStream bos ;
+    private ObjectOutputStream out ;
+    private FileInputStream fis ;
+    private BufferedInputStream bis ;
+    private ObjectInputStream in ;
+    private Map<String, Boolean> regions ;
+    private String path;
+
+    FileIO(){
+        fos = null;
+        bos = null;
+        out = null;
+        fis = null;
+        bis = null;
+        in = null;
+        this.regions = new HashMap<String, Boolean>() {{
+            put("muju", true);
+            put("high1", true);
+        }};
+    }
 
     private void makeFolder(String path) {
         File folder = new File(path);
@@ -21,6 +37,14 @@ public class FileIO {
                 e.getStackTrace();
             }
         }
+    }
+
+    public boolean inRegion(String region){
+        if (!regions.containsKey(region)) {
+            System.out.println("지점이 존재하지 않습니다.");
+            return false;
+        }
+        return true;
     }
 
     public void memberListWriter(Map<String, Member> memberList){
@@ -54,19 +78,13 @@ public class FileIO {
         } catch (FileNotFoundException e) {
             System.out.println("파일이 존재하지 않아서 생성");
             return new HashMap<String,Member>();
-        } catch (EOFException e) {
-            System.out.println("파일의 끝" + e.getMessage());
-        } catch (IOException e) {
-            System.out.println("파일이 읽을 수 없어요");
-        } catch (ClassNotFoundException e) {
-            System.out.println("해당 객체가 존재하지 않아요");
         } catch (Exception e) {
-            System.out.println("나머지 예외");
+            e.printStackTrace();
         }finally {
             try {
-                in.close();
-                bis.close();
-                fis.close();
+                if (in != null) {in.close();}
+                if (bis != null) {bis.close();}
+                if (fis != null) {fis.close();}
             } catch (Exception e2) {
                 e2.printStackTrace();
             }
@@ -105,14 +123,100 @@ public class FileIO {
         } catch (FileNotFoundException e) {
             System.out.println("파일이 존재하지 않아서 생성");
             return new HashMap<String,Admin>();
-        } catch (EOFException e) {
-            System.out.println("파일의 끝" + e.getMessage());
-        } catch (IOException e) {
-            System.out.println("파일이 읽을 수 없어요");
-        } catch (ClassNotFoundException e) {
-            System.out.println("해당 객체가 존재하지 않아요");
         } catch (Exception e) {
-            System.out.println("나머지 예외");
+            e.printStackTrace();
+        }finally {
+            try {
+                if (in != null) {in.close();}
+                if (bis != null) {bis.close();}
+                if (fis != null) {fis.close();}
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
+        }
+        return adminList;
+    }
+
+    public void roomListWriter(String region, Map<Integer, Room> roomList){
+        try {
+            path = basePath + region + "\\";
+            makeFolder(path);
+            fos = new FileOutputStream(path + "roomData.txt");
+            bos = new BufferedOutputStream(fos);
+            out = new ObjectOutputStream(bos);
+            out.writeObject(roomList);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                out.close();
+                bos.close();
+                fos.close();
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
+        }
+    }
+
+    public Map roomListReader(String region){
+        path = basePath + region + "\\";
+        Map<Integer, Room> roomList = null;
+        try {
+            fis = new FileInputStream(path + "roomData.txt");
+            bis = new BufferedInputStream(fis);
+            in = new ObjectInputStream(bis);
+            roomList = (HashMap) in.readObject();
+        } catch (FileNotFoundException e) {
+            System.out.println("파일이 존재하지 않아서 생성");
+            return new HashMap<Integer, Room>();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                if (in != null) {in.close();}
+                if (bis != null) {bis.close();}
+                if (fis != null) {fis.close();}
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
+        }
+        return roomList;
+    }
+
+    public void reservationListWriter(String region, List<Reservation> reservationList){
+        try {
+            path = basePath + region + "\\";
+            makeFolder(path);
+            fos = new FileOutputStream(path + "reservationData.txt");
+            bos = new BufferedOutputStream(fos);
+            out = new ObjectOutputStream(bos);
+            out.writeObject(reservationList);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                out.close();
+                bos.close();
+                fos.close();
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
+        }
+    }
+
+    public List<Reservation> reservationListReader(String region){
+        path = basePath + region + "\\";
+        List<Reservation> reservationList = null;
+        try {
+            fis = new FileInputStream(path + "reservationData.txt");
+            bis = new BufferedInputStream(fis);
+            in = new ObjectInputStream(bis);
+            reservationList = (ArrayList)in.readObject();
+        } catch (FileNotFoundException e) {
+            System.out.println("파일이 존재하지 않아요");
+            return new ArrayList<Reservation>();
+        } catch (Exception e) {
+            e.printStackTrace();
         }finally {
             try {
                 in.close();
@@ -122,6 +226,6 @@ public class FileIO {
                 e2.printStackTrace();
             }
         }
-        return adminList;
+        return reservationList;
     }
 }
