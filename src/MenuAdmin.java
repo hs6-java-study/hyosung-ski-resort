@@ -1,10 +1,16 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class MenuAdmin {
-
+    private Admin admin;
     public Scanner sc;
     public FileIO fileIo;
-    private Admin admin;
+    private int pointer;
+    Map<String, Member> memberList;
+    List<Reservation> reservationList;
 
     MenuAdmin() {
         sc = new Scanner(System.in);
@@ -12,120 +18,198 @@ public class MenuAdmin {
     }
 
     public void run(Admin admin) {
-        // 관리자 메뉴
-        int pointer;
+        this.admin = admin;
         do {
-            System.out.println("===== 관리자 메뉴 =====");
-            System.out.println("1. 회원 전체 조회 / 2. 회원 정보 검색 / 3. 회원 탈퇴 처리 / 4. 예약 목록 전체 조회 / 5. 특정 회원 예약내역 조회 / 6. 장비 전체 조회 / 7. 장비 추가 / 8. 장비 삭제 / 9. 장비 대여 매출 조회 / 10. 숙박 매출 조회 / 11. 로그아웃");
+            System.out.println("1. 회원 관리, 2. 예약 내역 관리, 3. 장비 관리, 4. 매출 조회, 5. 종료");
             pointer = Integer.parseInt(sc.nextLine());
             switch (pointer) {
-                case 1:
-                    getAllMemberListInfo();
+                case 1: {
+                    System.out.println("1. 회원 전체 조회, 2. 회원 정보 검색, 3. 회원 탈퇴 처리");
+                    int pointerMemberManage = Integer.parseInt(sc.nextLine());
+                    if (pointerMemberManage == 1) {
+                        getAllMemberListInfo();
+                    } else if (pointerMemberManage == 2) {
+                        getOneMemberInfo();
+                    } else if (pointerMemberManage == 3) {
+                        deleteOneMember();
+                    } else {
+                        System.out.println("잘못된 입력");
+                    }
                     break;
-                case 2:
-                    getOneMemberInfo();
+                }
+                case 2: {
+                    System.out.println("1. 예약 목록 전체 조회, 2. 특정 회원 예약내역 조회");
+                    int pointerReservationManage = Integer.parseInt(sc.nextLine());
+                    if (pointerReservationManage == 1) {
+                        getAllReservationInfo();
+                    } else if (pointerReservationManage == 2) {
+                        getReservationInfoByOneMember();
+                    } else {
+                        System.out.println("잘못된 입력");
+                    }
                     break;
-                case 3:
-                    deleteOneMember();
+                }
+                case 3: {
+                    System.out.println("1. 대여 장비 전체 재고 조회, 2. 장비 개수 추가, 3. 장비 개수 삭제");
+                    int pointerProductManage = Integer.parseInt(sc.nextLine());
+                    if (pointerProductManage == 1) {
+                        getAllProductInfo();
+                    } else if (pointerProductManage == 2) {
+                        addProduct();
+                    } else if (pointerProductManage == 3) {
+                        deleteProduct();
+                    } else {
+                        System.out.println("잘못된 입력");
+                    }
                     break;
-                case 4:
-                    getAllReservationInfo();
+                }
+                case 4: {
+                    System.out.println("1. 숙박 매출 조회, 2. 대여 장비 매출 조회");
+                    int pointerRevenueManage = Integer.parseInt(sc.nextLine());
+                    if (pointerRevenueManage == 1) {
+                        getAllReservationRevenue();
+                    } else if (pointerRevenueManage == 2) {
+                        getAllProductRevenue();
+                    } else {
+                        System.out.println("잘못된 입력");
+                    }
                     break;
-                case 5:
-                    getReservationInfoByOneMember();
+                }
+                case 5: {
                     break;
-                case 6:
-                    getAllProductInfo();
-                    break;
-                case 7:
-                    addProduct();
-                    break;
-                case 8:
-                    deleteProduct();
-                    break;
-                case 9:
-                    getAllReservationRevenue();
-                    break;
-                case 10:
-                    getAllProductRevenue();
-                    break;
-                case 11:
-                    // TODO: 로그아웃 처리
-                    System.out.println(admin.getUserId() + " 관리자님 로그아웃 되었습니다!");
-                    break;
+                }
                 default:
-                    System.out.println("잘못된입력");
+                    System.out.println("잘못된 입력");
             }
-        } while (pointer != 11);
-
+        } while (pointer != 5);
     }
 
-    /**
-     * 회원 전체 조회
-     */
     public void getAllMemberListInfo() {
-
+        memberList = fileIo.memberListReader();
+        System.out.println("ID \t 전화번호 \t 등급 \t 포인트 \t");
+        memberList.entrySet().stream()
+                .forEach(entry -> System.out.println(entry.getValue().getName() + "\t" +entry.getValue().getPhoneNumber() + "\t" + entry.getValue().getGrade() + "\t" + entry.getValue().getPoint()));
     }
 
-    /**
-     * 회원 정보 검색
-     */
     public void getOneMemberInfo() {
+        memberList = fileIo.memberListReader();
+        System.out.print("검색 하실 회원의 이름: ");
+        String searchName = sc.nextLine();
 
+        // ID, 전화번호, 등급, 포인트 헤더 출력
+        System.out.println("ID \t 전화번호 \t 등급 \t 포인트 \t");
+
+        memberList.entrySet().stream()
+                .filter(entry -> entry.getValue().getName().equals(searchName))
+                .forEach(entry -> System.out.println(entry.getKey() + "\t" +
+                        entry.getValue().getPhoneNumber() + "\t" +
+                        entry.getValue().getGrade() + "\t" +
+                        entry.getValue().getPoint()));
     }
 
-    /**
-     * 회원 탈퇴 처리
-     */
+
     public void deleteOneMember() {
+        System.out.print("삭제할 회원의 이름: ");
+        String deleteName = sc.nextLine();
+        memberList = fileIo.memberListReader();
+        boolean removed = memberList.entrySet().removeIf(entry -> entry.getValue().getName().equals(deleteName));
 
+        if (removed) {
+            System.out.println(deleteName + " 회원의 정보가 성공적으로 삭제되었습니다.");
+            fileIo.memberListWriter(memberList); // 변경된 회원 목록을 파일에 다시 쓰기
+        } else {
+            System.out.println(deleteName + " 회원을 찾을 수 없습니다.");
+        }
     }
 
-    /**
-     * 예약 목록 전체 조회
-     */
     public void getAllReservationInfo() {
-
+        // 예약하기 제대로 안되서 미확인
+        System.out.println("1. 수서점  2. 혜화점");
+        int regionPointer = Integer.parseInt(sc.nextLine());
+        switch (regionPointer) {
+            case 1 : {
+                reservationList = fileIo.reservationListReader("muju");
+                break;
+            }
+            case 2 : {
+                reservationList = fileIo.reservationListReader("hyehwa");
+                break;
+            }
+            default:
+                System.out.println("잘못된 입력"); return;
+        }
+        if (reservationList != null && !reservationList.isEmpty()) {
+            System.out.println("예약 ID \t 이름 \t 예약 날짜 \t 예약 시간");
+            for (Reservation reservation : reservationList) {
+                System.out.println(reservation.getMember() + "\t" +
+                        reservation.getRoom() + "\t" +
+                        reservation.getProducts());
+            }
+        } else {
+            System.out.println("예약 내역이 없습니다.");
+        }
     }
 
-    /**
-     * 특정 회원 예약내역 조회
-     */
     public void getReservationInfoByOneMember() {
+        System.out.print("조회할 이름을 입력하세요 : ");
+        String searchName = sc.nextLine();
+        reservationList = fileIo.reservationListReader("muju");
+        List<Reservation> filteredReservationsByMuju = reservationList.stream()
+                .filter(reservation -> reservation.getMember().getName().equals(searchName))
+                .collect(Collectors.toList());
 
+        // 필터링된 예약 목록 출력
+        if (!filteredReservationsByMuju.isEmpty()) {
+            System.out.println("예약자명 \t 전화번호 \t 지점 \t 방 번호 \t 인원수 \t 가격 \t 날짜");
+            filteredReservationsByMuju.forEach(reservation ->
+                    System.out.println(reservation.getMember().getName() + "\t" +
+                            reservation.getMember().getPhoneNumber() + "\t" +
+                            reservation.getRoom().getRegion() + "\t" +
+                            reservation.getRoom().getRoomNumber() + "\t" +
+                            reservation.getRoom().getCapacity() + "\t" +
+                            reservation.getRoom().getPrice() + "\t" +
+                            reservation.getRoom().getDates() + "\t"));
+        } else {
+            System.out.println(searchName + "님의 무주점 예약 내역이 없습니다.");
+        }
+
+        reservationList = fileIo.reservationListReader("hyehwa");
+        List<Reservation> filteredReservationsByHyehwa = reservationList.stream()
+                .filter(reservation -> reservation.getMember().getName().equals(searchName))
+                .collect(Collectors.toList());
+
+        // 필터링된 예약 목록 출력
+        if (!filteredReservationsByHyehwa.isEmpty()) {
+            System.out.println("예약 ID \t 이름 \t 예약 날짜 \t 예약 시간");
+            filteredReservationsByHyehwa.forEach(reservation ->
+                    System.out.println(reservation.getMember().getName() + "\t" +
+                            reservation.getMember().getPhoneNumber() + "\t" +
+                            reservation.getRoom().getRegion() + "\t" +
+                            reservation.getRoom().getRoomNumber() + "\t" +
+                            reservation.getRoom().getCapacity() + "\t" +
+                            reservation.getRoom().getPrice() + "\t" +
+                            reservation.getRoom().getDates() + "\t"));
+        } else {
+            System.out.println(searchName + "님의 혜화점 예약 내역이 없습니다.");
+        }
     }
 
-    /**
-     * 장비 전체 조회
-     */
     public void getAllProductInfo() {
 
     }
 
-    /**
-     * 장비 추가
-     */
     public void addProduct() {
 
     }
 
-    /**
-     * 장비 삭제
-     */
     public void deleteProduct() {
 
     }
 
-    /**
-     * 장비 대여 매출 조회
-     */
     public void getAllReservationRevenue() {
 
     }
 
-    /**
-     * 숙박 매출 조회
-     */
     public void getAllProductRevenue() {
 
     }
