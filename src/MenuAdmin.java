@@ -37,6 +37,7 @@ public class MenuAdmin {
                     }
                     break;
                 }
+                /*
                 case 2: {
                     System.out.println("1. 예약 목록 전체 조회, 2. 특정 회원 예약내역 조회");
                     int pointerReservationManage = Integer.parseInt(sc.nextLine());
@@ -75,6 +76,7 @@ public class MenuAdmin {
                     }
                     break;
                 }
+                */
                 case 5: {
                     break;
                 }
@@ -121,7 +123,7 @@ public class MenuAdmin {
             System.out.println(deleteName + " 회원을 찾을 수 없습니다.");
         }
     }
-
+/*
     public void getAllReservationInfo() {
         // 예약하기 제대로 안되서 미확인
         System.out.println("1. 수서점  2. 혜화점");
@@ -213,4 +215,6 @@ public class MenuAdmin {
     public void getAllProductRevenue() {
 
     }
+
+ */
 }

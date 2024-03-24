@@ -39,13 +39,14 @@ public class AuthMember {
 
     public void signup() {
         memberList = fileIo.memberListReader(); // 기존 회원목록 불러오기
+        ValidationUtils validationUtils = new ValidationUtils(); // 유효성 검사 클래스 분리
 
         String userId;
         do {
             System.out.println("\n===== 효성리조트 회원가입 =====");
             System.out.println("회원가입을 취소하시려면 \"취소\"를 입력해주세요.\n");
 
-            userId = getValidation("ID : ", "^[a-z]{1}[a-z0-9]{5,10}+$", "ID 정규식 미통과", "회원가입이 취소되었습니다.");
+            userId = validationUtils.getValidation(sc, AuthValidation.USER_ID);
             if (userId == null) return;
 
             // 동일 키값이 있는 경우 들어가면 X
@@ -55,13 +56,13 @@ public class AuthMember {
             }
         } while (userId == null);
 
-        String password = getValidation("비밀번호 : ", "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=~!]).{8,14}$", "PW 정규식 미통과", "회원가입이 취소되었습니다.");
+        String password = validationUtils.getValidation(sc, AuthValidation.PASSWORD);
         if (password == null) return;
 
-        String name = getValidation("이름 : ", "^[a-zA-Z가-힣]+$", "이름 정규식 미통과", "회원가입이 취소되었습니다.");
+        String name = validationUtils.getValidation(sc, AuthValidation.NAME);
         if (name == null) return;
 
-        String phoneNumber = getValidation("전화번호 : ", "^01(?:0|1|[6-9])-(?:\\d{3}|\\d{4})-\\d{4}$", "전화번호 정규식 미통과", "회원가입이 취소되었습니다.");
+        String phoneNumber = validationUtils.getValidation(sc, AuthValidation.PHONE_NUMBER);
         if (phoneNumber == null) return;
 
         member = new Member(name, phoneNumber, userId, password, false);
@@ -71,7 +72,7 @@ public class AuthMember {
 
         // 확인용 출력
         memberList.entrySet().stream()
-                .forEach(entry -> System.out.println("회원 ID : " + entry.getKey() + " | member 정보 : " + entry.getValue()));
+                .forEach(entry -> System.out.println("[확인용 출력] 회원 ID : " + entry.getKey() + " | member 정보 : " + entry.getValue()));
     }
 
     public void login() {
@@ -99,11 +100,6 @@ public class AuthMember {
             }
         }
 
-        // 확인용 출력(전체정보 - 확인용)
-        System.out.println("전체 회원 정보 (확인용)");
-        memberList.entrySet().stream()
-                .forEach(entry -> System.out.println("회원 ID : " + entry.getKey() + " | member 정보 : " + entry.getValue()));
-
         // 현재 로그인한 회원 정보 출력(확인용)
         System.out.println("현재 로그인한 회원 정보 출력 : " + member.toString());
 
@@ -111,24 +107,4 @@ public class AuthMember {
         menuMember.run(member);
     }
 
-    /**
-     * 유효성 검사
-     */
-    private String getValidation(String inputMessage, String regex, String failMessage, String exitMessage) {
-        String input;
-        while (true) {
-            System.out.print(inputMessage);
-            input = sc.nextLine();
-            if ("취소".equals(input)) {
-                System.out.println(exitMessage);
-                return null;
-            }
-            if (!input.matches(regex)) {
-                System.out.println(failMessage);
-                continue;
-            }
-            break;
-        }
-        return input;
-    }
 }
