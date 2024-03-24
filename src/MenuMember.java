@@ -19,7 +19,8 @@ public class MenuMember {
     public void run(Member member){
         this.member = member;
         do{
-            System.out.println("1. 예약하기, 2. 예약취소, 3. 예약조회, 4. 뒤로, 5. tmp_방 추가, 6. tmp_방 조회");
+            System.out.println("===== 회원 메뉴 =====");
+            System.out.println("1. 예약하기, 2. 예약취소, 3. 예약조회, 4. 로그아웃, 5. tmp_방 추가, 6. tmp_방 조회");
             pointer = Integer.parseInt(sc.nextLine());
             switch (pointer) {
                 case 1:
@@ -31,7 +32,7 @@ public class MenuMember {
                 case 3:
                     break;
                 case 4:
-                    System.out.println("뒤로이동");
+                    System.out.println(member.getUserId() + "님 로그아웃 되었습니다!");
                     break;
                 case 5:
                     tmp_addRoom();
