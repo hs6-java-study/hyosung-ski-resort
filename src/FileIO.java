@@ -5,7 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 public class FileIO {
-    final String basePath = "ResortData\\";
+//    final String basePath = "ResortData\\";
+    final String basePath = "/Users/som/SkiResort/";
     private FileOutputStream fos ;
     private BufferedOutputStream bos ;
     private ObjectOutputStream out ;
@@ -229,11 +230,12 @@ public class FileIO {
         return reservationList;
     }
 
-    public void helmetListWriter(String region, Product helmet){
+    public void helmetListWriter(String region, Map helmet){
         try {
-            path = basePath + region + "\\";
+//            path = basePath + region + "\\";
+            path = basePath + region + "/";
             makeFolder(path);
-            fos = new FileOutputStream(path + "helmet.txt");
+            fos = new FileOutputStream(path + "Helmet.txt");
             bos = new BufferedOutputStream(fos);
             out = new ObjectOutputStream(bos);
             out.writeObject(helmet);
@@ -250,14 +252,15 @@ public class FileIO {
         }
     }
 
-    public Helmet helmetListReader(String region, Product helmet){
-        path = basePath + region + "\\";
-        Helmet helmetList = null;
+    public Map helmetListReader(String region){
+//        path = basePath + region + "\\";
+        path = basePath + region + "/";
+        Map<String, Helmet> helmetList = new HashMap<String, Helmet>();
         try {
             fis = new FileInputStream(path + "Helmet.txt");
             bis = new BufferedInputStream(fis);
             in = new ObjectInputStream(bis);
-            helmetList = (Helmet)in.readObject();
+            helmetList = (HashMap)in.readObject();
         } catch (FileNotFoundException e) {
             System.out.println("파일이 존재하지 않아요");
             return null;
@@ -274,4 +277,77 @@ public class FileIO {
         }
         return helmetList;
     }
+
+
+    /**
+     * 장비 목록 전체 조회(지점까지)
+     */
+    public Map<String, Product> ProductListReader() {
+        path = basePath;
+        Map<String, Product> productList = new HashMap<String, Product>();
+
+        File file = new File(path);
+        String[] files = null;
+
+        try {
+            if (file.exists() && file.isDirectory()) {
+                files = file.list();
+                for (String eachFile : files) {
+                    getAllProduct(eachFile, productList, "muju");
+                    getAllProduct(eachFile, productList, "gangchon");
+                }
+            }
+            return productList;
+        } catch (FileNotFoundException e) {
+            System.out.println("파일이 존재하지 않아요");
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (in != null) in.close();
+                if (bis != null) bis.close();
+                if (fis != null) fis.close();
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 장비 전체 조회 helper 함수
+     */
+    private void getAllProduct(String eachFile, Map<String, Product> productList, String region) throws IOException, ClassNotFoundException {
+        String[] productFileNames = {"Helmet.txt", "Clothes.txt", "Equipment.txt"};
+        if (eachFile.contains(region)) {
+            for (String productFileName : productFileNames) {
+                File temp = new File(basePath + region + "/" + productFileName);
+                System.out.println(temp);
+                if(temp.exists()) {
+                    fis = new FileInputStream(temp);
+                    bis = new BufferedInputStream(fis);
+                    in = new ObjectInputStream(bis);
+                    Map<String, Product> tempProductList = (HashMap) in.readObject();
+                    // if(tempProductList != null) productList.putAll(tempProductList);
+                    for (Map.Entry<String, Product> entry : tempProductList.entrySet()) {
+                        // 지점명을 포함하는 새 키 생성
+                        String newKey = "[" + region + "] " + entry.getKey();
+                        // 지점명이 포함된 키와 제품을 productList에 추가
+                        productList.put(newKey, entry.getValue());
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * 장비 개수 추가
+     */
+
+
+    /**
+     * 장비 개수 삭제
+     */
+
 }
