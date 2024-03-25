@@ -1,3 +1,4 @@
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -363,6 +364,14 @@ public class MenuAdmin {
         String inputSerialNum = sc.nextLine();
         try {
             if(productList.containsKey(inputSerialNum)) {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
+                String today = dateFormat.format(new Date());
+                for (Map.Entry<String, Boolean> d : productList.get(inputSerialNum).getRentalDates().entrySet()){
+                    if(d.getKey().compareTo(today) > 0){
+                        System.out.println("예약이 있는 상품은 삭제가 불가능");
+                        return;
+                    }
+                }
                 productList.remove(inputSerialNum);
                 fileIo.productListWriter(name, region, productList);
                 System.out.println(inputSerialNum + " 번호의 "+ name +"이 삭제되었습니다.");
