@@ -93,9 +93,9 @@ public class MenuAdmin {
     public void getAllMemberListInfo() {
         memberList = fileIo.memberListReader();
         if (memberList != null) {
-            System.out.println("ID \t 전화번호 \t 등급 \t 포인트 \t");
+            System.out.println("ID \t 전화번호 \t 등급 \t 포인트 \t 예약리스트");
             memberList.entrySet().stream()
-                    .forEach(entry -> System.out.println(entry.getValue().getName() + "\t" + entry.getValue().getPhoneNumber() + "\t" + entry.getValue().getGrade() + "\t" + entry.getValue().getPoint()));
+                    .forEach(entry -> System.out.println(entry.getValue().getName() + "\t" + entry.getValue().getPhoneNumber() + "\t" + entry.getValue().getGrade() + "\t" + entry.getValue().getPoint()+ "\t" +entry.getValue().getReservationNumberList()));
         } else {
             System.out.println("회원 정보가 없습니다.");
         }
@@ -256,7 +256,7 @@ public class MenuAdmin {
                 int howMany = Integer.parseInt(helmetInput[1].trim());
                 int price = Integer.parseInt(helmetInput[2].trim());
                 for(int i = 0; i < howMany; i++) {
-                    helmetList.put(numberGen(4), new Helmet(Integer.parseInt(numberGen(4)),size,price,null));
+                    helmetList.put(numberGen(4), new Helmet(Integer.parseInt(numberGen(4)),size,price,new HashMap<String,Boolean>()));
                 }
                 fileIo.productListWriter("Helmet", region, helmetList);
                 break;}
@@ -281,7 +281,7 @@ public class MenuAdmin {
                 int howMany = Integer.parseInt(clothesInput[1].trim());
                 int price = Integer.parseInt(clothesInput[2].trim());
                 for(int i = 0; i < howMany; i++) {
-                    clothesList.put(numberGen(4), new Clothes(Integer.parseInt(numberGen(4)),size,price,null));
+                    clothesList.put(numberGen(4), new Clothes(Integer.parseInt(numberGen(4)),size,price,new HashMap<String,Boolean>()));
                 }
                 fileIo.productListWriter("Clothes", region, clothesList);
                 break;}
@@ -301,7 +301,7 @@ public class MenuAdmin {
                 int howMany = Integer.parseInt(equipmentInput[0].trim());
                 int price = Integer.parseInt(equipmentInput[1].trim());
                 for(int i = 0; i < howMany; i++) {
-                    equipmentList.put(numberGen(4), new Equipment(Integer.parseInt(numberGen(4)),null,price,null));
+                    equipmentList.put(numberGen(4), new Equipment(Integer.parseInt(numberGen(4)),null,price,new HashMap<String,Boolean>()));
                 }
                 fileIo.productListWriter("Equipment",region,equipmentList);
                 break;}

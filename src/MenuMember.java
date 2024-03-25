@@ -8,7 +8,7 @@ public class MenuMember {
     private Map<Integer, Room> roomList;
     private Member member;
     private Room room;
-    private Map<Integer,Product> products;
+    private Map<String,Product> products;
     private Map<Integer,Reservation> reservationList;
     private int pointer;
     private String region;
@@ -18,7 +18,7 @@ public class MenuMember {
     private Random random ;
     private ManageDate manageDate;
     private Map<String, Member> memberList;
-    private List<Integer> rentProduct;
+    private List<String> rentProduct;
 
 
     MenuMember(){
@@ -79,37 +79,15 @@ public class MenuMember {
             else System.out.println("방이 없다.");
         }
 
-        // 파일 입력으로 대체
-        this.products = new HashMap<Integer,Product>();
-        Product helmet = new Helmet(88814651,"M",1561,new HashMap<String,Boolean>(){{
-            put("2024.01.30",true);
-            put("2024.01.31",true);
-        }});
-        Product helmet2 = new Helmet(26516546,"S",1561,new HashMap<String,Boolean>());
-        Product helmet3 = new Helmet(54616516,"L",1561,new HashMap<String,Boolean>());
-        Product helmet4 = new Helmet(88814651,"M",1561,new HashMap<String,Boolean>());
-//        Product clothes1 = new Clothes(65656514,"L",1561,new HashMap<String,Boolean>());
-        products.put(88814651,helmet);
-        products.put(26516546,helmet2);
-        products.put(54616516,helmet3);
-        products.put(88814651,helmet4);
-//        products.add(clothes1);
-
-
         // 장비 렌탈 로직
         this.rentProduct = new ArrayList<>();
-
         while(true){
             System.out.println("==== 장비렌탈 ====");
-            // 장비 갯수 보여주는 출력
-            for(Map.Entry p : products.entrySet()){
-                System.out.println(p.getKey() + " / " + p.getValue());
+            while(true){
+                if(rentHelmetOrClothes("Helmet")) break ;
             }
             while(true){
-                if(rentHelmetOrClothes("헬멧")) break ;
-            }
-            while(true){
-                if(rentHelmetOrClothes("의류")) break ;
+                if(rentHelmetOrClothes("Clothes")) break ;
             }
             while(true){
                 if(rentEquipment()) break ;
@@ -117,7 +95,9 @@ public class MenuMember {
             break;
         }
 
-        Reservation reservation = new Reservation(member, this.roomList.get(reservationRoomNumber), new HashMap<Integer,Product>());
+        room = new Room(this.region, reservationRoomNumber,this.capacity,this.roomList.get(reservationRoomNumber).getPrice());
+        Map<String,Product> rental = new HashMap<String,Product>();
+        Reservation reservation = new Reservation(member, room, rental);
         int randomNumber = random.nextInt(100000000);
 
         // 회원 예약 내역 리스트 추가
@@ -127,17 +107,42 @@ public class MenuMember {
 
         // 숙소 + 렌탈 장비 대여 날짜 추가
         this.roomList = fileIo.roomListReader(region);
+        Map<String,Product> ProductList = new HashMap<String, Product>();
+        Map<String,Product> helmetList = fileIo.productListReader("Helmet",this.region);
+        Map<String,Product> clothesList = fileIo.productListReader("Clothes",this.region);
+        Map<String,Product> equipmentList = fileIo.productListReader("Equipment",this.region);
+        ProductList.putAll(helmetList);
+        ProductList.putAll(clothesList);
+        ProductList.putAll(equipmentList);
+
+        for(String rentNumber : rentProduct) {
+            rental.put(rentNumber, ProductList.get(rentNumber));
+        }
+
         for(String d : this.manageDate.startEndDates){
             // 숙소 대여날짜 업데이트
             this.roomList.get(reservationRoomNumber).getReservationDates().put(d, true);
+            reservation.getRoom().getReservationDates().put(d,true);
+
             // 장비 대여날짜 업데이트
+            for(String rentNumber : rentProduct) {
+                ProductList.get(rentNumber).getRentalDates().put(d,true);
+            }
+        }
+        for(Map.Entry<String,Product> p : ProductList.entrySet()){
+            System.out.println(p.getKey() +" / "+ p.getValue());
         }
         fileIo.roomListWriter(region, this.roomList);
+        fileIo.productListWriter("Helmet",this.region,helmetList);
+        fileIo.productListWriter("Clothes",this.region,clothesList);
+        fileIo.productListWriter("Equipment",this.region,equipmentList);
 
         // 예약 내역 추가
         reservationList = fileIo.reservationListReader(region);
         reservationList.put(randomNumber,reservation);
         fileIo.reservationListWriter(region,reservationList);
+
+        // 예약 목록 확인
         for(Map.Entry m :reservationList.entrySet()){
             System.out.println(m.getKey() + " / " + m.getValue());
         }
@@ -145,7 +150,15 @@ public class MenuMember {
 
     // makeMyReservation 헬퍼 함수
     private Boolean rentHelmetOrClothes(String kind){
-        List<Integer> selectedProductNumbers = new ArrayList<Integer>();
+        List<String> selectedProductNumbers = new ArrayList<String>();
+        this.products = fileIo.productListReader(kind,this.region);
+
+        // 장비 갯수 보여주는 출력
+        System.out.println("==== 장비 목록 ====");
+        for(Map.Entry<String,Product> p : this.products.entrySet()){
+            System.out.println(p.getKey() + " / " + p.getValue());
+        }
+
         System.out.print(kind  + " >> S갯수/M갯수/L갯수 : ");
         String count = sc.nextLine();
         int[] counts = Arrays.stream((count.split("/")))
@@ -161,21 +174,21 @@ public class MenuMember {
             return false;
         }
 
-        for(Map.Entry<Integer,Product> product : this.products.entrySet()){
-            if(!this.manageDate.isPossibleReservation(((Product)product.getValue()).getRentalDates())) {
-                System.out.println(((Product)product.getValue()).getSerialNum() + "는 예약 불가능 " + kind);
+        for(Map.Entry<String,Product> product : this.products.entrySet()){
+            if(!this.manageDate.isPossibleReservation((product.getValue()).getRentalDates())) {
+                System.out.println((product.getValue()).getSerialNum() + "는 예약 불가능 " + kind);
                 continue;
             }
-            if (((Product)product.getValue()).getSize().equals("S") && counts[0] != 0){
-                selectedProductNumbers.add(((Product)product.getValue()).getSerialNum());
+            if ((product.getValue()).getSize().equals("S") && counts[0] != 0){
+                selectedProductNumbers.add(product.getKey());
                 counts[0]--;
             }
-            else if (((Product)product.getValue()).getSize().equals("M") && counts[1] != 0){
-                selectedProductNumbers.add(((Product)product.getValue()).getSerialNum());
+            else if ((product.getValue()).getSize().equals("M") && counts[1] != 0){
+                selectedProductNumbers.add(product.getKey());
                 counts[1]--;
             }
-            else if (((Product)product.getValue()).getSize().equals("L") && counts[2] != 0){
-                selectedProductNumbers.add(((Product)product.getValue()).getSerialNum());
+            else if ((product.getValue()).getSize().equals("L") && counts[2] != 0){
+                selectedProductNumbers.add(product.getKey());
                 counts[2]--;
             }
             else if (counts[0] == 0 && counts[1] == 0 && counts[2] == 0){
@@ -195,7 +208,15 @@ public class MenuMember {
 
     // makeMyReservation 헬퍼 함수
     private Boolean rentEquipment(){
-        List<Integer> selectedProductNumbers = new ArrayList<Integer>();
+        List<String> selectedProductNumbers = new ArrayList<String>();
+        this.products = fileIo.productListReader("Equipment",this.region);
+
+        // 장비 갯수 보여주는 출력
+        System.out.println("==== 장비 목록 ====");
+        for(Map.Entry<String,Product> p : this.products.entrySet()){
+            System.out.println(p.getKey() + " / " + p.getValue());
+        }
+
         System.out.print("장비 >> 스키갯수 : ");
         int count = Integer.parseInt(sc.nextLine());
 
@@ -204,9 +225,9 @@ public class MenuMember {
             return false;
         }
 
-        for(Map.Entry product : this.products.entrySet()){
+        for(Map.Entry<String,Product> product : this.products.entrySet()){
             if ( count != 0){
-                selectedProductNumbers.add(((Product)product.getValue()).getSerialNum());
+                selectedProductNumbers.add(product.getKey());
                 count--;
             }else{
                 rentProduct.addAll(selectedProductNumbers);
@@ -220,13 +241,6 @@ public class MenuMember {
     // makeMyReservation 헬퍼 함수
     private Map<Integer, Room>  getRoomList(String region, int capacity, String period){
         this.roomList = fileIo.roomListReader(region);
-
-        // 지워지는 부분
-        this.roomList.get(102).setReservationDates(new HashMap<String,Boolean>(){{
-            put("2024.01.29",true);
-            put("2024.01.30",true);
-            put("2024.01.31",true);
-        }});
 
         // 인원 수 필터
         this.roomList = this.roomList.entrySet().stream()
