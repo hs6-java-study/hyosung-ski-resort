@@ -10,10 +10,10 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Product implements Serializable {
-    private String serialNum;
+    private int serialNum;
     private String size;
     private int price;
-    private Map<Date,Boolean> rentalDates;
+    private Map<String,Boolean> rentalDates;
 
     @Override
     public String toString() {

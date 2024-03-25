@@ -105,7 +105,7 @@ public class MenuMember {
         fileIo.reservationListWriter("muju",reservationList);
     }
     private List rentHelmetOrClothes(String kind){
-        List<String> selectedProductNumbers = new ArrayList<String>();
+        List<Integer> selectedProductNumbers = new ArrayList<Integer>();
         System.out.print(kind  + " >> S갯수/M갯수/L갯수 : ");
         String count = sc.nextLine();
         int[] counts = Arrays.stream((count.split("/")))
@@ -114,8 +114,8 @@ public class MenuMember {
 
         // 파일 입력으로 대체
         this.products = new ArrayList<Product>();
-        Product helmet = new Helmet("asdf","M",1561,new HashMap<Date,Boolean>());
-        Product helmet2 = new Helmet("asdf","S",1561,new HashMap<Date,Boolean>());
+        Product helmet = new Helmet(102,"M",1561,new HashMap<String,Boolean>());
+        Product helmet2 = new Helmet(103,"S",1561,new HashMap<String,Boolean>());
         products = new ArrayList<Product>();
         products.add(helmet);
         products.add(helmet2);
@@ -135,8 +135,8 @@ public class MenuMember {
                 counts[2]--;
             }
             else if (counts[0] == 0 && counts[1] == 0 && counts[2] == 0){
-                for(String p : selectedProductNumbers){
-                    System.out.println(p.toString());
+                for(int p : selectedProductNumbers){
+                    System.out.println(p);
                 }
                 return selectedProductNumbers;
             }

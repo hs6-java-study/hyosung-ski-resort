@@ -3,7 +3,7 @@ import java.util.Date;
 import java.util.Map;
 
 public class Equipment extends Product implements Serializable {
-    Equipment(String serialNum, String size,int price, Map<Date,Boolean> rentalDates){
+    Equipment(int serialNum, String size,int price, Map<String,Boolean> rentalDates){
         super(serialNum, size,price,rentalDates);
     }
     @Override
