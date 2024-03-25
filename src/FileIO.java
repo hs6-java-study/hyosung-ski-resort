@@ -1,21 +1,18 @@
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class FileIO {
     final String basePath = "ResortData\\";
-    private FileOutputStream fos ;
-    private BufferedOutputStream bos ;
-    private ObjectOutputStream out ;
-    private FileInputStream fis ;
-    private BufferedInputStream bis ;
-    private ObjectInputStream in ;
-    private Map<String, Boolean> regions ;
+    private FileOutputStream fos;
+    private BufferedOutputStream bos;
+    private ObjectOutputStream out;
+    private FileInputStream fis;
+    private BufferedInputStream bis;
+    private ObjectInputStream in;
+    private Map<String, Boolean> regions;
     private String path;
 
-    FileIO(){
+    FileIO() {
         this.fos = null;
         this.bos = null;
         this.out = null;
@@ -39,7 +36,7 @@ public class FileIO {
         }
     }
 
-    public boolean inRegion(String region){
+    public boolean inRegion(String region) {
         if (!regions.containsKey(region)) {
             System.out.println("지점이 존재하지 않습니다.");
             return false;
@@ -47,7 +44,7 @@ public class FileIO {
         return true;
     }
 
-    public void memberListWriter(Map<String, Member> memberList){
+    public void memberListWriter(Map<String, Member> memberList) {
         try {
             makeFolder(basePath);
             fos = new FileOutputStream(basePath + "memberData.txt");
@@ -67,7 +64,7 @@ public class FileIO {
         }
     }
 
-    public Map memberListReader(){
+    public Map memberListReader() {
         Map<String, Member> memberList = null;
         try {
             fis = new FileInputStream(basePath + "memberData.txt");
@@ -77,14 +74,20 @@ public class FileIO {
 
         } catch (FileNotFoundException e) {
             System.out.println("파일이 존재하지 않아서 생성");
-            return new HashMap<String,Member>();
+            return new HashMap<String, Member>();
         } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             try {
-                if (in != null) {in.close();}
-                if (bis != null) {bis.close();}
-                if (fis != null) {fis.close();}
+                if (in != null) {
+                    in.close();
+                }
+                if (bis != null) {
+                    bis.close();
+                }
+                if (fis != null) {
+                    fis.close();
+                }
             } catch (Exception e2) {
                 e2.printStackTrace();
             }
@@ -92,7 +95,7 @@ public class FileIO {
         return memberList;
     }
 
-    public void adminListWriter(Map<String, Admin> adminList){
+    public void adminListWriter(Map<String, Admin> adminList) {
         try {
             makeFolder(basePath);
             fos = new FileOutputStream(basePath + "adminData.txt");
@@ -112,7 +115,7 @@ public class FileIO {
         }
     }
 
-    public Map adminListReader(){
+    public Map adminListReader() {
         Map<String, Admin> adminList = null;
         try {
             fis = new FileInputStream(basePath + "adminData.txt");
@@ -122,14 +125,20 @@ public class FileIO {
 
         } catch (FileNotFoundException e) {
             System.out.println("파일이 존재하지 않아서 생성");
-            return new HashMap<String,Admin>();
+            return new HashMap<String, Admin>();
         } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             try {
-                if (in != null) {in.close();}
-                if (bis != null) {bis.close();}
-                if (fis != null) {fis.close();}
+                if (in != null) {
+                    in.close();
+                }
+                if (bis != null) {
+                    bis.close();
+                }
+                if (fis != null) {
+                    fis.close();
+                }
             } catch (Exception e2) {
                 e2.printStackTrace();
             }
@@ -137,7 +146,7 @@ public class FileIO {
         return adminList;
     }
 
-    public void roomListWriter(String region, Map<Integer, Room> roomList){
+    public void roomListWriter(String region, Map<Integer, Room> roomList) {
         try {
             path = basePath + region + "\\";
             makeFolder(path);
@@ -158,7 +167,7 @@ public class FileIO {
         }
     }
 
-    public Map roomListReader(String region){
+    public Map roomListReader(String region) {
         path = basePath + region + "\\";
         Map<Integer, Room> roomList = null;
         try {
@@ -171,11 +180,17 @@ public class FileIO {
             return new HashMap<Integer, Room>();
         } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             try {
-                if (in != null) {in.close();}
-                if (bis != null) {bis.close();}
-                if (fis != null) {fis.close();}
+                if (in != null) {
+                    in.close();
+                }
+                if (bis != null) {
+                    bis.close();
+                }
+                if (fis != null) {
+                    fis.close();
+                }
             } catch (Exception e2) {
                 e2.printStackTrace();
             }
@@ -183,7 +198,7 @@ public class FileIO {
         return roomList;
     }
 
-    public void reservationListWriter(String region, Map<Integer,Reservation> reservationList){
+    public void reservationListWriter(String region, Map<Integer, Reservation> reservationList) {
         try {
             path = basePath + region + "\\";
             makeFolder(path);
@@ -193,7 +208,7 @@ public class FileIO {
             out.writeObject(reservationList);
         } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             try {
                 out.close();
                 bos.close();
@@ -204,20 +219,20 @@ public class FileIO {
         }
     }
 
-    public Map<Integer,Reservation> reservationListReader(String region){
+    public Map<Integer, Reservation> reservationListReader(String region) {
         path = basePath + region + "\\";
-        Map<Integer,Reservation> reservationList = null;
+        Map<Integer, Reservation> reservationList = null;
         try {
             fis = new FileInputStream(path + "reservationData.txt");
             bis = new BufferedInputStream(fis);
             in = new ObjectInputStream(bis);
-            reservationList = (HashMap)in.readObject();
+            reservationList = (HashMap) in.readObject();
         } catch (FileNotFoundException e) {
             System.out.println("파일이 존재하지 않아요");
-            return new HashMap<Integer,Reservation>();
+            return new HashMap<Integer, Reservation>();
         } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             try {
                 if (in != null) {in.close();}
                 if (bis != null) {bis.close();}
@@ -230,7 +245,7 @@ public class FileIO {
     }
 
 
-    public void productListWriter(String productName, String region, Map product){
+    public void productListWriter(String productName, String region, Map product) {
         try {
             path = basePath + region + "\\";
             makeFolder(path);
@@ -240,7 +255,7 @@ public class FileIO {
             out.writeObject(product);
         } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             try {
                 out.close();
                 bos.close();
@@ -251,8 +266,8 @@ public class FileIO {
         }
     }
 
-    public <T> Map productListReader(String productName, String region){
-        Map<Integer,T> productList = null;
+    public <T> Map productListReader(String productName, String region) {
+        Map<Integer, T> productList = null;
 
         path = basePath + region + "\\";
         try {
@@ -265,7 +280,7 @@ public class FileIO {
             return null;
         } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             try {
                 if (in != null) in.close();
                 if (bis != null) bis.close();
@@ -323,15 +338,16 @@ public class FileIO {
             for (String productFileName : productFileNames) {
                 File temp = new File(basePath + region + "/" + productFileName);
                 System.out.println(temp);
-                if(temp.exists()) {
+                if (temp.exists()) {
                     fis = new FileInputStream(temp);
                     bis = new BufferedInputStream(fis);
                     in = new ObjectInputStream(bis);
+
+                    String productType = productFileName.contains("Helmet") ? "헬멧" : productFileName.contains("Clothes") ? "의류" : "장비";
                     Map<String, Product> tempProductList = (HashMap) in.readObject();
-                    // if(tempProductList != null) productList.putAll(tempProductList);
                     for (Map.Entry<String, Product> entry : tempProductList.entrySet()) {
                         // 지점명을 포함하는 새 키 생성
-                        String newKey = "[" + region + "] " + entry.getKey();
+                        String newKey = "[" + region + " 지점 | " + productType + "]  물품 고유번호 : " + entry.getKey();
                         // 지점명이 포함된 키와 제품을 productList에 추가
                         productList.put(newKey, entry.getValue());
                     }
