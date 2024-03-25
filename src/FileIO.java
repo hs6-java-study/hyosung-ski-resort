@@ -296,7 +296,7 @@ public class FileIO {
     /**
      * 장비 목록 전체 조회(지점까지)
      */
-    public Map<String, Product> ProductListReader() {
+    public Map<String, Product> AllProductListReader() {
         path = basePath;
         Map<String, Product> productList = new HashMap<String, Product>();
 
@@ -337,7 +337,6 @@ public class FileIO {
         if (eachFile.contains(region)) {
             for (String productFileName : productFileNames) {
                 File temp = new File(basePath + region + "/" + productFileName);
-//                System.out.println(temp);
                 if (temp.exists()) {
                     fis = new FileInputStream(temp);
                     bis = new BufferedInputStream(fis);
@@ -355,14 +354,4 @@ public class FileIO {
             }
         }
     }
-
-    /**
-     * 장비 개수 추가
-     */
-
-
-    /**
-     * 장비 개수 삭제
-     */
-
 }
