@@ -2,8 +2,7 @@ import java.io.*;
 import java.util.*;
 
 public class FileIO {
-    //    final String basePath = "ResortData\\";
-    final String basePath = "/Users/som/SkiResort/";
+    final String basePath = "ResortData\\";
     private FileOutputStream fos;
     private BufferedOutputStream bos;
     private ObjectOutputStream out;
@@ -248,7 +247,7 @@ public class FileIO {
 
     public void productListWriter(String productName, String region, Map product) {
         try {
-            path = basePath + region + "/";
+            path = basePath + region + "\\";
             makeFolder(path);
             fos = new FileOutputStream(path + productName + ".txt");
             bos = new BufferedOutputStream(fos);
