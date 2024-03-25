@@ -13,13 +13,13 @@ public class Room implements Serializable {
     private int roomNumber;
     private int capacity;
     private int price;
-    private Map<Calendar,Boolean> reservationDates ;
+    private Map<String,Boolean> reservationDates ;
 
     public Room(String region, int roomNumber, int capacity, int price) {
         this.region = region;
         this.roomNumber = roomNumber;
         this.capacity = capacity;
         this.price = price;
-        this.reservationDates = new HashMap<Calendar,Boolean>();
+        this.reservationDates = new HashMap<String,Boolean>();
     }
 }
