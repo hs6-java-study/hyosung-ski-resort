@@ -31,7 +31,7 @@ public class MenuMember {
         this.member = member;
         do{
             System.out.println("===== 회원 메뉴 =====");
-            System.out.println("1. 예약하기, 2. 예약취소, 3. 예약조회, 4. 로그아웃, 5. tmp_방 추가, 6. tmp_방 조회");
+            System.out.println("1. 예약하기, 2. 예약취소, 3. 예약조회, 4. 로그아웃, 5. tmp_방 추가, 6. tmp_방 조회 7. 회원 탈퇴");
             this.pointer = Integer.parseInt(sc.nextLine());
             switch (pointer) {
                 case 1:
@@ -51,6 +51,9 @@ public class MenuMember {
                     break;
                 case 6:
                     tmp_checkRoom();
+                    break;
+                case 7:
+                    deleteMemberInfoSelf(member);
                     break;
                 default:
                     System.out.println("잘못된입력");
@@ -329,6 +332,24 @@ public class MenuMember {
         roomList = fileIo.roomListReader(region);
         for (Map.Entry mem : roomList.entrySet()){
             System.out.println("호수 : " + mem.getKey() + " / " + "방클래스 : " + mem.getValue());
+        }
+    }
+
+    public void deleteMemberInfoSelf(Member member) {
+        System.out.println("Y/N");
+        System.out.println("회원 탈퇴 하시겠습니까?");
+        String answer = sc.nextLine();
+        if(answer.equalsIgnoreCase("Y")) {
+            memberList = fileIo.memberListReader();
+            boolean removed =  memberList.entrySet().removeIf(entry -> entry.getValue().getPhoneNumber().equals(member.getPhoneNumber()));
+            if(removed) {
+                System.out.println(member.getName() + " 회원의 정보가 성공적으로 삭제되었습니다.");
+                fileIo.memberListWriter(memberList); // 변경된 회원 목록을 파일에 다시 쓰기
+                System.out.println("시스템을 종료합니다.");
+                System.exit(0);
+            }
+        } else if( answer.equalsIgnoreCase("N")) {
+            System.out.println("이전 페이지로 돌아갑니다.");
         }
     }
 }
