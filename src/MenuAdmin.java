@@ -10,7 +10,7 @@ public class MenuAdmin {
     public FileIO fileIo;
     private int pointer;
     Map<String, Member> memberList;
-    List<Reservation> reservationList;
+    Map<Integer, Reservation> reservationList;
 
     MenuAdmin() {
         sc = new Scanner(System.in);
@@ -76,6 +76,8 @@ public class MenuAdmin {
                     break;
                 }
                 case 5: {
+                    System.out.println("시스템을 종료합니다.");
+                    System.exit(0);
                     break;
                 }
                 default:
@@ -86,9 +88,13 @@ public class MenuAdmin {
 
     public void getAllMemberListInfo() {
         memberList = fileIo.memberListReader();
-        System.out.println("ID \t 전화번호 \t 등급 \t 포인트 \t");
-        memberList.entrySet().stream()
-                .forEach(entry -> System.out.println(entry.getValue().getName() + "\t" +entry.getValue().getPhoneNumber() + "\t" + entry.getValue().getGrade() + "\t" + entry.getValue().getPoint()));
+        if(memberList != null) {
+            System.out.println("ID \t 전화번호 \t 등급 \t 포인트 \t");
+            memberList.entrySet().stream()
+                    .forEach(entry -> System.out.println(entry.getValue().getName() + "\t" +entry.getValue().getPhoneNumber() + "\t" + entry.getValue().getGrade() + "\t" + entry.getValue().getPoint()));
+        } else {
+            System.out.println("회원 정보가 없습니다.");
+        }
     }
 
     public void getOneMemberInfo() {
@@ -96,15 +102,20 @@ public class MenuAdmin {
         System.out.print("검색 하실 회원의 이름: ");
         String searchName = sc.nextLine();
 
-        // ID, 전화번호, 등급, 포인트 헤더 출력
-        System.out.println("ID \t 전화번호 \t 등급 \t 포인트 \t");
+        boolean isEmptySearchedMemberByName = memberList.entrySet().stream().anyMatch(entry -> entry.getValue().getName().equals(searchName));
 
-        memberList.entrySet().stream()
-                .filter(entry -> entry.getValue().getName().equals(searchName))
-                .forEach(entry -> System.out.println(entry.getKey() + "\t" +
-                        entry.getValue().getPhoneNumber() + "\t" +
-                        entry.getValue().getGrade() + "\t" +
-                        entry.getValue().getPoint()));
+        if(isEmptySearchedMemberByName) {
+            System.out.println("ID \t 전화번호 \t 등급 \t 포인트 \t");
+
+            memberList.entrySet().stream()
+                    .filter(entry -> entry.getValue().getName().equals(searchName))
+                    .forEach(entry -> System.out.println(entry.getKey() + "\t" +
+                            entry.getValue().getPhoneNumber() + "\t" +
+                            entry.getValue().getGrade() + "\t" +
+                            entry.getValue().getPoint()));
+        } else {
+            System.out.println("일치하는 회원 정보가 없습니다.");
+        }
     }
 
 
@@ -124,7 +135,7 @@ public class MenuAdmin {
 
     public void getAllReservationInfo() {
         // 예약하기 제대로 안되서 미확인
-        System.out.println("1. 수서점  2. 혜화점");
+        System.out.println("1. 무주점  2. 강촌점");
         int regionPointer = Integer.parseInt(sc.nextLine());
         switch (regionPointer) {
             case 1 : {
@@ -132,7 +143,7 @@ public class MenuAdmin {
                 break;
             }
             case 2 : {
-                reservationList = fileIo.reservationListReader("hyehwa");
+                reservationList = fileIo.reservationListReader("gangchon");
                 break;
             }
             default:
@@ -140,11 +151,14 @@ public class MenuAdmin {
         }
         if (reservationList != null && !reservationList.isEmpty()) {
             System.out.println("예약 ID \t 이름 \t 예약 날짜 \t 예약 시간");
-            for (Reservation reservation : reservationList) {
-                System.out.println(reservation.getMember() + "\t" +
-                        reservation.getRoom() + "\t" +
-                        reservation.getProducts());
-            }
+            reservationList.values().forEach(reservation -> {
+                System.out.println(reservation.getMember().getUserId() + "\t" +
+                        reservation.getMember().getName() + "\t" +
+                        reservation.getRoom().getReservationDates() + "\t" +
+                        reservation.getProducts().stream()
+                                .map(product -> product.getRentalDates() + " ")
+                                .collect(Collectors.joining(", ")));
+            });
         } else {
             System.out.println("예약 내역이 없습니다.");
         }
@@ -154,7 +168,7 @@ public class MenuAdmin {
         System.out.print("조회할 이름을 입력하세요 : ");
         String searchName = sc.nextLine();
         reservationList = fileIo.reservationListReader("muju");
-        List<Reservation> filteredReservationsByMuju = reservationList.stream()
+        List<Reservation> filteredReservationsByMuju = reservationList.values().stream()
                 .filter(reservation -> reservation.getMember().getName().equals(searchName))
                 .collect(Collectors.toList());
 
@@ -168,29 +182,29 @@ public class MenuAdmin {
                             reservation.getRoom().getRoomNumber() + "\t" +
                             reservation.getRoom().getCapacity() + "\t" +
                             reservation.getRoom().getPrice() + "\t" +
-                            reservation.getRoom().getDates() + "\t"));
+                            reservation.getRoom().getReservationDates() + "\t"));
         } else {
             System.out.println(searchName + "님의 무주점 예약 내역이 없습니다.");
         }
 
-        reservationList = fileIo.reservationListReader("hyehwa");
-        List<Reservation> filteredReservationsByHyehwa = reservationList.stream()
+        reservationList = fileIo.reservationListReader("gangchon");
+        List<Reservation> filteredReservationsByGangchon = reservationList.values().stream()
                 .filter(reservation -> reservation.getMember().getName().equals(searchName))
                 .collect(Collectors.toList());
 
         // 필터링된 예약 목록 출력
-        if (!filteredReservationsByHyehwa.isEmpty()) {
+        if (!filteredReservationsByGangchon.isEmpty()) {
             System.out.println("예약 ID \t 이름 \t 예약 날짜 \t 예약 시간");
-            filteredReservationsByHyehwa.forEach(reservation ->
+            filteredReservationsByGangchon.forEach(reservation ->
                     System.out.println(reservation.getMember().getName() + "\t" +
                             reservation.getMember().getPhoneNumber() + "\t" +
                             reservation.getRoom().getRegion() + "\t" +
                             reservation.getRoom().getRoomNumber() + "\t" +
                             reservation.getRoom().getCapacity() + "\t" +
                             reservation.getRoom().getPrice() + "\t" +
-                            reservation.getRoom().getDates() + "\t"));
+                            reservation.getRoom().getReservationDates() + "\t"));
         } else {
-            System.out.println(searchName + "님의 혜화점 예약 내역이 없습니다.");
+            System.out.println(searchName + "님의 강촌점 예약 내역이 없습니다.");
         }
     }
 

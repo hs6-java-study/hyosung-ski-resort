@@ -82,6 +82,7 @@ public class MenuMember {
         products.add(helmet);
         products.add(helmet);
         products.add(helmet);
+        fileIo.helmetListWriter("muju",helmet);
 
         Reservation reservation = new Reservation(member, room, products);
         reservationList = fileIo.reservationListReader("muju");
@@ -137,14 +138,14 @@ public class MenuMember {
     // makeMyReservation 헬퍼 함수
     private String choiceRegion (){
         do{
-            System.out.print("지점 => 1. 무주 , 2. 하이원 >>> 번호입력 : ");
+            System.out.print("지점 => 1. 무주 , 2. 강촌 >>> 번호입력 : ");
             pointer = Integer.parseInt(sc.nextLine());
             switch (pointer){
                 case 1:
                     region = "muju";
                     break;
                 case 2:
-                    region = "high1";
+                    region = "gangchon";
                     break;
                 case 3:
 
@@ -200,7 +201,7 @@ public class MenuMember {
     // 나중에 다른곳으로 빠질 애들
     public void tmp_addRoom(){
         System.out.println("방 만들기 Test");
-        System.out.print("지역(muju/high1) : ");
+        System.out.print("지역(muju/gangchon) : ");
         String region = sc.nextLine();
         if(!fileIo.inRegion(region)) return;
         System.out.print("몇호(숫자만) : ");
