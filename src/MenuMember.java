@@ -69,7 +69,9 @@ public class MenuMember {
         int reservationRoomNumber;
         while (true){
             System.out.println("==== 지점, 인원, 기간을 입력해 주세요 ====");
-            this.region = choiceRegion();
+            System.out.println("뒤로가려면 \"99\"를 입력해주세요.\n");
+
+            this.region = choiceRegion(); if(this.region.equals(" ")) return ;
             this.capacity = choiceCapacity();
             this.period = choosePeriod();
             this.roomList = getRoomList(this.region, this.capacity, this.period);
@@ -168,7 +170,7 @@ public class MenuMember {
         System.out.print(kind  + " >> S갯수/M갯수/L갯수 : ");
         String count = sc.nextLine();
         int[] counts = Arrays.stream((count.split("/")))
-                        .mapToInt(Integer::parseInt).toArray();
+                .mapToInt(Integer::parseInt).toArray();
 
         int totalProductCount = 0;
         for (int c : counts){
@@ -269,6 +271,8 @@ public class MenuMember {
         do{
             System.out.print("지점 => 1. 무주 , 2. 하이원 >>> 번호입력 : ");
             pointer = Integer.parseInt(sc.nextLine());
+            if (pointer == 99) return " ";
+
             switch (pointer){
                 case 1:
                     region = "muju";
@@ -308,11 +312,18 @@ public class MenuMember {
     }
 
     public void getMyReservations(){
-        for(Map.Entry reservation : fileIo.reservationListReader("muju").entrySet()){
-            System.out.println(reservation.getValue());
+        Map<Integer, Reservation> totalReservations = new HashMap<Integer, Reservation>();
+        totalReservations.putAll(fileIo.reservationListReader("muju"));
+        totalReservations.putAll(fileIo.reservationListReader("gangchon"));
+
+        System.out.println("====비교를 위한 전체 회원 목록 (삭제 예정)====");
+        for(Map.Entry<Integer, Reservation> reservation : totalReservations.entrySet()){
+            System.out.println(reservation.getKey() + " / " + reservation.getValue());
         }
-        for(Map.Entry reservation : fileIo.reservationListReader("gangchon").entrySet()){
-            System.out.println(reservation.getValue());
+        //
+        System.out.println("====나의 예약 목록조회====");
+        for(Integer reservationNumber : member.getReservationNumberList()){
+            System.out.println(totalReservations.get(reservationNumber).toString());
         }
     }
 
