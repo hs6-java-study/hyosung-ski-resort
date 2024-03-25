@@ -232,6 +232,7 @@ public class MenuAdmin {
             region = "gangchon";
         } else {
             System.out.println("잘못된 입력");
+            return;
         }
         System.out.println("1. 헬멧 \t 2. 의류 \t 3. 장비");
         int productPointer = Integer.parseInt(sc.nextLine());
@@ -263,6 +264,7 @@ public class MenuAdmin {
             region = "gangchon";
         } else {
             System.out.println("잘못된 입력");
+            return;
         }
         System.out.println("1. 헬멧 \t 2. 의류 \t 3. 장비");
         int productPointer = Integer.parseInt(sc.nextLine());
