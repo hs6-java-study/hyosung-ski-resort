@@ -23,6 +23,8 @@ public class AuthMember {
             switch (pointer) {
                 case 1:
                     login();
+//                    menuMember = new MenuMember();
+//                    menuMember.run(member);
                     break;
                 case 2:
                     signup();

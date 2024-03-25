@@ -219,9 +219,9 @@ public class FileIO {
             e.printStackTrace();
         }finally {
             try {
-                in.close();
-                bis.close();
-                fis.close();
+                if (in != null) {in.close();}
+                if (bis != null) {bis.close();}
+                if (fis != null) {fis.close();}
             } catch (Exception e2) {
                 e2.printStackTrace();
             }
