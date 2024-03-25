@@ -8,7 +8,7 @@ public class MenuMember {
     private Map<Integer, Room> roomList;
     private Member member;
     private Room room;
-    private List<Product> products;
+    private Map<Integer,Product> products;
     private Map<Integer,Reservation> reservationList;
     private int pointer;
     private String region;
@@ -18,6 +18,7 @@ public class MenuMember {
     private Random random ;
     private ManageDate manageDate;
     private Map<String, Member> memberList;
+    private List<Integer> rentProduct;
 
 
     MenuMember(){
@@ -59,90 +60,161 @@ public class MenuMember {
 
     public void makeMyReservation(Member member){
         // 숙박 예약 로직
+        int reservationRoomNumber;
         while (true){
             System.out.println("==== 지점, 인원, 기간을 입력해 주세요 ====");
-//            this.region = choiceRegion();
-//            this.capacity = choiceCapacity();
-//            this.period = choosePeriod();
-
-//           this.roomList = getRoomList(region, capacity, period);
-
-            // 지워지는 부분
-            this.roomList = getRoomList("muju", 5, "2024.01.28~2024.02.06");
+            this.region = choiceRegion();
+            this.capacity = choiceCapacity();
+            this.period = choosePeriod();
+            this.roomList = getRoomList(this.region, this.capacity, this.period);
 
             for (Integer roomNumber : roomList.keySet()){
                 System.out.println(roomList.get(roomNumber).toString());}
 
             System.out.println("예약을 원하는 방의 호 수 입력");
             System.out.print("호 수 : ");
-            int roomNumber = Integer.parseInt(sc.nextLine());
+            reservationRoomNumber = Integer.parseInt(sc.nextLine());
 
-            if (this.roomList.containsKey(roomNumber)) break;
+            if (this.roomList.containsKey(reservationRoomNumber)) break;
             else System.out.println("방이 없다.");
         }
 
-//        while(true){
-//            System.out.println("==== 장비렌탈 ====");
-//            System.out.println("ex) 1/0/2");
-//            rentHelmetOrClothes("헬멧");
-//            break;
-//        }
-        // 장비 렌탈 로직 여기에 생성
-        room = new Room("muju",123,4,1000);
-        member = member;
+        // 파일 입력으로 대체
+        this.products = new HashMap<Integer,Product>();
+        Product helmet = new Helmet(88814651,"M",1561,new HashMap<String,Boolean>(){{
+            put("2024.01.30",true);
+            put("2024.01.31",true);
+        }});
+        Product helmet2 = new Helmet(26516546,"S",1561,new HashMap<String,Boolean>());
+        Product helmet3 = new Helmet(54616516,"L",1561,new HashMap<String,Boolean>());
+        Product helmet4 = new Helmet(88814651,"M",1561,new HashMap<String,Boolean>());
+//        Product clothes1 = new Clothes(65656514,"L",1561,new HashMap<String,Boolean>());
+        products.put(88814651,helmet);
+        products.put(26516546,helmet2);
+        products.put(54616516,helmet3);
+        products.put(88814651,helmet4);
+//        products.add(clothes1);
 
-        Reservation reservation = new Reservation(member, room, products);
+
+        // 장비 렌탈 로직
+        this.rentProduct = new ArrayList<>();
+
+        while(true){
+            System.out.println("==== 장비렌탈 ====");
+            // 장비 갯수 보여주는 출력
+            for(Map.Entry p : products.entrySet()){
+                System.out.println(p.getKey() + " / " + p.getValue());
+            }
+            while(true){
+                if(rentHelmetOrClothes("헬멧")) break ;
+            }
+            while(true){
+                if(rentHelmetOrClothes("의류")) break ;
+            }
+            while(true){
+                if(rentEquipment()) break ;
+            }
+            break;
+        }
+
+        Reservation reservation = new Reservation(member, this.roomList.get(reservationRoomNumber), new HashMap<Integer,Product>());
         int randomNumber = random.nextInt(100000000);
 
         // 회원 예약 내역 리스트 추가
-//        memberList = fileIo.memberListReader();
-//        memberList.get(member.getUserId()).getReservationNumberList().add(randomNumber);
-//        fileIo.memberListWriter(memberList);
+        memberList = fileIo.memberListReader();
+        memberList.get(member.getUserId()).getReservationNumberList().add(randomNumber);
+        fileIo.memberListWriter(memberList);
+
+        // 숙소 + 렌탈 장비 대여 날짜 추가
+        this.roomList = fileIo.roomListReader(region);
+        for(String d : this.manageDate.startEndDates){
+            // 숙소 대여날짜 업데이트
+            this.roomList.get(reservationRoomNumber).getReservationDates().put(d, true);
+            // 장비 대여날짜 업데이트
+        }
+        fileIo.roomListWriter(region, this.roomList);
 
         // 예약 내역 추가
-        reservationList = fileIo.reservationListReader("muju");
+        reservationList = fileIo.reservationListReader(region);
         reservationList.put(randomNumber,reservation);
-        fileIo.reservationListWriter("muju",reservationList);
+        fileIo.reservationListWriter(region,reservationList);
+        for(Map.Entry m :reservationList.entrySet()){
+            System.out.println(m.getKey() + " / " + m.getValue());
+        }
     }
-    private List rentHelmetOrClothes(String kind){
+
+    // makeMyReservation 헬퍼 함수
+    private Boolean rentHelmetOrClothes(String kind){
         List<Integer> selectedProductNumbers = new ArrayList<Integer>();
         System.out.print(kind  + " >> S갯수/M갯수/L갯수 : ");
         String count = sc.nextLine();
         int[] counts = Arrays.stream((count.split("/")))
-                        .mapToInt(Integer::parseInt)
-                        .toArray();
+                        .mapToInt(Integer::parseInt).toArray();
 
-        // 파일 입력으로 대체
-        this.products = new ArrayList<Product>();
-        Product helmet = new Helmet(102,"M",1561,new HashMap<String,Boolean>());
-        Product helmet2 = new Helmet(103,"S",1561,new HashMap<String,Boolean>());
-        products = new ArrayList<Product>();
-        products.add(helmet);
-        products.add(helmet2);
-        products.add(helmet);
+        int totalProductCount = 0;
+        for (int c : counts){
+            totalProductCount += c;
+        }
 
-        for(Product product : this.products){
-            if (product.getSize().equals("S") && counts[0] != 0){
-                selectedProductNumbers.add(product.getSerialNum());
+        if (totalProductCount > this.capacity) {
+            System.out.println(kind +" 개수가 인원을 초과");
+            return false;
+        }
+
+        for(Map.Entry<Integer,Product> product : this.products.entrySet()){
+            if(!this.manageDate.isPossibleReservation(((Product)product.getValue()).getRentalDates())) {
+                System.out.println(((Product)product.getValue()).getSerialNum() + "는 예약 불가능 " + kind);
+                continue;
+            }
+            if (((Product)product.getValue()).getSize().equals("S") && counts[0] != 0){
+                selectedProductNumbers.add(((Product)product.getValue()).getSerialNum());
                 counts[0]--;
             }
-            else if (product.getSize().equals("M") && counts[1] != 0){
-                selectedProductNumbers.add(product.getSerialNum());
+            else if (((Product)product.getValue()).getSize().equals("M") && counts[1] != 0){
+                selectedProductNumbers.add(((Product)product.getValue()).getSerialNum());
                 counts[1]--;
             }
-            else if (product.getSize().equals("L") && counts[2] != 0){
-                selectedProductNumbers.add(product.getSerialNum());
+            else if (((Product)product.getValue()).getSize().equals("L") && counts[2] != 0){
+                selectedProductNumbers.add(((Product)product.getValue()).getSerialNum());
                 counts[2]--;
             }
             else if (counts[0] == 0 && counts[1] == 0 && counts[2] == 0){
-                for(int p : selectedProductNumbers){
-                    System.out.println(p);
-                }
-                return selectedProductNumbers;
+                System.out.println("장비대여가능");
+                rentProduct.addAll(selectedProductNumbers);
+                return true;
             }
         }
-        System.out.println("못빌리쥬");
-        return new ArrayList<String>();
+        if (counts[0] == 0 && counts[1] == 0 && counts[2] == 0){
+            System.out.println("장비대여가능");
+            rentProduct.addAll(selectedProductNumbers);
+            return true;
+        }
+        System.out.println("장비부족 못빌림");
+        return false;
+    }
+
+    // makeMyReservation 헬퍼 함수
+    private Boolean rentEquipment(){
+        List<Integer> selectedProductNumbers = new ArrayList<Integer>();
+        System.out.print("장비 >> 스키갯수 : ");
+        int count = Integer.parseInt(sc.nextLine());
+
+        if (count > this.capacity) {
+            System.out.println("장비 개수가 인원을 초과");
+            return false;
+        }
+
+        for(Map.Entry product : this.products.entrySet()){
+            if ( count != 0){
+                selectedProductNumbers.add(((Product)product.getValue()).getSerialNum());
+                count--;
+            }else{
+                rentProduct.addAll(selectedProductNumbers);
+                return true;
+            }
+        }
+        System.out.println("장비부족 못빌리쥬");
+        return false;
     }
 
     // makeMyReservation 헬퍼 함수

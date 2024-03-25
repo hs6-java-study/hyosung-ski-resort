@@ -2,6 +2,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 @Data
@@ -16,7 +17,7 @@ public class Member extends User implements Serializable {
         this.phoneNumber = phoneNumber;
         this.grade = Grade.BASIC;
         this.point = 0;
-        this.reservationNumberList = new ArrayList<Integer>();
+        this.reservationNumberList = new LinkedList<Integer>();
     }
 
     @Override

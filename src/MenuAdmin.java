@@ -93,7 +93,7 @@ public class MenuAdmin {
         if(memberList != null) {
             System.out.println("ID \t 전화번호 \t 등급 \t 포인트 \t");
             memberList.entrySet().stream()
-                    .forEach(entry -> System.out.println(entry.getValue().getName() + "\t" +entry.getValue().getPhoneNumber() + "\t" + entry.getValue().getGrade() + "\t" + entry.getValue().getPoint()));
+                    .forEach(entry -> System.out.println(entry.getValue().getName() + "\t" +entry.getValue().getPhoneNumber() + "\t" + entry.getValue().getGrade() + "\t" + entry.getValue().getPoint() + "\t" + entry.getValue().getReservationNumberList()));
         } else {
             System.out.println("회원 정보가 없습니다.");
         }
