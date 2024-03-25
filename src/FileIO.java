@@ -229,11 +229,11 @@ public class FileIO {
         return reservationList;
     }
 
-    public void helmetListWriter(String region, Product helmet){
+    public void helmetListWriter(String region, Map helmet){
         try {
             path = basePath + region + "\\";
             makeFolder(path);
-            fos = new FileOutputStream(path + "helmet.txt");
+            fos = new FileOutputStream(path + "Helmet.txt");
             bos = new BufferedOutputStream(fos);
             out = new ObjectOutputStream(bos);
             out.writeObject(helmet);
@@ -250,14 +250,14 @@ public class FileIO {
         }
     }
 
-    public Helmet helmetListReader(String region, Product helmet){
+    public Map helmetListReader(String region){
+        Map<Integer, Helmet> helmetList = null;
         path = basePath + region + "\\";
-        Helmet helmetList = null;
         try {
             fis = new FileInputStream(path + "Helmet.txt");
             bis = new BufferedInputStream(fis);
             in = new ObjectInputStream(bis);
-            helmetList = (Helmet)in.readObject();
+            helmetList = (HashMap) in.readObject();
         } catch (FileNotFoundException e) {
             System.out.println("파일이 존재하지 않아요");
             return null;
@@ -273,5 +273,52 @@ public class FileIO {
             }
         }
         return helmetList;
+    }
+
+    public void productListWriter(String productName, String region, Map helmet){
+        try {
+            path = basePath + region + "\\";
+            makeFolder(path);
+            fos = new FileOutputStream(path + productName + ".txt");
+            bos = new BufferedOutputStream(fos);
+            out = new ObjectOutputStream(bos);
+            out.writeObject(helmet);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                out.close();
+                bos.close();
+                fos.close();
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
+        }
+    }
+
+    public <T> Map productListReader(String productName, String region){
+        Map<Integer,T> productList = null;
+
+        path = basePath + region + "\\";
+        try {
+            fis = new FileInputStream(path + productName + ".txt");
+            bis = new BufferedInputStream(fis);
+            in = new ObjectInputStream(bis);
+            productList = (HashMap) in.readObject();
+        } catch (FileNotFoundException e) {
+            System.out.println("파일이 존재하지 않아요");
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                if (in != null) in.close();
+                if (bis != null) bis.close();
+                if (fis != null) fis.close();
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
+        }
+        return productList;
     }
 }
