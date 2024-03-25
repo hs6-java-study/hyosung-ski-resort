@@ -10,5 +10,5 @@ import java.util.Map;
 public class Reservation implements Serializable {
     private Member member;
     private Room room;
-    private Map<Integer,Product> products;
+    private Map<String,Product> products;
 }
