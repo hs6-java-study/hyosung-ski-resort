@@ -1,3 +1,4 @@
+import java.sql.SQLOutput;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -289,12 +290,77 @@ public class MenuAdmin {
     }
 
     private void getAllReservationRevenue() {
+        System.out.println("1. 무주점 \t 2. 강촌점");
+        System.out.print("숙박 매출을 보고싶은 지점을 입력 : ");
+        int revenuePointer = Integer.parseInt(sc.nextLine());
+        String region = null;
+        if(revenuePointer == 1) {
+            region = "muju";
+        } else if (revenuePointer == 2) {
+            region = "gangchon";
+        } else {
+            System.out.println("잘못된 입력");
+            return;
+        }
+        int grandTotalRevenue = 0;
+        Calendar currentDate = Calendar.getInstance();
 
+        for(int i = 0; i < 3; i++) {
+            int totalRevenue = 0;
+            String yearMonth = String.format("%04d.%02d", currentDate.get(Calendar.YEAR),currentDate.get(Calendar.MONTH)+2);
+            Map<Integer, Reservation> reservationList = fileIo.reservationListReader(region);
+
+            for(Reservation reservation : reservationList.values()) {
+                int revenue = reservation.getRoom().getReservationDates().entrySet().stream()
+                        .filter(entry -> entry.getKey().startsWith(yearMonth))
+                        .mapToInt(entry -> entry.getValue() ? reservation.getRoom().getPrice() : 0)
+                        .sum();
+                totalRevenue += revenue;
+            }
+            grandTotalRevenue += totalRevenue;
+            System.out.println(yearMonth + " : " + totalRevenue);
+            currentDate.add(Calendar.MONTH, -1);
+        }
+        System.out.println("숙박 매출 총합 : " + grandTotalRevenue);
     }
 
     private void getAllProductRevenue() {
+        System.out.println("1. 무주점 \t 2. 강촌점");
+        System.out.print("숙박 매출을 보고싶은 지점을 입력 : ");
+        int revenuePointer = Integer.parseInt(sc.nextLine());
+        String region = null;
+        if(revenuePointer == 1) {
+            region = "muju";
+        } else if (revenuePointer == 2) {
+            region = "gangchon";
+        } else {
+            System.out.println("잘못된 입력");
+            return;
+        }
+        Map<String, Integer> monthlyRevenueMap = new HashMap<>();
+        Calendar currentDate = Calendar.getInstance();
+        Map<Integer, Reservation> reservationList = fileIo.reservationListReader(region);
 
+        for (int i = 0; i < 3; i++) {
+            int totalRevenue = 0;
+            String yearMonth = String.format("%04d.%02d", currentDate.get(Calendar.YEAR), currentDate.get(Calendar.MONTH) + 2);
+            for (Reservation reservation : reservationList.values()) {
+                for (Product product : reservation.getProducts().values()) {
+                    int revenueForMonth = product.getRentalDates().entrySet().stream()
+                            .filter(entry -> entry.getKey().startsWith(yearMonth))
+                            .mapToInt(entry -> entry.getValue() ? product.getPrice() : 0)
+                            .sum();
+                    totalRevenue += revenueForMonth;
+                }
+            }
+            monthlyRevenueMap.put(yearMonth, totalRevenue);
+            System.out.println(yearMonth + " : " + totalRevenue);
+            currentDate.add(Calendar.MONTH, -1);
+        }
+        int grandTotalRevenue = monthlyRevenueMap.values().stream().mapToInt(Integer::intValue).sum();
+        System.out.println("총 합: " + grandTotalRevenue);
     }
+
 
     private static String numberGen(int len) {
 
