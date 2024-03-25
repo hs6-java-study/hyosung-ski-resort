@@ -237,73 +237,13 @@ public class MenuAdmin {
         int productPointer = Integer.parseInt(sc.nextLine());
         switch (productPointer) {
             case 1 :{
-                helmetList = fileIo.productListReader("Helmet",region);
-                if(helmetList != null && !helmetList.isEmpty()){
-                    helmetList.entrySet().stream()
-                            .forEach(entry -> System.out.println("[확인용 출력] getKey : " + entry.getKey() + "  | getValue : " + entry.getValue()));
-                } else {
-                    fileIo.productListWriter("Helmet",region,null);
-                    helmetList = new HashMap<String,Helmet>();
-                }
-                System.out.println("추가할 헬멧 사이즈 / 개수 / 가격");
-                System.out.println("s/2/5000");
-                String[] helmetInput = sc.nextLine().split("/");
-                String size = null;
-                String inputSize = helmetInput[0].trim().toUpperCase();
-                if(Arrays.asList("S", "M", "L").contains(inputSize)) {
-                    size = inputSize;
-                }
-                int howMany = Integer.parseInt(helmetInput[1].trim());
-                int price = Integer.parseInt(helmetInput[2].trim());
-                for(int i = 0; i < howMany; i++) {
-                    helmetList.put(numberGen(4), new Helmet(Integer.parseInt(numberGen(4)),size,price,null));
-                }
-                fileIo.productListWriter("Helmet", region, helmetList);
+                combineAddProduct(region , "Helmet");
                 break;}
             case 2 : {
-                clothesList = fileIo.productListReader("Clothes",region);
-
-                if(clothesList != null && !clothesList.isEmpty()){
-                    clothesList.entrySet().stream()
-                            .forEach(entry -> System.out.println("[확인용 출력] getKey : " + entry.getKey() + "  | getValue : " + entry.getValue()));
-                } else {
-                    fileIo.productListWriter("Clothes",region,null);
-                    clothesList = new HashMap<String,Clothes>();
-                }
-                System.out.println("추가할 의류 사이즈 / 개수 / 가격");
-                System.out.println("s/2/5000");
-                String[] clothesInput = sc.nextLine().split("/");
-                String size = null;
-                String inputSize = clothesInput[0].toUpperCase();
-                if(Arrays.asList("S", "M", "L").contains(inputSize)) {
-                    size = inputSize;
-                }
-                int howMany = Integer.parseInt(clothesInput[1].trim());
-                int price = Integer.parseInt(clothesInput[2].trim());
-                for(int i = 0; i < howMany; i++) {
-                    clothesList.put(numberGen(4), new Clothes(Integer.parseInt(numberGen(4)),size,price,null));
-                }
-                fileIo.productListWriter("Clothes", region, clothesList);
+                combineAddProduct(region , "Clothes");
                 break;}
             case 3 :{
-                equipmentList = fileIo.productListReader("Equipment",region);
-
-                if(equipmentList != null && !equipmentList.isEmpty()){
-                    equipmentList.entrySet().stream()
-                            .forEach(entry -> System.out.println("[확인용 출력] getKey : " + entry.getKey() + "  | getValue : " + entry.getValue()));
-                } else {
-                    fileIo.productListWriter("Equipment",region,null);
-                    equipmentList = new HashMap<String,Equipment>();
-                }
-                System.out.println("추가할 장비 개수 / 가격");
-                System.out.println("2/5000");
-                String[] equipmentInput = sc.nextLine().split("/");
-                int howMany = Integer.parseInt(equipmentInput[0].trim());
-                int price = Integer.parseInt(equipmentInput[1].trim());
-                for(int i = 0; i < howMany; i++) {
-                    equipmentList.put(numberGen(4), new Equipment(Integer.parseInt(numberGen(4)),null,price,null));
-                }
-                fileIo.productListWriter("Equipment",region,equipmentList);
+                combineAddProduct(region , "Equipment");
                 break;}
             default: {
                 System.out.println("잘못된 입력");
@@ -328,73 +268,13 @@ public class MenuAdmin {
         int productPointer = Integer.parseInt(sc.nextLine());
         switch (productPointer) {
             case 1 :{
-                helmetList = fileIo.productListReader("Helmet",region);
-                if(helmetList != null && !helmetList.isEmpty()){
-                    helmetList.entrySet().stream()
-                            .forEach(entry -> System.out.println("[확인용 출력] getKey : " + entry.getKey() + "  | getValue : " + entry.getValue()));
-                } else {
-                    System.out.println("등록된 재고가 없습니다.");
-                    return;
-                }
-                System.out.print("삭제할 헬멧 고유번호 : ");
-                String inputSerialNum = sc.nextLine();
-                try {
-                    if(helmetList.containsKey(inputSerialNum)) {
-                        helmetList.remove(inputSerialNum);
-                        fileIo.productListWriter("Helmet", region, helmetList);
-                        System.out.println(inputSerialNum + " 번호의 헬멧이 삭제되었습니다.");
-                    } else {
-                        System.out.println("해당 번호의 헬멧이 존재하지 않습니다.");
-                    }
-                } catch(NumberFormatException e) {
-                    System.out.println("올바른 고유번호를 입력해주세요.");
-                }
+                combineDeleteProduct(region, "Helmet");
                 break;}
             case 2 : {
-                clothesList = fileIo.productListReader("Clothes",region);
-                if(clothesList != null && !clothesList.isEmpty()){
-                    clothesList.entrySet().stream()
-                            .forEach(entry -> System.out.println("[확인용 출력] getKey : " + entry.getKey() + "  | getValue : " + entry.getValue()));
-                } else {
-                    System.out.println("등록된 재고가 없습니다.");
-                    return;
-                }
-                System.out.print("삭제할 의류 고유번호 : ");
-                String inputSerialNum = sc.nextLine();
-                try {
-                    if(clothesList.containsKey(inputSerialNum)) {
-                        clothesList.remove(inputSerialNum);
-                        fileIo.productListWriter("Clothes", region, clothesList);
-                        System.out.println(inputSerialNum + " 번호의 의류가 삭제되었습니다.");
-                    } else {
-                        System.out.println("해당 번호의 의류가 존재하지 않습니다.");
-                    }
-                } catch(NumberFormatException e) {
-                    System.out.println("올바른 고유번호를 입력해주세요.");
-                }
+                combineDeleteProduct(region, "Clothes");
                 break;}
             case 3 :{
-                equipmentList = fileIo.productListReader("Equipment",region);
-                if(equipmentList != null && !equipmentList.isEmpty()){
-                    equipmentList.entrySet().stream()
-                            .forEach(entry -> System.out.println("[확인용 출력] getKey : " + entry.getKey() + "  | getValue : " + entry.getValue()));
-                } else {
-                    System.out.println("등록된 재고가 없습니다.");
-                    return;
-                }
-                System.out.print("삭제할 장비 고유번호 : ");
-                String inputSerialNum = sc.nextLine();
-                try {
-                    if(equipmentList.containsKey(inputSerialNum)) {
-                        equipmentList.remove(inputSerialNum);
-                        fileIo.productListWriter("Equipment", region, equipmentList);
-                        System.out.println(inputSerialNum + " 번호의 장비가 삭제되었습니다.");
-                    } else {
-                        System.out.println("해당 번호의 장비가 존재하지 않습니다.");
-                    }
-                } catch(NumberFormatException e) {
-                    System.out.println("올바른 고유번호를 입력해주세요.");
-                }
+                combineDeleteProduct(region, "Equipment");
                 break;}
             default: {
                 System.out.println("잘못된 입력");
@@ -426,5 +306,67 @@ public class MenuAdmin {
                 }
             }
         return numStr;
+    }
+
+    public void combineAddProduct(String region ,String name) {
+        productList = fileIo.productListReader(name,region);
+        if(productList != null && !productList.isEmpty()){
+            productList.entrySet().stream()
+                    .forEach(entry -> System.out.println("[확인용 출력] getKey : " + entry.getKey() + "  | getValue : " + entry.getValue()));
+        } else {
+            fileIo.productListWriter(name,region,new HashMap<String, Boolean>());
+            productList = new HashMap<String, Product>();
+        }
+        String size = null;
+        int howMany = 0;
+        int price = 0;
+
+        if(name.equals("Equipment")) {
+            System.out.println("추가할 "+ name + " 개수 / 가격");
+            System.out.println("2/5000");
+            String[] productInput = sc.nextLine().split("/");
+            size = "Free";
+            howMany = Integer.parseInt(productInput[0].trim());
+            price = Integer.parseInt(productInput[1].trim());
+
+        } else {
+            System.out.println("추가할 "+ name + " 사이즈 / 개수 / 가격");
+            System.out.println("s/2/5000");
+            String[] productInput = sc.nextLine().split("/");
+            String inputSize = productInput[0].trim().toUpperCase();
+            if(Arrays.asList("S", "M", "L").contains(inputSize)) {
+                size = inputSize;
+            }
+            howMany = Integer.parseInt(productInput[1].trim());
+            price = Integer.parseInt(productInput[2].trim());
+        }
+        for(int i = 0; i < howMany; i++) {
+            productList.put(numberGen(4), new Product(Integer.parseInt(numberGen(4)),size,price,new HashMap<String, Boolean>()));
+        }
+        fileIo.productListWriter(name, region, productList);
+    }
+
+    public void combineDeleteProduct(String region, String name) {
+        productList = fileIo.productListReader(name,region);
+        if(productList != null && !productList.isEmpty()){
+            productList.entrySet().stream()
+                    .forEach(entry -> System.out.println("[확인용 출력] getKey : " + entry.getKey() + "  | getValue : " + entry.getValue()));
+        } else {
+            System.out.println("등록된 재고가 없습니다.");
+            return;
+        }
+        System.out.print("삭제할 헬멧 고유번호 : ");
+        String inputSerialNum = sc.nextLine();
+        try {
+            if(productList.containsKey(inputSerialNum)) {
+                productList.remove(inputSerialNum);
+                fileIo.productListWriter(name, region, productList);
+                System.out.println(inputSerialNum + " 번호의 "+ name +"이 삭제되었습니다.");
+            } else {
+                System.out.println("해당 번호의 "+name+"이 존재하지 않습니다.");
+            }
+        } catch(NumberFormatException e) {
+            System.out.println("올바른 고유번호를 입력해주세요.");
+        }
     }
 }
