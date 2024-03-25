@@ -229,60 +229,15 @@ public class FileIO {
         return reservationList;
     }
 
-    public void helmetListWriter(String region, Map helmet){
-        try {
-            path = basePath + region + "\\";
-            makeFolder(path);
-            fos = new FileOutputStream(path + "Helmet.txt");
-            bos = new BufferedOutputStream(fos);
-            out = new ObjectOutputStream(bos);
-            out.writeObject(helmet);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }finally {
-            try {
-                out.close();
-                bos.close();
-                fos.close();
-            } catch (Exception e2) {
-                e2.printStackTrace();
-            }
-        }
-    }
 
-    public Map helmetListReader(String region){
-        Map<Integer, Helmet> helmetList = null;
-        path = basePath + region + "\\";
-        try {
-            fis = new FileInputStream(path + "Helmet.txt");
-            bis = new BufferedInputStream(fis);
-            in = new ObjectInputStream(bis);
-            helmetList = (HashMap) in.readObject();
-        } catch (FileNotFoundException e) {
-            System.out.println("파일이 존재하지 않아요");
-            return null;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }finally {
-            try {
-                if (in != null) in.close();
-                if (bis != null) bis.close();
-                if (fis != null) fis.close();
-            } catch (Exception e2) {
-                e2.printStackTrace();
-            }
-        }
-        return helmetList;
-    }
-
-    public void productListWriter(String productName, String region, Map helmet){
+    public void productListWriter(String productName, String region, Map product){
         try {
             path = basePath + region + "\\";
             makeFolder(path);
             fos = new FileOutputStream(path + productName + ".txt");
             bos = new BufferedOutputStream(fos);
             out = new ObjectOutputStream(bos);
-            out.writeObject(helmet);
+            out.writeObject(product);
         } catch (Exception e) {
             e.printStackTrace();
         }finally {
