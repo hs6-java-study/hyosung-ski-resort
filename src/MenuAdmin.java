@@ -12,6 +12,8 @@ public class MenuAdmin {
     Map<String, Clothes> clothesList;
     Map<String, Equipment> equipmentList;
 
+    Map<String, Product> productList;
+
     MenuAdmin() {
         sc = new Scanner(System.in);
         fileIo = new FileIO();
@@ -90,10 +92,10 @@ public class MenuAdmin {
 
     public void getAllMemberListInfo() {
         memberList = fileIo.memberListReader();
-        if(memberList != null) {
+        if (memberList != null) {
             System.out.println("ID \t 전화번호 \t 등급 \t 포인트 \t");
             memberList.entrySet().stream()
-                    .forEach(entry -> System.out.println(entry.getValue().getName() + "\t" +entry.getValue().getPhoneNumber() + "\t" + entry.getValue().getGrade() + "\t" + entry.getValue().getPoint()));
+                    .forEach(entry -> System.out.println(entry.getValue().getName() + "\t" + entry.getValue().getPhoneNumber() + "\t" + entry.getValue().getGrade() + "\t" + entry.getValue().getPoint()));
         } else {
             System.out.println("회원 정보가 없습니다.");
         }
@@ -106,7 +108,7 @@ public class MenuAdmin {
 
         boolean isEmptySearchedMemberByName = memberList.entrySet().stream().anyMatch(entry -> entry.getValue().getName().equals(searchName));
 
-        if(isEmptySearchedMemberByName) {
+        if (isEmptySearchedMemberByName) {
             System.out.println("ID \t 전화번호 \t 등급 \t 포인트 \t");
 
             memberList.entrySet().stream()
@@ -213,7 +215,10 @@ public class MenuAdmin {
     }
 
     public void getAllProductInfo() {
-
+        productList = fileIo.ProductListReader();
+        // 확인용 출력
+        productList.entrySet().stream()
+                .forEach(entry -> System.out.println("[확인용 출력] " + entry.getKey() + " | product 정보 : " + entry.getValue()));
     }
 
     public void addProduct() {
