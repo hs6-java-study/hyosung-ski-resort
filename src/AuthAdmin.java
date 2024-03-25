@@ -54,13 +54,14 @@ public class AuthAdmin {
 
     public void signup() {
         adminList = fileIo.adminListReader(); // 기존 관리자목록 불러오기
+        ValidationUtils validationUtils = new ValidationUtils(); // 유효성 검사 클래스 분리
 
         String userId;
         do {
             System.out.println("\n===== 효성리조트 관리자 회원가입 =====");
             System.out.println("회원가입을 취소하시려면 \"취소\"를 입력해주세요.\n");
 
-            userId = getValidation("ID 입력 : ", "^[a-z]{1}[a-z0-9]{5,10}+$", "ID 정규식 미통과", "회원가입이 취소되었습니다.");
+            userId = validationUtils.getValidation(sc, AuthValidation.USER_ID);
             if (userId == null) return;
 
             // 동일 키값이 있는 경우 들어가면 X
@@ -70,11 +71,11 @@ public class AuthAdmin {
             }
         } while (userId == null);
 
-        String password = getValidation("비밀번호 입력 : ", "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=~!]).{8,14}$", "PW 정규식 미통과", "회원가입이 취소되었습니다.");
-        if(password == null) return;
+        String password = validationUtils.getValidation(sc, AuthValidation.PASSWORD);
+        if (password == null) return;
 
-        String name = getValidation("이름 : ", "^[a-zA-Z가-힣]+$", "이름 정규식 미통과", "회원가입이 취소되었습니다.");
-        if(name == null) return;
+        String name = validationUtils.getValidation(sc, AuthValidation.NAME);
+        if (name == null) return;
 
         admin = new Admin(name, userId, password, true);
         adminList.put(userId, admin);
@@ -83,7 +84,7 @@ public class AuthAdmin {
 
         // 확인용 출력
         adminList.entrySet().stream()
-                .forEach(entry -> System.out.println("관리자 ID : " + entry.getKey() + "  | admin 정보 : " + entry.getValue()));
+                .forEach(entry -> System.out.println("[확인용 출력] 관리자 ID : " + entry.getKey() + "  | admin 정보 : " + entry.getValue()));
     }
 
     public void login() {
@@ -97,7 +98,7 @@ public class AuthAdmin {
         while (true) {
             System.out.print("ID 입력 : ");
             userId = sc.nextLine();
-            if(userId.equals("취소")) return;
+            if (userId.equals("취소")) return;
 
             System.out.print("PW 입력 : ");
             password = sc.nextLine();
@@ -111,37 +112,11 @@ public class AuthAdmin {
             }
         }
 
-        // 확인용 출력
-        System.out.println("전체 관리자 정보 (확인용)");
-        adminList.entrySet().stream()
-                .forEach(entry -> System.out.println("관리자 ID : " + entry.getKey() + " | admin 정보 : " + entry.getValue()));
-
         // 현재 로그인한 관리자 정보 출력(확인용)
         System.out.println("현재 로그인한 관리자 정보 출력 : " + admin.toString());
 
         menuAdmin = new MenuAdmin();
         menuAdmin.run(admin);
-    }
-
-    /**
-     * 유효성 검사
-     */
-    private String getValidation(String inputMessage, String regex, String failMessage, String exitMessage) {
-        String input;
-        while (true) {
-            System.out.print(inputMessage);
-            input = sc.nextLine();
-            if ("취소".equals(input)) {
-                System.out.println(exitMessage);
-                return null;
-            }
-            if (!input.matches(regex)) {
-                System.out.println(failMessage);
-                continue;
-            }
-            break;
-        }
-        return input;
     }
 }
 
