@@ -1,4 +1,6 @@
 import java.lang.reflect.Array;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -303,12 +305,49 @@ public class MenuMember {
 
     // makeMyReservation 헬퍼 함수
     private String choosePeriod(){
-        // 유효성 검사 필요
-        System.out.print("시작날짜 => ex) 2024.04.26 >>> 번호입력 : ");
-        String start = sc.nextLine();
-        System.out.print("종료날짜 => ex) 2024.04.26 >>> 번호입력 : ");
-        String end = sc.nextLine();
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
+        Calendar calendar = Calendar.getInstance();
+        String today = dateFormat.format(new Date());
+        String start = null;
+        String end = null;
+        do {
+            // 시작 날짜 확인
+            System.out.print("시작날짜 => " + AuthValidation.DATE.getInputMessage());
+            start = sc.nextLine();
+            if (!isValidDate(start) || !start.matches(AuthValidation.DATE.getRegex())) {
+                System.out.println(AuthValidation.DATE.getFailureMessage());continue;
+            }
+            if( start.compareTo(today) <= 0) {
+                System.out.println("시작날짜는 오늘날짜보다 늦어야 합니다.");
+                continue;
+            }
+
+            // 종료 날짜 확인
+            System.out.print("종료날짜 => " + AuthValidation.DATE.getInputMessage());
+            end = sc.nextLine();
+
+            if (!isValidDate(end) || !end.matches(AuthValidation.DATE.getRegex())) {
+                System.out.println(AuthValidation.DATE.getFailureMessage()); continue;
+            }
+            if (end.compareTo(start) <= 0){
+                System.out.println("종료날짜는 시작날짜보다 늦어야 합니다."); continue;
+            }
+            break;
+        } while (true);
         return start + "~" + end;
+    }
+
+    // choosePeriod의 헬퍼성 함수 : 시간 정규식 유효성 검사
+    private boolean isValidDate(String date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
+        dateFormat.setLenient(false);
+        try {
+            dateFormat.parse(date);
+            return true;
+        } catch (ParseException e) {
+            return false;
+        }
     }
 
     public void getMyReservations(){

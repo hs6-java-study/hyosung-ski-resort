@@ -38,9 +38,6 @@ public class ManageDate {
         while (!currentDate.after(endDate)) {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd");
             String formattedDate = sdf.format(currentDate.getTime());
-
-            // 예약 희망 날짜
-            System.out.println(formattedDate);
             this.startEndDates.add(formattedDate);
             currentDate.add(Calendar.DATE, 1);
         }
