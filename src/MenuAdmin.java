@@ -90,7 +90,7 @@ public class MenuAdmin {
         } while (pointer != 5);
     }
 
-    public void getAllMemberListInfo() {
+    private void getAllMemberListInfo() {
         memberList = fileIo.memberListReader();
         if (memberList != null) {
             System.out.println("ID \t 전화번호 \t 등급 \t 포인트 \t");
@@ -101,7 +101,7 @@ public class MenuAdmin {
         }
     }
 
-    public void getOneMemberInfo() {
+    private void getOneMemberInfo() {
         memberList = fileIo.memberListReader();
         System.out.print("검색 하실 회원의 이름: ");
         String searchName = sc.nextLine();
@@ -123,7 +123,7 @@ public class MenuAdmin {
     }
 
 
-    public void deleteOneMember() {
+    private void deleteOneMember() {
         System.out.print("삭제할 회원의 이름: ");
         String deleteName = sc.nextLine();
         memberList = fileIo.memberListReader();
@@ -137,7 +137,7 @@ public class MenuAdmin {
         }
     }
 
-    public void getAllReservationInfo() {
+    private void getAllReservationInfo() {
         // 예약하기 제대로 안되서 미확인
         System.out.println("1. 무주점  2. 강촌점");
         int regionPointer = Integer.parseInt(sc.nextLine());
@@ -170,7 +170,7 @@ public class MenuAdmin {
         }
     }
 
-    public void getReservationInfoByOneMember() {
+    private void getReservationInfoByOneMember() {
         System.out.print("조회할 이름을 입력하세요 : ");
         String searchName = sc.nextLine();
         reservationList = fileIo.reservationListReader("muju");
@@ -214,14 +214,14 @@ public class MenuAdmin {
         }
     }
 
-    public void getAllProductInfo() {
+    private void getAllProductInfo() {
         productList = fileIo.ProductListReader();
         // 확인용 출력
         productList.entrySet().stream()
                 .forEach(entry -> System.out.println("[확인용 출력] " + entry.getKey() + " | product 정보 : " + entry.getValue()));
     }
 
-    public void addProduct() {
+    private void addProduct() {
         System.out.println("무주 / 강촌");
         System.out.print("원하는 장비의 지점을 입력하세요 : ");
         String regionInput = sc.nextLine();
@@ -252,7 +252,7 @@ public class MenuAdmin {
         }
     }
 
-    public void deleteProduct() {
+    private void deleteProduct() {
         System.out.println("무주 / 강촌");
         System.out.print("원하는 장비의 지점을 입력하세요 : ");
         String regionInput = sc.nextLine();
@@ -284,15 +284,15 @@ public class MenuAdmin {
 
     }
 
-    public void getAllReservationRevenue() {
+    private void getAllReservationRevenue() {
 
     }
 
-    public void getAllProductRevenue() {
+    private void getAllProductRevenue() {
 
     }
 
-    public static String numberGen(int len) {
+    private static String numberGen(int len) {
 
         Random rand = new Random();
         String numStr = "";
@@ -308,7 +308,7 @@ public class MenuAdmin {
         return numStr;
     }
 
-    public void combineAddProduct(String region ,String name) {
+    private void combineAddProduct(String region ,String name) {
         productList = fileIo.productListReader(name,region);
         if(productList != null && !productList.isEmpty()){
             productList.entrySet().stream()
@@ -346,7 +346,7 @@ public class MenuAdmin {
         fileIo.productListWriter(name, region, productList);
     }
 
-    public void combineDeleteProduct(String region, String name) {
+    private void combineDeleteProduct(String region, String name) {
         productList = fileIo.productListReader(name,region);
         if(productList != null && !productList.isEmpty()){
             productList.entrySet().stream()

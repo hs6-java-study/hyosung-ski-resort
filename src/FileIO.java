@@ -337,7 +337,7 @@ public class FileIO {
         if (eachFile.contains(region)) {
             for (String productFileName : productFileNames) {
                 File temp = new File(basePath + region + "/" + productFileName);
-                System.out.println(temp);
+//                System.out.println(temp);
                 if (temp.exists()) {
                     fis = new FileInputStream(temp);
                     bis = new BufferedInputStream(fis);

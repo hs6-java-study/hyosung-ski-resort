@@ -31,7 +31,7 @@ public class MenuMember {
         this.member = member;
         do{
             System.out.println("===== 회원 메뉴 =====");
-            System.out.println("1. 예약하기, 2. 예약취소, 3. 예약조회, 4. 로그아웃, 5. tmp_방 추가, 6. tmp_방 조회 7. 회원 탈퇴");
+            System.out.println("1. 예약하기, 2. 예약취소, 3. 예약조회, 4. 로그아웃, 5. tmp_방 추가, 6. tmp_방 조회");
             this.pointer = Integer.parseInt(sc.nextLine());
             switch (pointer) {
                 case 1:
@@ -52,9 +52,12 @@ public class MenuMember {
                 case 6:
                     tmp_checkRoom();
                     break;
-                case 7:
-                    deleteMemberInfoSelf(member);
-                    break;
+//                case 7:
+//                    editMemberInfoSelf(member);
+//                    break;
+//                case 8:
+//                    deleteMemberInfoSelf(member);
+//                    break;
                 default:
                     System.out.println("잘못된입력");
             }
@@ -335,21 +338,79 @@ public class MenuMember {
         }
     }
 
-    public void deleteMemberInfoSelf(Member member) {
-        System.out.println("Y/N");
-        System.out.println("회원 탈퇴 하시겠습니까?");
-        String answer = sc.nextLine();
-        if(answer.equalsIgnoreCase("Y")) {
-            memberList = fileIo.memberListReader();
-            boolean removed =  memberList.entrySet().removeIf(entry -> entry.getValue().getPhoneNumber().equals(member.getPhoneNumber()));
-            if(removed) {
-                System.out.println(member.getName() + " 회원의 정보가 성공적으로 삭제되었습니다.");
-                fileIo.memberListWriter(memberList); // 변경된 회원 목록을 파일에 다시 쓰기
-                System.out.println("시스템을 종료합니다.");
-                System.exit(0);
-            }
-        } else if( answer.equalsIgnoreCase("N")) {
-            System.out.println("이전 페이지로 돌아갑니다.");
-        }
-    }
+//    private void editMemberInfoSelf(Member member) {
+//        System.out.println("1. 비밀번호 / 2. 전화번호");
+//        System.out.print("수정하려는 정보를 입력 : ");
+//        int answer = Integer.parseInt(sc.nextLine());
+//        if(answer == 1) {
+//            memberList = fileIo.memberListReader();
+//            System.out.print("기존 비밀번호를 입력하세요: ");
+//            String oldPassword = sc.nextLine();
+//
+//            boolean found = false;
+//            for(Member m : memberList.values()) {
+//                if(m.getPhoneNumber().equals(member.getPhoneNumber())) {
+//                    if(m.getPassword().equals(oldPassword)) {
+//                        System.out.print("새로운 비밀번호를 입력하세요: ");
+//                        String newPassword = sc.nextLine();
+//                        m.setPassword(newPassword);
+//                        found = true;
+//                        break;
+//                    } else {
+//                        System.out.println("틀렸습니다.");
+//                    }
+//                }
+//            }
+//            if(found) {
+//                fileIo.memberListWriter(memberList);
+//                System.out.println(member.getName() + " 회원의 정보가 성공적으로 수정 되었습니다.");
+//                System.out.println("재접속 해주십시오.");
+//                System.exit(0);
+//            }
+//        } else if( answer == 2) {
+//            memberList = fileIo.memberListReader();
+//            System.out.print("기존 전화번호를 입력하세요: ");
+//            String oldPhoneNumber = sc.nextLine();
+//            boolean found = false;
+//            for(Member m : memberList.values()) {
+//                if(m.getPhoneNumber().equals(member.getPhoneNumber())) {
+//                    if(m.getPhoneNumber().equals(oldPhoneNumber)) {
+//                        System.out.print("새로운 전화번호를 입력하세요: ");
+//                        String newPhoneNumber = sc.nextLine();
+//                        m.setPhoneNumber(newPhoneNumber);
+//                        found = true;
+//                        break;
+//                    } else {
+//                        System.out.println("틀렸습니다.");
+//                    }
+//                }
+//            }
+//            if(found) {
+//                fileIo.memberListWriter(memberList); // 변경된 회원 목록을 파일에 다시 쓰기
+//                System.out.println(member.getName() + " 회원의 정보가 성공적으로 수정 되었습니다.");
+//                System.out.println("재접속 해주십시오.");
+//                System.exit(0);
+//            }
+//        } else {
+//            System.out.println("잘못된 입력");
+//        }
+//    }
+//
+//    private void deleteMemberInfoSelf(Member member) {
+//        System.out.println("Y/N");
+//        System.out.println("회원 탈퇴 하시겠습니까?");
+//        String answer = sc.nextLine();
+//        if(answer.equalsIgnoreCase("Y")) {
+//            memberList = fileIo.memberListReader();
+//            boolean removed =  memberList.entrySet().removeIf(entry -> entry.getValue().getPhoneNumber().equals(member.getPhoneNumber()));
+//            if(removed) {
+//                System.out.println(member.getName() + " 회원의 정보가 성공적으로 삭제되었습니다.");
+//                fileIo.memberListWriter(memberList); // 변경된 회원 목록을 파일에 다시 쓰기
+//                System.out.println("시스템을 종료합니다.");
+//                System.exit(0);
+//            }
+//        } else if( answer.equalsIgnoreCase("N")) {
+//            System.out.println("이전 페이지로 돌아갑니다.");
+//        }
+//    }
 }
