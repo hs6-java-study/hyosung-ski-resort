@@ -215,8 +215,10 @@ public class MenuAdmin {
     }
 
     public void getAllProductInfo() {
-        productList = fileIo.ProductListReader();
-        // 확인용 출력
+        productList = fileIo.AllProductListReader();
+        if(productList.isEmpty()) {
+            System.out.println("장비 목록이 존재하지 않습니다.");
+        }
         productList.entrySet().stream()
                 .forEach(entry -> System.out.println("[확인용 출력] " + entry.getKey() + " | product 정보 : " + entry.getValue()));
     }

@@ -2,7 +2,10 @@ import java.io.*;
 import java.util.*;
 
 public class FileIO {
-    final String basePath = "ResortData\\";
+//    final String basePath = "ResortData\\";
+
+    final String basePath = "/Users/som/SkiResort/";
+
     private FileOutputStream fos;
     private BufferedOutputStream bos;
     private ObjectOutputStream out;
@@ -148,7 +151,7 @@ public class FileIO {
 
     public void roomListWriter(String region, Map<Integer, Room> roomList) {
         try {
-            path = basePath + region + "\\";
+            path = basePath + region + "/";
             makeFolder(path);
             fos = new FileOutputStream(path + "roomData.txt");
             bos = new BufferedOutputStream(fos);
@@ -168,7 +171,7 @@ public class FileIO {
     }
 
     public Map roomListReader(String region) {
-        path = basePath + region + "\\";
+        path = basePath + region + "/";
         Map<Integer, Room> roomList = null;
         try {
             fis = new FileInputStream(path + "roomData.txt");
@@ -200,7 +203,7 @@ public class FileIO {
 
     public void reservationListWriter(String region, Map<Integer, Reservation> reservationList) {
         try {
-            path = basePath + region + "\\";
+            path = basePath + region + "/";
             makeFolder(path);
             fos = new FileOutputStream(path + "reservationData.txt");
             bos = new BufferedOutputStream(fos);
@@ -220,7 +223,7 @@ public class FileIO {
     }
 
     public Map<Integer, Reservation> reservationListReader(String region) {
-        path = basePath + region + "\\";
+        path = basePath + region + "/";
         Map<Integer, Reservation> reservationList = null;
         try {
             fis = new FileInputStream(path + "reservationData.txt");
@@ -247,7 +250,7 @@ public class FileIO {
 
     public void productListWriter(String productName, String region, Map product) {
         try {
-            path = basePath + region + "\\";
+            path = basePath + region + "/";
             makeFolder(path);
             fos = new FileOutputStream(path + productName + ".txt");
             bos = new BufferedOutputStream(fos);
@@ -269,7 +272,7 @@ public class FileIO {
     public <T> Map productListReader(String productName, String region) {
         Map<Integer, T> productList = null;
 
-        path = basePath + region + "\\";
+        path = basePath + region + "/";
         try {
             fis = new FileInputStream(path + productName + ".txt");
             bis = new BufferedInputStream(fis);
@@ -296,7 +299,7 @@ public class FileIO {
     /**
      * 장비 목록 전체 조회(지점까지)
      */
-    public Map<String, Product> ProductListReader() {
+    public Map<String, Product> AllProductListReader() {
         path = basePath;
         Map<String, Product> productList = new HashMap<String, Product>();
 
@@ -337,7 +340,6 @@ public class FileIO {
         if (eachFile.contains(region)) {
             for (String productFileName : productFileNames) {
                 File temp = new File(basePath + region + "/" + productFileName);
-                System.out.println(temp);
                 if (temp.exists()) {
                     fis = new FileInputStream(temp);
                     bis = new BufferedInputStream(fis);
@@ -355,14 +357,4 @@ public class FileIO {
             }
         }
     }
-
-    /**
-     * 장비 개수 추가
-     */
-
-
-    /**
-     * 장비 개수 삭제
-     */
-
 }
