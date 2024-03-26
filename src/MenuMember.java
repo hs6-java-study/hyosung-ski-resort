@@ -54,7 +54,7 @@ public class MenuMember {
                     tmp_checkRoom();
                     break;
 //                case 7:
-//                    editMemberInfoSelf(member);
+//                    deleteMemberInfoSelf(member);
 //                    break;
 //                case 8:
 //                    deleteMemberInfoSelf(member);
