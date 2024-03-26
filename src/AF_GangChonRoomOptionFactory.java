@@ -1,6 +1,6 @@
-package TestAF;
+import java.io.Serializable;
 
-public class GangChonRoomOptionFactory implements  RoomOptionFactory{
+public class AF_GangChonRoomOptionFactory implements AF_RoomOptionFactory, Serializable {
     public String BuyTv(){
         return "LGtv";
     }

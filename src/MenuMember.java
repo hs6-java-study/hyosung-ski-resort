@@ -38,6 +38,8 @@ public class MenuMember {
             System.out.println("\t\t\t\t\t\t\t\t2. 예약 취소" );
             System.out.println("\t\t\t\t\t\t\t\t3. 예약 조회" );
             System.out.println("\t\t\t\t\t\t\t\t4. 로그 아웃" );
+            System.out.println("\t\t\t\t\t\t\t\t5. 방생성 (임시)" );
+            System.out.println("\t\t\t\t\t\t\t\t6. 방확인 (임시)" );
             System.out.println("\t+———————————————————————————————————————————————————————————————————+");
             System.out.print("\t\t\t\t\t\t\t\t➤ 입력 : ");
             pointer = sc.nextLine();
@@ -55,7 +57,8 @@ public class MenuMember {
                     System.out.println(member.getUserId() + "님 로그아웃 되었습니다!");
                     break;
                 case "5":
-                    tmp_addRoom();
+//                    tmp_addRoom();
+                    AF_addRoom();
                     break;
                 case "6":
                     tmp_checkRoom();
@@ -104,7 +107,7 @@ public class MenuMember {
         }
 
         // 수정이 필요
-        room = new Room(this.region, reservationRoomNumber,this.capacity,this.roomList.get(reservationRoomNumber).getPrice());
+//        room = new Room(this.region, reservationRoomNumber,this.capacity,this.roomList.get(reservationRoomNumber).getPrice());
         Map<String,Product> rental = new HashMap<String,Product>();
         Reservation reservation = new Reservation(this.member, room, rental);
         int randomNumber = random.nextInt(100000000);
@@ -519,24 +522,50 @@ public class MenuMember {
         fileIo.productListWriter("Equipment",this.region,equipmentList);
     }
 
-    // 나중에 다른곳으로 빠질 애들
-    public void tmp_addRoom(){
-        System.out.println("방 만들기 Test");
-        System.out.print("지역(muju/gangchon) : ");
-        String region = sc.nextLine();
-        if(!fileIo.inRegion(region)) return;
-        System.out.print("몇호(숫자만) : ");
-        int roomNumber = Integer.parseInt(sc.nextLine());
-        System.out.print("인원(숫자만) : ");
-        int capacity = Integer.parseInt(sc.nextLine());
-        System.out.print("가격(숫자만) : ");
-        int price = Integer.parseInt(sc.nextLine());
+    public void AF_addRoom(){
+        System.out.print("1.무주 / 2.강촌 : ");
+        String where = sc.nextLine();
+        System.out.println("standard/deluxe/standard/Family");
+        String RoomType = sc.nextLine();
+        Room room = null;
 
-        Room room = new Room(region,roomNumber,capacity,price);
-        roomList = fileIo.roomListReader(region);
-        roomList.put(roomNumber,room);
-        fileIo.roomListWriter(region, roomList);
+        switch (where){
+            case "1":
+                AF_BuildRoom mjBuild = new AF_BuildMuJuRoom();
+                room = mjBuild.orderRoom(RoomType);
+                break;
+            case "2":
+                AF_BuildRoom gcBuild = new AF_BuildGangChonRoom();
+                room = gcBuild.orderRoom(RoomType);
+                break;
+            default:
+                System.out.println("잘못된 입력");
+        }
+
+        where = (where.equals("1") ? "muju" : "gangchon");
+        roomList = fileIo.roomListReader(where);
+        roomList.put(room.getRoomNumber(),room);
+        fileIo.roomListWriter(where, roomList);
     }
+
+    // 나중에 다른곳으로 빠질 애들
+//    public void tmp_addRoom(){
+//        System.out.println("방 만들기 Test");
+//        System.out.print("지역(muju/gangchon) : ");
+//        String region = sc.nextLine();
+//        if(!fileIo.inRegion(region)) return;
+//        System.out.print("몇호(숫자만) : ");
+//        int roomNumber = Integer.parseInt(sc.nextLine());
+//        System.out.print("인원(숫자만) : ");
+//        int capacity = Integer.parseInt(sc.nextLine());
+//        System.out.print("가격(숫자만) : ");
+//        int price = Integer.parseInt(sc.nextLine());
+//
+//        Room room = new Room(region,roomNumber,capacity,price);
+//        roomList = fileIo.roomListReader(region);
+//        roomList.put(roomNumber,room);
+//        fileIo.roomListWriter(region, roomList);
+//    }
 
     public void tmp_checkRoom(){
         System.out.println("방 데이터 Test");
