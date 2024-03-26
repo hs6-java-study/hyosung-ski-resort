@@ -16,25 +16,25 @@ public class AuthAdmin {
     }
 
     public void run() {
-        int pointer;
+        String pointer = null;
         do {
             admin = null;
             System.out.println("1. 관리자 로그인 / 2. 관리자 회원가입 / 3. 뒤로");
-            pointer = Integer.parseInt(sc.nextLine());
+            pointer = sc.nextLine();
             switch (pointer) {
-                case 1:
+                case "1":
                     login();
                     break;
-                case 2:
+                case "2":
                     signup();
                     break;
-                case 3:
+                case "3":
                     System.out.println("뒤로이동");
                     break;
                 default:
                     System.out.println("잘못된입력");
             }
-        } while (pointer != 3);
+        } while (!pointer.equals("3"));
     }
 
     public void signup() {
