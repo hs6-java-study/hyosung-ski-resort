@@ -3,6 +3,7 @@ import java.util.*;
 
 public class FileIO {
     final String basePath = "ResortData\\";
+//    final String basePath = "/Users/som/SkiResort/";
     private Map<String, Boolean> regions;
     private String path;
 
@@ -55,7 +56,7 @@ public class FileIO {
             memberList = (HashMap) in.readObject();
 
         } catch (FileNotFoundException e) {
-            System.out.println("파일이 존재하지 않아서 생성");
+            System.out.println("파일이 존재하지 않습니다.");
             return new HashMap<String, Member>();
         } catch (Exception e) {
             e.printStackTrace();
@@ -85,7 +86,7 @@ public class FileIO {
         ) {
             adminList = (HashMap) in.readObject();
         } catch (FileNotFoundException e) {
-            System.out.println("파일이 존재하지 않아서 생성");
+            System.out.println("파일이 존재하지 않습니다.");
             return new HashMap<String, Admin>();
         } catch (Exception e) {
             e.printStackTrace();
@@ -117,7 +118,7 @@ public class FileIO {
         ) {
             roomList = (HashMap) in.readObject();
         } catch (FileNotFoundException e) {
-            System.out.println("파일이 존재하지 않아서 생성");
+            System.out.println("파일이 존재하지 않습니다.");
             return new HashMap<Integer, Room>();
         } catch (Exception e) {
             e.printStackTrace();
@@ -149,7 +150,7 @@ public class FileIO {
         ) {
             reservationList = (HashMap) in.readObject();
         } catch (FileNotFoundException e) {
-            System.out.println("파일이 존재하지 않아요");
+            System.out.println("파일이 존재하지 않습니다.");
             return new HashMap<Integer, Reservation>();
         } catch (Exception e) {
             e.printStackTrace();
@@ -182,7 +183,7 @@ public class FileIO {
         ) {
             productList = (HashMap) in.readObject();
         } catch (FileNotFoundException e) {
-            System.out.println("파일이 존재하지 않아요");
+            System.out.println("파일이 존재하지 않습니다.");
             return null;
         } catch (Exception e) {
             e.printStackTrace();
@@ -211,7 +212,7 @@ public class FileIO {
             }
             return productList;
         } catch (FileNotFoundException e) {
-            System.out.println("파일이 존재하지 않아요");
+            System.out.println("파일이 존재하지 않습니다.");
             return null;
         } catch (Exception e) {
             e.printStackTrace();
