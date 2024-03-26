@@ -7,6 +7,7 @@ public enum AnsiColor {
     BLUE("\u001B[34m"),
     PURPLE("\u001B[35m"),
     CYAN("\u001B[36m"),
+    LINE("\u001B[35m"),
     WHITE("\u001B[37m"),
     BLACK_BACKGROUND("\u001B[40m"),
     RED_BACKGROUND("\u001B[41m"),
@@ -55,6 +56,10 @@ public enum AnsiColor {
     public static String cyan(String content) {
         return AnsiColor.CYAN.getCode() + content + AnsiColor.RESET.getCode();
     }
+    public static String line(String content) {
+        return AnsiColor.LINE.getCode() + content + AnsiColor.RESET.getCode();
+    }
+
 
     public static String white(String content) {
         return AnsiColor.WHITE.getCode() + content + AnsiColor.RESET.getCode();

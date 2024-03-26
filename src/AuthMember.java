@@ -18,14 +18,14 @@ public class AuthMember {
         String pointer = null;
         do {
             member = null;
-            System.out.println();
-            System.out.println("\t\t\t\t\t\t\t\t< 회원 접속 >");
+            System.out.println("\n");
+            System.out.println(AnsiColor.line("\t\t\t\t\t\t\t\t< 회원 접속 >"));
             System.out.println("\t〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓");
             System.out.println("\t\t\t\t\t\t\t\t1. 회원 로그인   " );
             System.out.println("\t\t\t\t\t\t\t\t2. 회원 회원가입  " );
             System.out.println("\t\t\t\t\t\t\t\t3. 뒤로 이동" );
             System.out.println("\t〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓");
-            System.out.print("\t\t\t\t\t\t\t\t입력 : ");
+            System.out.print("\t\t\t\t\t\t\t\t➤ 입력 : ");
             pointer = sc.nextLine();
             switch (pointer) {
                 case "1":
@@ -89,7 +89,7 @@ public class AuthMember {
 
         System.out.println();
         System.out.println("\t\t\t\t\t\t\t\t< 회원 로그인 >");
-        System.out.println(AnsiCo"\t\t\t\t\t\t\t-뒤로가려면 \"X\"를 입력해주세요-\n");
+        System.out.println(AnsiColor.yellow("\t\t\t\t\t\t-뒤로가려면 \"X\"를 입력해주세요-\n"));
 
         while (true) {
             System.out.print("ID 입력 : ");
