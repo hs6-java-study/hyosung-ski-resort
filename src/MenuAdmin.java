@@ -1,6 +1,5 @@
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.sql.SQLOutput;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -11,9 +10,10 @@ public class MenuAdmin {
     public FileIO fileIo;
     Map<String, Member> memberList;
     Map<Integer, Reservation> reservationList;
-    Map<String, Helmet> helmetList;
-    Map<String, Clothes> clothesList;
-    Map<String, Equipment> equipmentList;
+    ValidationUtils validationUtils;
+//    Map<String, Helmet> helmetList;
+//    Map<String, Clothes> clothesList;
+//    Map<String, Equipment> equipmentList;
 
     Map<String, Product> productList;
 
@@ -26,7 +26,7 @@ public class MenuAdmin {
         this.admin = admin;
         String pointer = null;
         do {
-            System.out.println("1. 회원 관리, 2. 예약 내역 관리, 3. 장비 관리, 4. 매출 조회, 5. 로그아웃");
+            System.out.println( "1. 회원 관리, 2. 예약 내역 관리, 3. 장비 관리, 4. 매출 조회, 5. 로그아웃" );
             pointer = sc.nextLine();
             switch (pointer) {
                 case "1": {
@@ -96,9 +96,21 @@ public class MenuAdmin {
     private void getAllMemberListInfo() {
         memberList = fileIo.memberListReader();
         if (memberList != null) {
-            System.out.println("ID \t 전화번호 \t 등급 \t 포인트 \t 예약리스트");
+            System.out.println(
+                    "----------------------------------------------------------------------------------------");
+            // 테이블 헤더 출력
+            System.out.format("%-7s \t %-9s \t %-15s \t %-7s \t %-10s \t %s\n", "이름", "아이디" , "전화번호", "등급", "포인트", "남은 예약 건수");
+            System.out.println(
+                    "----------------------------------------------------------------------------------------");
+            // 회원 정보 출력
             memberList.entrySet().stream()
-                    .forEach(entry -> System.out.println(entry.getValue().getName() + "\t" + entry.getValue().getPhoneNumber() + "\t" + entry.getValue().getGrade() + "\t" + entry.getValue().getPoint()+ "\t" +entry.getValue().getReservationNumberList()));
+                    .forEach(entry -> System.out.format("%-7s \t %-13s \t %-15s \t %-7s \t %-10d \t %s\n",
+                            entry.getValue().getName(),
+                            entry.getValue().getUserId(),
+                            entry.getValue().getPhoneNumber(),
+                            entry.getValue().getGrade(),
+                            entry.getValue().getPoint(),
+                            entry.getValue().getReservationNumberList().toString()));
         } else {
             System.out.println("회원 정보가 없습니다.");
         }
@@ -106,20 +118,26 @@ public class MenuAdmin {
 
     private void getOneMemberInfo() {
         memberList = fileIo.memberListReader();
-        System.out.print("검색 하실 회원의 이름: ");
-        String searchName = sc.nextLine();
-        System.out.println("삭제할 회원의 전화번호 뒤 네자리");
-        String phoneNumLastFour = sc.nextLine();
+        validationUtils = new ValidationUtils();
+        String searchInfo = validationUtils.getValidation(sc, AuthValidation.SEARCH_MEMBER_INFO);
+        String [] splitInfo = searchInfo.split("/");
+        String searchName = splitInfo[0].trim();
+        String phoneNumLastFour = splitInfo[1].trim();
+
         boolean isEmptySearchedMemberByName = memberList.entrySet().stream().anyMatch(entry -> entry.getValue().getName().equals(searchName) && entry.getValue().getPhoneNumber().endsWith(phoneNumLastFour));
 
         if (isEmptySearchedMemberByName) {
-            System.out.println("ID \t 전화번호 \t 등급 \t 포인트 \t");
-
+            System.out.println(
+                    "-----------------------------------------------------------------------------");
+            System.out.format("%-8s  %-11s  %-5s  %-9s\n", "아이디", "전화번호", "등급", "포인트");
+            System.out.println(
+                    "-----------------------------------------------------------------------------");
             memberList.entrySet().stream()
                     .filter(entry -> entry.getValue().getName().equals(searchName))
-                    .forEach(entry -> System.out.println(entry.getKey() + "\t" +
-                            entry.getValue().getPhoneNumber() + "\t" +
-                            entry.getValue().getGrade() + "\t" +
+                    .forEach(entry -> System.out.format("%-10s  %-13s  %-6s  %-10d\n",
+                            entry.getKey(),
+                            entry.getValue().getPhoneNumber(),
+                            entry.getValue().getGrade(),
                             entry.getValue().getPoint()));
         } else {
             System.out.println("일치하는 회원 정보가 없습니다.");
@@ -128,22 +146,22 @@ public class MenuAdmin {
 
 
     private void deleteOneMember() {
-        System.out.print("삭제할 회원의 이름: ");
-        String deleteName = sc.nextLine();
-        System.out.println("삭제할 회원의 전화번호 뒤 네자리");
-        String phoneNumLastFour = sc.nextLine();
+        validationUtils = new ValidationUtils();
+        String searchInfo = validationUtils.getValidation(sc, AuthValidation.SEARCH_MEMBER_INFO);
+        String [] splitInfo = searchInfo.split("/");
+        String searchName = splitInfo[0].trim();
+        String phoneNumLastFour = splitInfo[1].trim();
         memberList = fileIo.memberListReader();
-        boolean removed = memberList.entrySet().removeIf(entry -> entry.getValue().getName().equals(deleteName) && entry.getValue().getPhoneNumber().endsWith(phoneNumLastFour));
+        boolean removed = memberList.entrySet().removeIf(entry -> entry.getValue().getName().equals(searchName) && entry.getValue().getPhoneNumber().endsWith(phoneNumLastFour));
         if (removed) {
-            System.out.println(deleteName + " 회원의 정보가 성공적으로 삭제되었습니다.");
+            System.out.println(searchName + " 회원의 정보가 성공적으로 삭제되었습니다.");
             fileIo.memberListWriter(memberList); // 변경된 회원 목록을 파일에 다시 쓰기
         } else {
-            System.out.println(deleteName + " 회원을 찾을 수 없습니다.");
+            System.out.println(searchName + " 회원을 찾을 수 없습니다.");
         }
     }
 
     private void getAllReservationInfo() {
-        // 예약하기 제대로 안되서 미확인
         System.out.println("1. 무주점  2. 강촌점");
         String regionPointer = sc.nextLine();
         switch (regionPointer) {
@@ -159,16 +177,13 @@ public class MenuAdmin {
                 System.out.println("잘못된 입력"); return;
         }
         if (reservationList != null && !reservationList.isEmpty()) {
-            System.out.println("예약 ID \t 이름 \t 방 번호 \t 예약 금액 \t 예약 날짜 \t 예약 시간");
+            System.out.println("이름 \t 예약자 아이디 \t 방 번호 \t 예약 금액 \t 예약 날짜 ");
             reservationList.values().forEach(reservation -> {
-                System.out.println(reservation.getMember().getUserId() + "\t" +
-                        reservation.getMember().getName() + "\t" +
-                        reservation.getRoom().getReservationDates() + "\t" +
+                System.out.println(reservation.getMember().getName() + "\t" +
+                        reservation.getMember().getUserId() + "\t" +
                         reservation.getRoom().getRoomNumber() + "\t" +
-                        reservation.getRoom().getPrice());
-//                        reservation.getProducts().stream()
-//                                .map(product -> product.getRentalDates() + " ")
-//                                .collect(Collectors.joining(", ")));
+                        reservation.getRoom().getPrice() + "\t" +
+                        reservation.getRoom().getReservationDates());
             });
         } else {
             System.out.println("예약 내역이 없습니다.");
@@ -387,7 +402,7 @@ public class MenuAdmin {
             int grandTotalRevenue = 0;
             Calendar startDate = Calendar.getInstance();
             Calendar endDate = Calendar.getInstance();
-            
+
             System.out.println("조회하려는 첫 날짜 입력 2024.04.01");
             startDate.setTime(sdf.parse(sc.nextLine()));
 
@@ -406,19 +421,19 @@ public class MenuAdmin {
                 int revenue = reservation.getRoom().getReservationDates().entrySet().stream()
                         .filter(entry -> {
                             try {
-                                    Calendar reservationDate = Calendar.getInstance();
-                                    reservationDate.setTime(sdf.parse(entry.getKey()));
-                                    return !reservationDate.before(startDate) && reservationDate.before(endDate);
+                                Calendar reservationDate = Calendar.getInstance();
+                                reservationDate.setTime(sdf.parse(entry.getKey()));
+                                return !reservationDate.before(startDate) && reservationDate.before(endDate);
                             } catch (Exception e) {
-                                    e.printStackTrace();
-                                    return false;
+                                e.printStackTrace();
+                                return false;
                             }})
-                            .mapToInt(entry -> entry.getValue() ? reservation.getRoom().getPrice() : 0)
-                            .sum();
+                        .mapToInt(entry -> entry.getValue() ? reservation.getRoom().getPrice() : 0)
+                        .sum();
 
                 totalRevenue += revenue;
-                }
-                grandTotalRevenue += totalRevenue;
+            }
+            grandTotalRevenue += totalRevenue;
             System.out.println("숙박 매출 총합 : " + grandTotalRevenue);
         } catch (ParseException e) {
             System.out.println("날짜 형식이 잘못되었습니다. 올바른 날짜 형식으로 입력해주세요.");
@@ -435,12 +450,12 @@ public class MenuAdmin {
 
         for(int i=0;i<len;i++) {
             String ran = Integer.toString(rand.nextInt(10));
-                if(!numStr.contains(ran)) {
-                    numStr += ran;
-                } else {
-                    i-=1;
-                }
+            if(!numStr.contains(ran)) {
+                numStr += ran;
+            } else {
+                i-=1;
             }
+        }
         return numStr;
     }
 
@@ -456,50 +471,23 @@ public class MenuAdmin {
         String size = null;
         int howMany = 0;
         int price = 0;
+        validationUtils = new ValidationUtils();
 
         if(name.equals("Equipment")) {
-            while(true) {
-                System.out.println("추가할 "+ name + " 개수 / 가격");
-                System.out.println("2/5000");
-                String[] productInput = sc.nextLine().split("/");
-                if(productInput.length == 2) {
-                    try {
-                        howMany = Integer.parseInt(productInput[0].trim());
-                        price = Integer.parseInt(productInput[1].trim());
-                        size = "Free";
-                        break;
-                    } catch(NumberFormatException e) {
-                        System.out.println("잘못된 입력입니다. 숫자를 입력해주세요.");
-                    }
-                } else {
-                    System.out.println("입력 형식이 잘못되었습니다. 다시 입력해주세요.");
-                }
-            }
+                String searchInfo = validationUtils.getValidation(sc, AuthValidation.EQUIPMENT_ADD);
+                String [] productInput = searchInfo.split("/");
+                howMany = Integer.parseInt(productInput[0].trim());
+                price = Integer.parseInt(productInput[1].trim());
+                size = "Free";
         } else if(name.equals("Helmet") || name.equals("Clothes")){
-            while (true) {
-                System.out.println("추가할 "+ name + " 사이즈 / 개수 / 가격");
-                System.out.println("s/2/5000");
-                String[] productInput = sc.nextLine().split("/");
-                if(productInput.length == 3) {
-                    try {
-                        String inputSize = productInput[0].trim().toUpperCase();
-                        if(Arrays.asList("S", "M", "L").contains(inputSize)) {
-                            size = inputSize;
-                            howMany = Integer.parseInt(productInput[1].trim());
-                            price = Integer.parseInt(productInput[2].trim());
-                            break;
-                        } else {
-                            System.out.println("사이즈는 S, M, L 중 하나여야 합니다.");
-                        }
-                    } catch(NumberFormatException e) {
-                        System.out.println("잘못된 입력입니다. 숫자를 입력해주세요.");
-                    }
-                } else {
-                    System.out.println("입력 형식이 잘못되었습니다. 다시 입력해주세요.");
-                }
-            }
+                String searchInfo = validationUtils.getValidation(sc, AuthValidation.HELMET_CLOTHES_ADD);
+                String [] productInput = searchInfo.split("/");
+                size = productInput[0].trim().toUpperCase();
+                howMany = Integer.parseInt(productInput[1].trim());
+                price = Integer.parseInt(productInput[2].trim());
         } else {
             System.out.println("잘못된 입력");
+            return;
         }
         for(int i = 0; i < howMany; i++) {
             productList.put(numberGen(4), new Product(Integer.parseInt(numberGen(4)),size,price,new HashMap<String, Boolean>()));
@@ -551,6 +539,5 @@ public class MenuAdmin {
                 System.out.println("올바른 고유번호를 입력해주세요.");
             }
         } while (exitDeleteProduct);
-
     }
 }
