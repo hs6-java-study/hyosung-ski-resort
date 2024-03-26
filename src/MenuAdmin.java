@@ -1,3 +1,4 @@
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.sql.SQLOutput;
 import java.text.SimpleDateFormat;
@@ -8,7 +9,6 @@ public class MenuAdmin {
     private Admin admin;
     public Scanner sc;
     public FileIO fileIo;
-    private int pointer;
     Map<String, Member> memberList;
     Map<Integer, Reservation> reservationList;
     Map<String, Helmet> helmetList;
@@ -24,18 +24,19 @@ public class MenuAdmin {
 
     public void run(Admin admin) {
         this.admin = admin;
+        String pointer = null;
         do {
-            System.out.println("1. 회원 관리, 2. 예약 내역 관리, 3. 장비 관리, 4. 매출 조회, 5. 종료");
-            pointer = Integer.parseInt(sc.nextLine());
+            System.out.println("1. 회원 관리, 2. 예약 내역 관리, 3. 장비 관리, 4. 매출 조회, 5. 로그아웃");
+            pointer = sc.nextLine();
             switch (pointer) {
-                case 1: {
+                case "1": {
                     System.out.println("1. 회원 전체 조회, 2. 회원 정보 검색, 3. 회원 탈퇴 처리");
-                    int pointerMemberManage = Integer.parseInt(sc.nextLine());
-                    if (pointerMemberManage == 1) {
+                    String pointerMemberManage = sc.nextLine();
+                    if (pointerMemberManage.equals("1")) {
                         getAllMemberListInfo();
-                    } else if (pointerMemberManage == 2) {
+                    } else if (pointerMemberManage.equals("2")) {
                         getOneMemberInfo();
-                    } else if (pointerMemberManage == 3) {
+                    } else if (pointerMemberManage.equals("3")) {
                         deleteOneMember();
                     } else {
                         System.out.println("잘못된 입력");
@@ -43,38 +44,38 @@ public class MenuAdmin {
                     break;
                 }
 
-                case 2: {
+                case "2": {
                     System.out.println("1. 예약 목록 전체 조회, 2. 특정 회원 예약내역 조회");
-                    int pointerReservationManage = Integer.parseInt(sc.nextLine());
-                    if (pointerReservationManage == 1) {
+                    String pointerReservationManage = sc.nextLine();
+                    if (pointerReservationManage.equals("1")) {
                         getAllReservationInfo();
-                    } else if (pointerReservationManage == 2) {
+                    } else if (pointerReservationManage.equals("2")) {
                         getReservationInfoByOneMember();
                     } else {
                         System.out.println("잘못된 입력");
                     }
                     break;
                 }
-                case 3: {
+                case "3": {
                     System.out.println("1. 대여 장비 전체 재고 조회, 2. 장비 개수 추가, 3. 장비 개수 삭제");
-                    int pointerProductManage = Integer.parseInt(sc.nextLine());
-                    if (pointerProductManage == 1) {
+                    String pointerProductManage = sc.nextLine();
+                    if (pointerProductManage.equals("1")) {
                         getAllProductInfo();
-                    } else if (pointerProductManage == 2) {
+                    } else if (pointerProductManage.equals("2")) {
                         addProduct();
-                    } else if (pointerProductManage == 3) {
+                    } else if (pointerProductManage.equals("3")) {
                         deleteProduct();
                     } else {
                         System.out.println("잘못된 입력");
                     }
                     break;
                 }
-                case 4: {
+                case "4": {
                     System.out.println("1. 숙박 매출 조회, 2. 대여 장비 매출 조회");
-                    int pointerRevenueManage = Integer.parseInt(sc.nextLine());
-                    if (pointerRevenueManage == 1) {
+                    String pointerRevenueManage = sc.nextLine();
+                    if (pointerRevenueManage.equals("1")) {
                         getAllReservationRevenue();
-                    } else if (pointerRevenueManage == 2) {
+                    } else if (pointerRevenueManage.equals("2")) {
                         getAllProductRevenue();
                     } else {
                         System.out.println("잘못된 입력");
@@ -82,15 +83,14 @@ public class MenuAdmin {
                     break;
                 }
 
-                case 5: {
-                    System.out.println("시스템을 종료합니다.");
-                    System.exit(0);
+                case "5": {
+                    System.out.println(admin.getUserId() + "님 로그아웃 되었습니다!");
                     break;
                 }
                 default:
                     System.out.println("잘못된 입력");
             }
-        } while (pointer != 5);
+        } while (!pointer.equals("5"));
     }
 
     private void getAllMemberListInfo() {
@@ -227,28 +227,28 @@ public class MenuAdmin {
     }
 
     private void addProduct() {
-        System.out.println("무주 / 강촌");
+        System.out.println("1. 무주 / 2. 강촌");
         System.out.print("원하는 장비의 지점을 입력하세요 : ");
         String regionInput = sc.nextLine();
         String region = null;
-        if( regionInput.equals("무주")) {
+        if( regionInput.equals("1")) {
             region = "muju";
-        } else if ( regionInput.equals("강촌")) {
+        } else if ( regionInput.equals("2")) {
             region = "gangchon";
         } else {
             System.out.println("잘못된 입력");
             return;
         }
         System.out.println("1. 헬멧 \t 2. 의류 \t 3. 장비");
-        int productPointer = Integer.parseInt(sc.nextLine());
+        String productPointer = sc.nextLine();
         switch (productPointer) {
-            case 1 :{
+            case "1" :{
                 combineAddProduct(region , "Helmet");
                 break;}
-            case 2 : {
+            case "2" : {
                 combineAddProduct(region , "Clothes");
                 break;}
-            case 3 :{
+            case "3" :{
                 combineAddProduct(region , "Equipment");
                 break;}
             default: {
@@ -259,28 +259,28 @@ public class MenuAdmin {
     }
 
     private void deleteProduct() {
-        System.out.println("무주 / 강촌");
+        System.out.println("1. 무주 / 2. 강촌");
         System.out.print("원하는 장비의 지점을 입력하세요 : ");
         String regionInput = sc.nextLine();
         String region = null;
-        if( regionInput.equals("무주")) {
+        if( regionInput.equals("1")) {
             region = "muju";
-        } else if ( regionInput.equals("강촌")) {
+        } else if ( regionInput.equals("2")) {
             region = "gangchon";
         } else {
             System.out.println("잘못된 입력");
             return;
         }
         System.out.println("1. 헬멧 \t 2. 의류 \t 3. 장비");
-        int productPointer = Integer.parseInt(sc.nextLine());
+        String productPointer = sc.nextLine();
         switch (productPointer) {
-            case 1 :{
+            case "1" :{
                 combineDeleteProduct(region, "Helmet");
                 break;}
-            case 2 : {
+            case "2" : {
                 combineDeleteProduct(region, "Clothes");
                 break;}
-            case 3 :{
+            case "3" :{
                 combineDeleteProduct(region, "Equipment");
                 break;}
             default: {
@@ -292,13 +292,13 @@ public class MenuAdmin {
     }
 
     private void getAllReservationRevenue() {
-        System.out.println("1. 무주점 \t 2. 강촌점");
+        System.out.println("1. 무주점 / 2. 강촌점");
         System.out.print("숙박 매출을 보고싶은 지점을 입력 : ");
-        int revenuePointer = Integer.parseInt(sc.nextLine());
+        String revenuePointer = sc.nextLine();
         String region = null;
-        if(revenuePointer == 1) {
+        if(revenuePointer.equals("1")) {
             region = "muju";
-        } else if (revenuePointer == 2) {
+        } else if (revenuePointer.equals("2")) {
             region = "gangchon";
         } else {
             System.out.println("잘못된 입력");
@@ -343,11 +343,11 @@ public class MenuAdmin {
     private void getAllProductRevenue() {
         System.out.println("1. 무주점 \t 2. 강촌점");
         System.out.print("숙박 매출을 보고싶은 지점을 입력 : ");
-        int revenuePointer = Integer.parseInt(sc.nextLine());
+        String revenuePointer = sc.nextLine();
         String region = null;
-        if(revenuePointer == 1) {
+        if(revenuePointer.equals("1")) {
             region = "muju";
-        } else if (revenuePointer == 2) {
+        } else if (revenuePointer.equals("2")) {
             region = "gangchon";
         } else {
             System.out.println("잘못된 입력");
@@ -379,16 +379,24 @@ public class MenuAdmin {
 
     private void getSpecificReservationRevenue(String region) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd");
+        sdf.setLenient(false);
 
         try {
             int grandTotalRevenue = 0;
             Calendar startDate = Calendar.getInstance();
             Calendar endDate = Calendar.getInstance();
+            
             System.out.println("조회하려는 첫 날짜 입력 2024.04.01");
             startDate.setTime(sdf.parse(sc.nextLine()));
+
             System.out.println("조회하려는 마지막 날짜 입력 2024.04.03");
             endDate.setTime(sdf.parse(sc.nextLine()));
-            endDate.add(Calendar.DATE, 1);
+            if (!startDate.before(endDate)) {
+                System.out.println("시작 날짜가 마지막 날짜보다 뒤에 있습니다. 다시 입력해 주십시오.");
+                return; // 함수 종료
+            }
+            endDate.add(Calendar.DATE, 1); // 마지막 날짜를 포함 안시켜서 1일 더해줌
+
             int totalRevenue = 0;
             Map<Integer, Reservation> reservationList = fileIo.reservationListReader(region);
 
@@ -410,7 +418,9 @@ public class MenuAdmin {
                 }
                 grandTotalRevenue += totalRevenue;
             System.out.println("숙박 매출 총합 : " + grandTotalRevenue);
-        } catch (Exception e) {
+        } catch (ParseException e) {
+            System.out.println("날짜 형식이 잘못되었습니다. 올바른 날짜 형식으로 입력해주세요.");
+        }catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -446,23 +456,48 @@ public class MenuAdmin {
         int price = 0;
 
         if(name.equals("Equipment")) {
-            System.out.println("추가할 "+ name + " 개수 / 가격");
-            System.out.println("2/5000");
-            String[] productInput = sc.nextLine().split("/");
-            size = "Free";
-            howMany = Integer.parseInt(productInput[0].trim());
-            price = Integer.parseInt(productInput[1].trim());
-
-        } else {
-            System.out.println("추가할 "+ name + " 사이즈 / 개수 / 가격");
-            System.out.println("s/2/5000");
-            String[] productInput = sc.nextLine().split("/");
-            String inputSize = productInput[0].trim().toUpperCase();
-            if(Arrays.asList("S", "M", "L").contains(inputSize)) {
-                size = inputSize;
+            while(true) {
+                System.out.println("추가할 "+ name + " 개수 / 가격");
+                System.out.println("2/5000");
+                String[] productInput = sc.nextLine().split("/");
+                if(productInput.length == 2) {
+                    try {
+                        howMany = Integer.parseInt(productInput[0].trim());
+                        price = Integer.parseInt(productInput[1].trim());
+                        size = "Free";
+                        break;
+                    } catch(NumberFormatException e) {
+                        System.out.println("잘못된 입력입니다. 숫자를 입력해주세요.");
+                    }
+                } else {
+                    System.out.println("입력 형식이 잘못되었습니다. 다시 입력해주세요.");
+                }
             }
-            howMany = Integer.parseInt(productInput[1].trim());
-            price = Integer.parseInt(productInput[2].trim());
+        } else if(name.equals("Helmet") || name.equals("Clothes")){
+            while (true) {
+                System.out.println("추가할 "+ name + " 사이즈 / 개수 / 가격");
+                System.out.println("s/2/5000");
+                String[] productInput = sc.nextLine().split("/");
+                if(productInput.length == 3) {
+                    try {
+                        String inputSize = productInput[0].trim().toUpperCase();
+                        if(Arrays.asList("S", "M", "L").contains(inputSize)) {
+                            size = inputSize;
+                            howMany = Integer.parseInt(productInput[1].trim());
+                            price = Integer.parseInt(productInput[2].trim());
+                            break;
+                        } else {
+                            System.out.println("사이즈는 S, M, L 중 하나여야 합니다.");
+                        }
+                    } catch(NumberFormatException e) {
+                        System.out.println("잘못된 입력입니다. 숫자를 입력해주세요.");
+                    }
+                } else {
+                    System.out.println("입력 형식이 잘못되었습니다. 다시 입력해주세요.");
+                }
+            }
+        } else {
+            System.out.println("잘못된 입력");
         }
         for(int i = 0; i < howMany; i++) {
             productList.put(numberGen(4), new Product(Integer.parseInt(numberGen(4)),size,price,new HashMap<String, Boolean>()));
@@ -471,34 +506,49 @@ public class MenuAdmin {
     }
 
     private void combineDeleteProduct(String region, String name) {
-        productList = fileIo.productListReader(name,region);
-        if(productList != null && !productList.isEmpty()){
-            productList.entrySet().stream()
-                    .forEach(entry -> System.out.println("[확인용 출력] getKey : " + entry.getKey() + "  | getValue : " + entry.getValue()));
-        } else {
-            System.out.println("등록된 재고가 없습니다.");
-            return;
-        }
-        System.out.print("삭제할 헬멧 고유번호 : ");
-        String inputSerialNum = sc.nextLine();
-        try {
-            if(productList.containsKey(inputSerialNum)) {
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
-                String today = dateFormat.format(new Date());
-                for (Map.Entry<String, Boolean> d : productList.get(inputSerialNum).getRentalDates().entrySet()){
-                    if(d.getKey().compareTo(today) > 0){
-                        System.out.println("예약이 있는 상품은 삭제가 불가능");
-                        return;
+        boolean exitDeleteProduct = true;
+        do {
+            productList = fileIo.productListReader(name,region);
+            if(productList != null && !productList.isEmpty()){
+                productList.entrySet().stream()
+                        .forEach(entry -> System.out.println("[확인용 출력] getKey : " + entry.getKey() + "  | getValue : " + entry.getValue()));
+            } else {
+                System.out.println("등록된 재고가 없습니다.");
+                return;
+            }
+            System.out.print("삭제할 " + name + " 고유번호 : ");
+            String inputSerialNum = sc.nextLine();
+            try {
+                if(productList.containsKey(inputSerialNum)) {
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
+                    String today = dateFormat.format(new Date());
+                    for (Map.Entry<String, Boolean> d : productList.get(inputSerialNum).getRentalDates().entrySet()){
+                        if(d.getKey().compareTo(today) > 0){
+                            System.out.println("예약이 있는 상품은 삭제가 불가능");
+                            return;
+                        }
+                    }
+                    productList.remove(inputSerialNum);
+                    fileIo.productListWriter(name, region, productList);
+                    System.out.println(inputSerialNum + " 번호의 " + name + "이 삭제되었습니다.");
+                    System.out.println("계속 하시려면 0, 나가려면 엔터");
+                    if(sc.nextLine().equals("0")) {
+                        exitDeleteProduct = true;
+                    } else {
+                        exitDeleteProduct = false;
+                    }
+                } else {
+                    System.out.println("해당 번호의 "+ name + "이 존재하지 않습니다. 계속 하려면 0 , 나가려면 엔터");
+                    if(sc.nextLine().equals("0")) {
+                        exitDeleteProduct = true;
+                    } else {
+                        exitDeleteProduct = false;
                     }
                 }
-                productList.remove(inputSerialNum);
-                fileIo.productListWriter(name, region, productList);
-                System.out.println(inputSerialNum + " 번호의 "+ name +"이 삭제되었습니다.");
-            } else {
-                System.out.println("해당 번호의 "+name+"이 존재하지 않습니다.");
+            } catch(NumberFormatException e) {
+                System.out.println("올바른 고유번호를 입력해주세요.");
             }
-        } catch(NumberFormatException e) {
-            System.out.println("올바른 고유번호를 입력해주세요.");
-        }
+        } while (exitDeleteProduct);
+
     }
 }
