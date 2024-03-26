@@ -20,4 +20,10 @@ public abstract class RoomTest {
         this.reservationDates = new HashMap<String,Boolean>();
     }
     abstract void prepare();
+
+    // 자동으로 호수 안겹치게 설정해주는 logic 필요
+    public int makeRoomNumber(String region){
+
+        return 8;
+    }
 }

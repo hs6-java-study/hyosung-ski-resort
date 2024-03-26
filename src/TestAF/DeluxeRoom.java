@@ -13,5 +13,6 @@ public class DeluxeRoom extends RoomTest {
         roomType = "TestAF.DeluxeRoom";
         capacity = 3;
         price = 150_000;
+        roomNumber = makeRoomNumber(region);
     }
 }
