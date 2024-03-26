@@ -1,9 +1,9 @@
 package TestAF;
 
-public class BuildHigh1Room extends BuildRoom {
+public class BuildGangChonRoom extends BuildRoom {
     protected RoomTest createRoom(String roomType){
         RoomTest room = null;
-        RoomOptionFactory optionFactory = new High1RoomOptionFactory();
+        RoomOptionFactory optionFactory = new GangChonRoomOptionFactory();
 
         if (roomType.equals("standard")){
             room = new StandardRoom(optionFactory);

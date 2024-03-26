@@ -9,7 +9,7 @@ public class StandardRoom extends RoomTest {
     public void prepare(){
         Bed = optionFactory.BuyBed();
         region = optionFactory.Region();
-        roomType = "StandardRoom";
+        roomType = "TestAF.StandardRoom";
         capacity = 2;
         price = 100_000;
         roomNumber = makeRoomNumber(region);

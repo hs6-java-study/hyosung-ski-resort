@@ -1,3 +1,6 @@
+import java.text.SimpleDateFormat;
+import java.sql.SQLOutput;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -140,13 +143,13 @@ public class MenuAdmin {
     private void getAllReservationInfo() {
         // 예약하기 제대로 안되서 미확인
         System.out.println("1. 무주점  2. 강촌점");
-        int regionPointer = Integer.parseInt(sc.nextLine());
+        String regionPointer = sc.nextLine();
         switch (regionPointer) {
-            case 1 : {
+            case "1" : {
                 reservationList = fileIo.reservationListReader("muju");
                 break;
             }
-            case 2 : {
+            case "2" : {
                 reservationList = fileIo.reservationListReader("gangchon");
                 break;
             }
@@ -289,12 +292,129 @@ public class MenuAdmin {
     }
 
     private void getAllReservationRevenue() {
+        System.out.println("1. 무주점 \t 2. 강촌점");
+        System.out.print("숙박 매출을 보고싶은 지점을 입력 : ");
+        int revenuePointer = Integer.parseInt(sc.nextLine());
+        String region = null;
+        if(revenuePointer == 1) {
+            region = "muju";
+        } else if (revenuePointer == 2) {
+            region = "gangchon";
+        } else {
+            System.out.println("잘못된 입력");
+            return;
+        }
+        System.out.println("1. 3개월 조회 \t 2. 특정 날짜 조회");
+        String pointer = sc.nextLine();
+        switch (pointer) {
+            case "1": {
+                int grandTotalRevenue = 0;
+                Calendar currentDate = Calendar.getInstance();
 
+                for(int i = 0; i < 3; i++) {
+                    int totalRevenue = 0;
+                    String yearMonth = String.format("%04d.%02d", currentDate.get(Calendar.YEAR),currentDate.get(Calendar.MONTH)+2);
+                    Map<Integer, Reservation> reservationList = fileIo.reservationListReader(region);
+
+                    for(Reservation reservation : reservationList.values()) {
+                        int revenue = reservation.getRoom().getReservationDates().entrySet().stream()
+                                .filter(entry -> entry.getKey().startsWith(yearMonth))
+                                .mapToInt(entry -> entry.getValue() ? reservation.getRoom().getPrice() : 0)
+                                .sum();
+                        totalRevenue += revenue;
+                    }
+                    grandTotalRevenue += totalRevenue;
+                    System.out.println(yearMonth + " : " + totalRevenue);
+                    currentDate.add(Calendar.MONTH, -1);
+                }
+                System.out.println("숙박 매출 총합 : " + grandTotalRevenue);
+                break;
+            }
+            case "2": {
+                getSpecificReservationRevenue(region);
+                break;
+            }
+            default:
+                System.out.println("잘못된 입력");
+                break;
+        }
     }
 
     private void getAllProductRevenue() {
+        System.out.println("1. 무주점 \t 2. 강촌점");
+        System.out.print("숙박 매출을 보고싶은 지점을 입력 : ");
+        int revenuePointer = Integer.parseInt(sc.nextLine());
+        String region = null;
+        if(revenuePointer == 1) {
+            region = "muju";
+        } else if (revenuePointer == 2) {
+            region = "gangchon";
+        } else {
+            System.out.println("잘못된 입력");
+            return;
+        }
+        Map<String, Integer> monthlyRevenueMap = new HashMap<>();
+        Calendar currentDate = Calendar.getInstance();
+        Map<Integer, Reservation> reservationList = fileIo.reservationListReader(region);
 
+        for (int i = 0; i < 3; i++) {
+            int totalRevenue = 0;
+            String yearMonth = String.format("%04d.%02d", currentDate.get(Calendar.YEAR), currentDate.get(Calendar.MONTH) + 2);
+            for (Reservation reservation : reservationList.values()) {
+                for (Product product : reservation.getProducts().values()) {
+                    int revenueForMonth = product.getRentalDates().entrySet().stream()
+                            .filter(entry -> entry.getKey().startsWith(yearMonth))
+                            .mapToInt(entry -> entry.getValue() ? product.getPrice() : 0)
+                            .sum();
+                    totalRevenue += revenueForMonth;
+                }
+            }
+            monthlyRevenueMap.put(yearMonth, totalRevenue);
+            System.out.println(yearMonth + " : " + totalRevenue);
+            currentDate.add(Calendar.MONTH, -1);
+        }
+        int grandTotalRevenue = monthlyRevenueMap.values().stream().mapToInt(Integer::intValue).sum();
+        System.out.println("총 합: " + grandTotalRevenue);
     }
+
+    private void getSpecificReservationRevenue(String region) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd");
+
+        try {
+            int grandTotalRevenue = 0;
+            Calendar startDate = Calendar.getInstance();
+            Calendar endDate = Calendar.getInstance();
+            System.out.println("조회하려는 첫 날짜 입력 2024.04.01");
+            startDate.setTime(sdf.parse(sc.nextLine()));
+            System.out.println("조회하려는 마지막 날짜 입력 2024.04.03");
+            endDate.setTime(sdf.parse(sc.nextLine()));
+            endDate.add(Calendar.DATE, 1);
+            int totalRevenue = 0;
+            Map<Integer, Reservation> reservationList = fileIo.reservationListReader(region);
+
+            for(Reservation reservation : reservationList.values()) {
+                int revenue = reservation.getRoom().getReservationDates().entrySet().stream()
+                        .filter(entry -> {
+                            try {
+                                    Calendar reservationDate = Calendar.getInstance();
+                                    reservationDate.setTime(sdf.parse(entry.getKey()));
+                                    return !reservationDate.before(startDate) && reservationDate.before(endDate);
+                            } catch (Exception e) {
+                                    e.printStackTrace();
+                                    return false;
+                            }})
+                            .mapToInt(entry -> entry.getValue() ? reservation.getRoom().getPrice() : 0)
+                            .sum();
+
+                totalRevenue += revenue;
+                }
+                grandTotalRevenue += totalRevenue;
+            System.out.println("숙박 매출 총합 : " + grandTotalRevenue);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private static String numberGen(int len) {
 
@@ -363,6 +483,14 @@ public class MenuAdmin {
         String inputSerialNum = sc.nextLine();
         try {
             if(productList.containsKey(inputSerialNum)) {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
+                String today = dateFormat.format(new Date());
+                for (Map.Entry<String, Boolean> d : productList.get(inputSerialNum).getRentalDates().entrySet()){
+                    if(d.getKey().compareTo(today) > 0){
+                        System.out.println("예약이 있는 상품은 삭제가 불가능");
+                        return;
+                    }
+                }
                 productList.remove(inputSerialNum);
                 fileIo.productListWriter(name, region, productList);
                 System.out.println(inputSerialNum + " 번호의 "+ name +"이 삭제되었습니다.");
