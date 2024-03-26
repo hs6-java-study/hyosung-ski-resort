@@ -23,12 +23,10 @@ public abstract class Room implements Serializable {
     // 자동으로 호수 안겹치게 설정해주는 logic 필요
     public int makeRoomNumber(String region){
         FileIO fileIo = new FileIO();
-        System.out.println("킹리적이다."+region.toString());
         Map<Integer, Room> roomList = fileIo.roomListReader(region);
         int initialRoomNumber = 201;
         int roomRange = 15;
         int roomCount = 0;
-        System.out.println("전"+roomNumber);
 
         // 파일을 불러왔는데 데이터가 없는 경우
         if (roomList.size() == 0) {
@@ -37,7 +35,6 @@ public abstract class Room implements Serializable {
         roomCount = roomList.size();  // ex ) 15
         // 호실번호 계산
         int roomNumber = initialRoomNumber + (roomCount / roomRange) * 100 + (roomCount % roomRange);
-        System.out.println("후"+roomNumber);
         return roomNumber;
     }
 }
