@@ -34,7 +34,7 @@ public class MenuMember {
         String pointer = null;
         do{
             System.out.println("===== 회원 메뉴 =====");
-            System.out.println("1. 예약하기, 2. 예약취소, 3. 예약조회, 4. 로그아웃, 5. tmp_방 추가, 6. tmp_방 조회");
+            System.out.println("1.예약하기, 2.예약취소, 3.예약조회, 4.로그아웃, 5.tmp_방 추가, 6.tmp_방 조회");
             pointer = sc.nextLine();
             switch (pointer) {
                 case "1":
@@ -69,26 +69,18 @@ public class MenuMember {
 
     public void makeMyReservation(){
         // 숙박 예약 로직
-        int reservationRoomNumber;
-        while (true){
-            System.out.println("==== 지점, 인원, 기간을 입력해 주세요 ====");
-            System.out.println("뒤로가려면 \"99\"를 입력해주세요.\n");
+        System.out.println("==== 지점, 인원, 기간을 입력해 주세요 ====");
 
-            this.region = choiceRegion(); if(this.region.equals(" ")) return ;
-            this.capacity = choiceCapacity();
-            this.period = choosePeriod();
-            this.roomList = getRoomList(this.region, this.capacity, this.period);
+        this.region = chooseRegion();
+        this.capacity = chooseCapacity();
+        this.period = choosePeriod();
+        this.roomList = getRoomList(this.region, this.capacity, this.period);
 
-            for (Integer roomNumber : roomList.keySet()){
-                System.out.println(roomList.get(roomNumber).toString());}
-
-            System.out.println("예약을 원하는 방의 호 수 입력");
-            System.out.print("호 수 : ");
-            reservationRoomNumber = Integer.parseInt(sc.nextLine());
-
-            if (this.roomList.containsKey(reservationRoomNumber)) break;
-            else System.out.println("방이 없다.");
+        System.out.println("==== 예약 가능한 객실 목록 ====");
+        for (Integer roomNumber : roomList.keySet()){
+            System.out.println(roomList.get(roomNumber).toString());
         }
+        int reservationRoomNumber = chooseReservationRoomNumber();
 
         // 장비 렌탈 로직
         this.rentProduct = new ArrayList<>();
@@ -192,18 +184,24 @@ public class MenuMember {
     // makeMyReservation 헬퍼 함수
     private Boolean rentHelmetOrClothes(String kind){
         List<String> selectedProductNumbers = new ArrayList<String>();
-        this.products = fileIo.productListReader(kind,this.region);
+        this.products = fileIo.productListReader(kind, this.region);
 
-        // 장비 갯수 보여주는 출력
-        System.out.println("==== 장비 목록 ====");
+        // 장비 보여주는 출력
+        System.out.println("\n==== 장비 목록 ====");
         for(Map.Entry<String,Product> p : this.products.entrySet()){
             System.out.println(p.getKey() + " / " + p.getValue());
         }
 
-        System.out.print(kind  + " >> S갯수/M갯수/L갯수 : ");
+        System.out.print(kind + AuthValidation.EQUIPMENT_COUNT.getInputMessage());
         String count = sc.nextLine();
-        int[] counts = Arrays.stream((count.split("/")))
-                .mapToInt(Integer::parseInt).toArray();
+        int[] counts = new int[3];
+        if (!count.matches(AuthValidation.EQUIPMENT_COUNT.getRegex())) {
+            System.out.println(AuthValidation.EQUIPMENT_COUNT.getFailureMessage());
+            return false;
+        }else{
+            counts = Arrays.stream((count.split("/")))
+                    .mapToInt(Integer::parseInt).toArray();
+        }
 
         int totalProductCount = 0;
         for (int c : counts){
@@ -253,14 +251,19 @@ public class MenuMember {
         this.products = fileIo.productListReader("Equipment",this.region);
 
         // 장비 갯수 보여주는 출력
-        System.out.println("==== 장비 목록 ====");
+        System.out.println("\n==== 장비 목록 ====");
         for(Map.Entry<String,Product> p : this.products.entrySet()){
             System.out.println(p.getKey() + " / " + p.getValue());
         }
 
-        System.out.print("장비 >> 스키갯수 : ");
-        int count = Integer.parseInt(sc.nextLine());
-
+        int count;
+        try{
+            System.out.print("Equipment >> 스키갯수 : ex) 3 : ");
+            count = Integer.parseInt(sc.nextLine());
+        }catch (NumberFormatException e){
+            System.out.println("숫자를 입력해주세요");
+            return false;
+        }
         if (count > this.capacity) {
             System.out.println("장비 개수가 인원을 초과");
             return false;
@@ -280,7 +283,7 @@ public class MenuMember {
             rentProduct.addAll(selectedProductNumbers);
             return true;
         }
-        System.out.println("장비부족 못빌리쥬");
+        System.out.println("장비부족 못빌림");
         return false;
     }
 
@@ -305,10 +308,10 @@ public class MenuMember {
     }
 
     // makeMyReservation 헬퍼 함수 : 사라질 수도 있는 함수
-    private String choiceRegion (){
+    private String chooseRegion (){
         String pointer =  null;
         do{
-            System.out.print("지점 => 1. 무주 , 2. 하이원 , 3. 뒤로가기 >>> 번호입력 : ");
+            System.out.print("지점 => 1.무주 , 2.강촌 >>> 번호입력 : ");
             pointer = sc.nextLine();
             switch (pointer){
                 case "1":
@@ -317,25 +320,32 @@ public class MenuMember {
                 case "2":
                     region = "gangchon";
                     break;
-                case "3":
-                    region = "";
-                    break;
                 default:
-                    System.out.println("잘못된입력");
+                    System.out.println("지점이 없습니다.");
             }
-        }while(pointer != "3");
+        }while(!pointer.equals("1") && !pointer.equals("2"));
         return region;
     }
 
     // makeMyReservation 헬퍼 함수 : 사라질 수도 있는 함수
-    private int choiceCapacity(){
+    private int chooseCapacity(){
+        String pointer = null;
+        int capacity = 0;
+        boolean validInput = false;
         do{
             System.out.print("인원 => (1 ~ 6) >>> 번호입력 : ");
-            capacity = Integer.parseInt(sc.nextLine());
-            if (capacity >= 7) {
-                System.out.println("잘못된 입력");
+            pointer = sc.nextLine();
+            try{
+                capacity = (Integer.parseInt(pointer));
+                if (capacity < 1 || capacity  > 6 ) {
+                    System.out.println("인원 수 부적합");
+                }else{
+                    validInput = true;
+                }
+            } catch (NumberFormatException e){
+                System.out.println("잘못된 입력: 숫자를 입력하세요.");
             }
-        }while(capacity >= 7);
+        }while (!validInput);
         return capacity;
     }
 
@@ -350,27 +360,46 @@ public class MenuMember {
             // 시작 날짜 확인
             System.out.print("시작날짜 => " + AuthValidation.DATE.getInputMessage());
             start = sc.nextLine();
-//            if (!isValidDate(start) || !start.matches(AuthValidation.DATE.getRegex())) {
-//                System.out.println(AuthValidation.DATE.getFailureMessage());continue;
-//            }
-//            if( start.compareTo(today) <= 0) {
-//                System.out.println("시작날짜는 오늘날짜보다 늦어야 합니다.");
-//                continue;
-//            }
+            if (!isValidDate(start) || !start.matches(AuthValidation.DATE.getRegex())) {
+                System.out.println(AuthValidation.DATE.getFailureMessage());continue;
+            }
+            if( start.compareTo(today) <= 0) {
+                System.out.println("시작 날짜는 오늘 날짜보다 늦어야 합니다.");continue;
+            }
+            break;
+        } while (true);
 
+        do{
             // 종료 날짜 확인
             System.out.print("종료날짜 => " + AuthValidation.DATE.getInputMessage());
             end = sc.nextLine();
 
-//            if (!isValidDate(end) || !end.matches(AuthValidation.DATE.getRegex())) {
-//                System.out.println(AuthValidation.DATE.getFailureMessage()); continue;
-//            }
-//            if (end.compareTo(start) <= 0){
-//                System.out.println("종료날짜는 시작날짜보다 늦어야 합니다."); continue;
-//            }
+            if (!isValidDate(end) || !end.matches(AuthValidation.DATE.getRegex())) {
+                System.out.println(AuthValidation.DATE.getFailureMessage()); continue;
+            }
+            if (end.compareTo(start) <= 0){
+                System.out.println("종료 날짜는 시작 날짜보다 늦어야 합니다."); continue;
+            }
             break;
         } while (true);
         return start + "~" + end;
+    }
+
+    private Integer chooseReservationRoomNumber(){
+        int reservationRoomNumber = 0;
+        do {
+            try {
+                System.out.print("호실 : ");
+                reservationRoomNumber = Integer.parseInt(sc.nextLine());
+                if (this.roomList.containsKey(reservationRoomNumber)) {
+                    return reservationRoomNumber;
+                } else {
+                    System.out.println("존재하지 않는 방");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("잘못된 입력입니다. 숫자를 입력해주세요.");
+            }
+        } while (true);
     }
 
     // choosePeriod의 헬퍼성 함수 : 시간 정규식 유효성 검사
