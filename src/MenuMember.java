@@ -1,4 +1,5 @@
-import java.lang.reflect.Array;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -31,17 +32,17 @@ public class MenuMember {
         this.member = member;
         do{
             System.out.println("===== 회원 메뉴 =====");
-            System.out.println("1. 예약하기, 2. 예약취소, 3. 예약조회, 4. 로그아웃, 5. tmp_방 추가, 6. tmp_방 조회");
+            System.out.println("1. 예약하기, 2. 예약조회, 3. 예약취소, 4. 로그아웃, 5. tmp_방 추가, 6. tmp_방 조회");
             this.pointer = Integer.parseInt(sc.nextLine());
             switch (pointer) {
                 case 1:
-                    makeMyReservation(member);
+                    makeMyReservation();
                     break;
                 case 2:
-                    deleteMyReservation();
+                    getMyReservations();
                     break;
                 case 3:
-                    getMyReservations();
+                    deleteMyReservation();
                     break;
                 case 4:
                     System.out.println(member.getUserId() + "님 로그아웃 되었습니다!");
@@ -64,12 +65,14 @@ public class MenuMember {
         }while(pointer != 4);
     }
 
-    public void makeMyReservation(Member member){
+    public void makeMyReservation(){
         // 숙박 예약 로직
         int reservationRoomNumber;
         while (true){
             System.out.println("==== 지점, 인원, 기간을 입력해 주세요 ====");
-            this.region = choiceRegion();
+            System.out.println("뒤로가려면 \"99\"를 입력해주세요.\n");
+
+            this.region = choiceRegion(); if(this.region.equals(" ")) return ;
             this.capacity = choiceCapacity();
             this.period = choosePeriod();
             this.roomList = getRoomList(this.region, this.capacity, this.period);
@@ -103,12 +106,13 @@ public class MenuMember {
 
         room = new Room(this.region, reservationRoomNumber,this.capacity,this.roomList.get(reservationRoomNumber).getPrice());
         Map<String,Product> rental = new HashMap<String,Product>();
-        Reservation reservation = new Reservation(member, room, rental);
+        Reservation reservation = new Reservation(this.member, room, rental);
         int randomNumber = random.nextInt(100000000);
 
         // 회원 예약 내역 리스트 추가
         memberList = fileIo.memberListReader();
         memberList.get(member.getUserId()).getReservationNumberList().add(randomNumber);
+        this.member.setReservationNumberList(memberList.get(member.getUserId()).getReservationNumberList());
         fileIo.memberListWriter(memberList);
 
         // 숙소 + 렌탈 장비 대여 날짜 추가
@@ -168,7 +172,7 @@ public class MenuMember {
         System.out.print(kind  + " >> S갯수/M갯수/L갯수 : ");
         String count = sc.nextLine();
         int[] counts = Arrays.stream((count.split("/")))
-                        .mapToInt(Integer::parseInt).toArray();
+                .mapToInt(Integer::parseInt).toArray();
 
         int totalProductCount = 0;
         for (int c : counts){
@@ -233,12 +237,17 @@ public class MenuMember {
 
         for(Map.Entry<String,Product> product : this.products.entrySet()){
             if ( count != 0){
+                System.out.println(count);
                 selectedProductNumbers.add(product.getKey());
                 count--;
             }else{
                 rentProduct.addAll(selectedProductNumbers);
                 return true;
             }
+        }
+        if(count == 0) {
+            rentProduct.addAll(selectedProductNumbers);
+            return true;
         }
         System.out.println("장비부족 못빌리쥬");
         return false;
@@ -269,6 +278,8 @@ public class MenuMember {
         do{
             System.out.print("지점 => 1. 무주 , 2. 하이원 >>> 번호입력 : ");
             pointer = Integer.parseInt(sc.nextLine());
+            if (pointer == 99) return " ";
+
             switch (pointer){
                 case 1:
                     region = "muju";
@@ -299,28 +310,140 @@ public class MenuMember {
 
     // makeMyReservation 헬퍼 함수
     private String choosePeriod(){
-        // 유효성 검사 필요
-        System.out.print("시작날짜 => ex) 2024.04.26 >>> 번호입력 : ");
-        String start = sc.nextLine();
-        System.out.print("종료날짜 => ex) 2024.04.26 >>> 번호입력 : ");
-        String end = sc.nextLine();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
+        Calendar calendar = Calendar.getInstance();
+        String today = dateFormat.format(new Date());
+        String start = null;
+        String end = null;
+        do {
+            // 시작 날짜 확인
+            System.out.print("시작날짜 => " + AuthValidation.DATE.getInputMessage());
+            start = sc.nextLine();
+//            if (!isValidDate(start) || !start.matches(AuthValidation.DATE.getRegex())) {
+//                System.out.println(AuthValidation.DATE.getFailureMessage());continue;
+//            }
+//            if( start.compareTo(today) <= 0) {
+//                System.out.println("시작날짜는 오늘날짜보다 늦어야 합니다.");
+//                continue;
+//            }
+
+            // 종료 날짜 확인
+            System.out.print("종료날짜 => " + AuthValidation.DATE.getInputMessage());
+            end = sc.nextLine();
+
+//            if (!isValidDate(end) || !end.matches(AuthValidation.DATE.getRegex())) {
+//                System.out.println(AuthValidation.DATE.getFailureMessage()); continue;
+//            }
+//            if (end.compareTo(start) <= 0){
+//                System.out.println("종료날짜는 시작날짜보다 늦어야 합니다."); continue;
+//            }
+            break;
+        } while (true);
         return start + "~" + end;
     }
 
-    public void getMyReservations(){
-        for(Map.Entry reservation : fileIo.reservationListReader("muju").entrySet()){
-            System.out.println(reservation.getValue());
+    // choosePeriod의 헬퍼성 함수 : 시간 정규식 유효성 검사
+    private boolean isValidDate(String date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
+        dateFormat.setLenient(false);
+        try {
+            dateFormat.parse(date);
+            return true;
+        } catch (ParseException e) {
+            return false;
         }
-        for(Map.Entry reservation : fileIo.reservationListReader("gangchon").entrySet()){
-            System.out.println(reservation.getValue());
+    }
+
+    public void getMyReservations(){
+        Map<Integer, Reservation> totalReservations = new HashMap<Integer, Reservation>();
+        totalReservations.putAll(fileIo.reservationListReader("muju"));
+        totalReservations.putAll(fileIo.reservationListReader("gangchon"));
+
+        System.out.println("\n====비교를 위한 전체 회원 목록 (삭제 예정)====");
+        for(Map.Entry<Integer, Reservation> reservation : totalReservations.entrySet()){
+            System.out.println(reservation.getKey() + " / " + reservation.getValue());
+        }
+
+        System.out.println("\n====나의 예약 목록조회====");
+        for(Integer reservationNumber : this.member.getReservationNumberList()){
+            System.out.println(reservationNumber + ":" + totalReservations.get(reservationNumber).toString());
         }
     }
 
     public void deleteMyReservation(){
-        Map<Integer,Reservation> reservationList = fileIo.reservationListReader("muju");
-        for (Map.Entry reservation : reservationList.entrySet()){
-            System.out.println(reservation.toString());
+        Map<Integer, Reservation> totalReservations = new HashMap<Integer, Reservation>();
+        totalReservations.putAll(fileIo.reservationListReader("muju"));
+        totalReservations.putAll(fileIo.reservationListReader("gangchon"));
+
+        List<Integer> reservationNumberList = member.getReservationNumberList();
+
+        for (int i = 0; i < reservationNumberList.size(); i++) {
+            System.out.print((i + 1) + ". " );
+            System.out.println(reservationNumberList.get(i) + " / " + totalReservations.get(reservationNumberList.get(i)).toString());
         }
+        System.out.print("삭제할 번호 입력 : ");
+        int order = Integer.parseInt(sc.nextLine());
+
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
+        String today = dateFormat.format(new Date());
+        for(Map.Entry<String,Boolean> d : totalReservations.get(reservationNumberList.get(order-1)).getRoom().getReservationDates().entrySet()){
+            if(d.getKey().compareTo(today) <= 0){
+                System.out.println("숙소 예약 날짜 중 현재보다 이전 날짜가 존재하니 삭제가 불가능하다.");
+                return;
+            }
+        }
+
+        // member에 접근하여 예약넘버 삭제
+        // read하여 내 ID의  예약넘버 삭제 후 writer
+        int deleteReservationNumber = reservationNumberList.remove(order-1);
+        memberList = fileIo.memberListReader();
+        memberList.get(member.getUserId()).setReservationNumberList(reservationNumberList);
+        this.member.setReservationNumberList(reservationNumberList);
+        fileIo.memberListWriter(memberList);
+
+        // reservationslist read하기
+        // 내 예약 넘버로 예약List에서 제거
+        // Room 객체에서 Date의 Start-end, 지점-호수 체크
+        // reservationsList의 물품 고유번호 체크
+        Reservation deletedReservation = totalReservations.get(deleteReservationNumber);
+        this.region = deletedReservation.getRoom().getRegion();
+        reservationList = fileIo.reservationListReader(this.region);
+        reservationList.remove(deleteReservationNumber);
+        fileIo.reservationListWriter(this.region, reservationList);
+
+        // 객실 날짜 수정
+        // 객실 지점으로 read
+        // 객실의 start-end 데이터로 날짜map 삭제 후 writer
+        roomList = fileIo.roomListReader(this.region);
+        room = roomList.get(deletedReservation.getRoom().getRoomNumber());
+        for (Map.Entry<String,Boolean> date : deletedReservation.getRoom().getReservationDates().entrySet()){
+            room.getReservationDates().remove(date.getKey());
+        }
+        roomList.get(deletedReservation.getRoom().getRoomNumber()).setReservationDates(room.getReservationDates());
+        fileIo.roomListWriter(this.region, roomList);
+
+        // 물품 날짜 수정
+        // 3물품 파일 read
+        // 3물풀에 물건 고유번호로 map에서 삭제 후 writer
+        products = deletedReservation.getProducts();
+        Map<String,Product> ProductList = new HashMap<String, Product>();
+        Map<String,Product> helmetList = fileIo.productListReader("Helmet",this.region);
+        Map<String,Product> clothesList = fileIo.productListReader("Clothes",this.region);
+        Map<String,Product> equipmentList = fileIo.productListReader("Equipment",this.region);
+        ProductList.putAll(helmetList);
+        ProductList.putAll(clothesList);
+        ProductList.putAll(equipmentList);
+
+        for(Map.Entry<String, Product> p : products.entrySet()){
+            for (Map.Entry<String,Boolean> date : deletedReservation.getRoom().getReservationDates().entrySet()){
+                ProductList.get(p.getKey()).getRentalDates().remove(date.getKey());
+            }
+        }
+        fileIo.productListWriter("Helmet",this.region,helmetList);
+        fileIo.productListWriter("Clothes",this.region,clothesList);
+        fileIo.productListWriter("Equipment",this.region,equipmentList);
+
     }
 
     // 나중에 다른곳으로 빠질 애들
