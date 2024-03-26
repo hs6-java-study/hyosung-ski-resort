@@ -2,7 +2,7 @@ package TestAF;
 
 import lombok.Data;
 
-import java.util.Date;
+import javax.swing.*;
 import java.util.HashMap;
 import java.util.Map;
 @Data
@@ -14,16 +14,10 @@ public abstract class RoomTest {
     int price;
     String Tv;
     String Bed;
-    Map<Date,Boolean> Dates;
+    private Map<String,Boolean> reservationDates ;
 
-    RoomTest(){
-        this.Dates = new HashMap<Date,Boolean>();
-        this.roomNumber = setRoomNumber();
+    public RoomTest(){
+        this.reservationDates = new HashMap<String,Boolean>();
     }
     abstract void prepare();
-
-    // 자동으로 호수 안겹치게 설정해주는 logic 필요
-    private int setRoomNumber(){
-        return 8;
-    }
 }
