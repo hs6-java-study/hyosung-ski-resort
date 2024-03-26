@@ -1,4 +1,3 @@
-import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -33,8 +32,13 @@ public class MenuMember {
         this.member = member;
         String pointer = null;
         do{
-            System.out.println("===== 회원 메뉴 =====");
-            System.out.println("1.예약하기, 2.예약취소, 3.예약조회, 4.로그아웃, 5.tmp_방 추가, 6.tmp_방 조회");
+            System.out.println("\t\t\t\t\t\t< 회원 메뉴 >");
+            System.out.println(AnsiColor.line("\t〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓"));
+            System.out.println("\t\t\t\t\t\t\t\t1. 회원접속   " );
+            System.out.println("\t\t\t\t\t\t\t\t2. 관리자접속  " );
+            System.out.println("\t\t\t\t\t\t\t\t3. 서비스 종료" );
+            System.out.println(AnsiColor.line("\t〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓"));
+            System.out.println("1. 예약하기, 2. 예약취소, 3. 예약조회, 4. 로그아웃 ");
             pointer = sc.nextLine();
             switch (pointer) {
                 case "1":
@@ -64,7 +68,7 @@ public class MenuMember {
                 default:
                     System.out.println("잘못된입력");
             }
-        }while(pointer != "4");
+        }while(!pointer.equals("4"));
     }
 
     public void makeMyReservation(){
@@ -98,6 +102,7 @@ public class MenuMember {
             break;
         }
 
+        // 수정이 필요
         room = new Room(this.region, reservationRoomNumber,this.capacity,this.roomList.get(reservationRoomNumber).getPrice());
         Map<String,Product> rental = new HashMap<String,Product>();
         Reservation reservation = new Reservation(this.member, room, rental);
@@ -217,7 +222,7 @@ public class MenuMember {
 
         for(Map.Entry<String,Product> product : this.products.entrySet()){
             if(!this.manageDate.isPossibleReservation((product.getValue()).getRentalDates())) {
-                System.out.println((product.getValue()).getSerialNum() + "는 예약 불가능 " + kind);
+                System.out.println(product.getKey() + "는 예약 불가능 " + kind);
                 continue;
             }
             if ((product.getValue()).getSize().equals("S") && counts[0] != 0){
@@ -443,9 +448,18 @@ public class MenuMember {
             System.out.print((i + 1) + ". " );
             System.out.println(reservationNumberList.get(i) + " / " + totalReservations.get(reservationNumberList.get(i)).toString());
         }
-        System.out.print("삭제할 번호 입력 : ");
-        int order = Integer.parseInt(sc.nextLine());
 
+        int order = 0;
+        boolean validInput = false;
+        do {
+            try {
+                System.out.print("삭제할 번호 입력 : ");
+                order = Integer.parseInt(sc.nextLine());
+                validInput = true;
+            } catch (NumberFormatException e) {
+                System.out.println("잘못된 입력입니다. 숫자를 입력해주세요.");
+            }
+        } while (!validInput);
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
         String today = dateFormat.format(new Date());
