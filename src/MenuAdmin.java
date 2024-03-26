@@ -11,9 +11,6 @@ public class MenuAdmin {
     Map<String, Member> memberList;
     Map<Integer, Reservation> reservationList;
     ValidationUtils validationUtils;
-//    Map<String, Helmet> helmetList;
-//    Map<String, Clothes> clothesList;
-//    Map<String, Equipment> equipmentList;
 
     Map<String, Product> productList;
 
@@ -26,11 +23,25 @@ public class MenuAdmin {
         this.admin = admin;
         String pointer = null;
         do {
-            System.out.println( "1. 회원 관리, 2. 예약 내역 관리, 3. 장비 관리, 4. 매출 조회, 5. 로그아웃" );
+            System.out.println("\t+———————————————————————————————————————————————————————————————————+");
+            System.out.println("\t\t\t\t\t\t\t\t1. 회원 관리" );
+            System.out.println("\t\t\t\t\t\t\t\t2. 예약 관리" );
+            System.out.println("\t\t\t\t\t\t\t\t3. 장비 관리" );
+            System.out.println("\t\t\t\t\t\t\t\t4. 매출 조회" );
+            System.out.println("\t\t\t\t\t\t\t\t5. 로그 아웃" );
+            System.out.println("\t+———————————————————————————————————————————————————————————————————+");
+            System.out.print("\t\t\t\t\t\t\t\t➤ 입력 : ");
+//            System.out.println( "1. 회원 관리, 2. 예약 내역 관리, 3. 장비 관리, 4. 매출 조회, 5. 로그아웃" );
             pointer = sc.nextLine();
             switch (pointer) {
                 case "1": {
-                    System.out.println("1. 회원 전체 조회, 2. 회원 정보 검색, 3. 회원 탈퇴 처리");
+                    System.out.println("\t+———————————————————————————————————————————————————————————————————+");
+                    System.out.println("\t\t\t\t\t\t\t\t1. 전체 회원 조회" );
+                    System.out.println("\t\t\t\t\t\t\t\t2. 특정 회원 조회" );
+                    System.out.println("\t\t\t\t\t\t\t\t3. 회원 탈퇴 처리" );
+                    System.out.println("\t+———————————————————————————————————————————————————————————————————+");
+                    System.out.print("\t\t\t\t\t\t\t\t➤ 입력 : ");
+//                    System.out.println("1. 회원 전체 조회, 2. 회원 정보 검색, 3. 회원 탈퇴 처리");
                     String pointerMemberManage = sc.nextLine();
                     if (pointerMemberManage.equals("1")) {
                         getAllMemberListInfo();
@@ -45,19 +56,33 @@ public class MenuAdmin {
                 }
 
                 case "2": {
-                    System.out.println("1. 예약 목록 전체 조회, 2. 특정 회원 예약내역 조회");
+                    System.out.println("\t+———————————————————————————————————————————————————————————————————+");
+                    System.out.println("\t\t\t\t\t\t\t\t1. 전체 예약 조회");
+                    System.out.println("\t\t\t\t\t\t\t\t2. 특정 회원 예약 조회");
+                    System.out.println("\t\t\t\t\t\t\t\t3. 지점별 날짜 예약 조회");
+                    System.out.println("\t+———————————————————————————————————————————————————————————————————+");
+                    System.out.print("\t\t\t\t\t\t\t\t➤ 입력 : ");
+//                    System.out.println("1. 예약 목록 전체 조회, 2. 특정 회원 예약내역 조회");
                     String pointerReservationManage = sc.nextLine();
                     if (pointerReservationManage.equals("1")) {
                         getAllReservationInfo();
                     } else if (pointerReservationManage.equals("2")) {
                         getReservationInfoByOneMember();
+                    }  else if (pointerReservationManage.equals("3")) {
+                        getReservationInfoByDate();
                     } else {
                         System.out.println("잘못된 입력");
                     }
                     break;
                 }
                 case "3": {
-                    System.out.println("1. 대여 장비 전체 재고 조회, 2. 장비 개수 추가, 3. 장비 개수 삭제");
+                    System.out.println("\t+———————————————————————————————————————————————————————————————————+");
+                    System.out.println("\t\t\t\t\t\t\t\t1. 전체 장비 조회" );
+                    System.out.println("\t\t\t\t\t\t\t\t2. 장비 개수 추가" );
+                    System.out.println("\t\t\t\t\t\t\t\t3. 장비 개수 삭제" );
+                    System.out.println("\t+———————————————————————————————————————————————————————————————————+");
+                    System.out.print("\t\t\t\t\t\t\t\t➤ 입력 : ");
+//                    System.out.println("1. 대여 장비 전체 재고 조회, 2. 장비 개수 추가, 3. 장비 개수 삭제");
                     String pointerProductManage = sc.nextLine();
                     if (pointerProductManage.equals("1")) {
                         getAllProductInfo();
@@ -71,7 +96,12 @@ public class MenuAdmin {
                     break;
                 }
                 case "4": {
-                    System.out.println("1. 숙박 매출 조회, 2. 대여 장비 매출 조회");
+                    System.out.println("\t+———————————————————————————————————————————————————————————————————+");
+                    System.out.println("\t\t\t\t\t\t\t\t1. 숙박 매출 조회" );
+                    System.out.println("\t\t\t\t\t\t\t\t2. 장비 매출 조회" );
+                    System.out.println("\t+———————————————————————————————————————————————————————————————————+");
+                    System.out.print("\t\t\t\t\t\t\t\t➤ 입력 : ");
+//                    System.out.println("1. 숙박 매출 조회, 2. 대여 장비 매출 조회");
                     String pointerRevenueManage = sc.nextLine();
                     if (pointerRevenueManage.equals("1")) {
                         getAllReservationRevenue();
@@ -96,12 +126,9 @@ public class MenuAdmin {
     private void getAllMemberListInfo() {
         memberList = fileIo.memberListReader();
         if (memberList != null) {
-            System.out.println(
-                    "----------------------------------------------------------------------------------------");
-            // 테이블 헤더 출력
-            System.out.format("%-7s \t %-9s \t %-15s \t %-7s \t %-10s \t %s\n", "이름", "아이디" , "전화번호", "등급", "포인트", "남은 예약 건수");
-            System.out.println(
-                    "----------------------------------------------------------------------------------------");
+            System.out.println("\t+———————————————————————————————————————————————————————————————————+");
+            System.out.format("%-7s \t %-9s \t %-15s \t %-7s \t %-10s \t %s\n", "이름", "아이디" , "전화번호", "등급", "포인트", "총 예약 건수");
+            System.out.println("\t+———————————————————————————————————————————————————————————————————+");
             // 회원 정보 출력
             memberList.entrySet().stream()
                     .forEach(entry -> System.out.format("%-7s \t %-13s \t %-15s \t %-7s \t %-10d \t %s\n",
@@ -110,7 +137,7 @@ public class MenuAdmin {
                             entry.getValue().getPhoneNumber(),
                             entry.getValue().getGrade(),
                             entry.getValue().getPoint(),
-                            entry.getValue().getReservationNumberList().toString()));
+                            entry.getValue().getReservationNumberList().size()));
         } else {
             System.out.println("회원 정보가 없습니다.");
         }
@@ -127,11 +154,9 @@ public class MenuAdmin {
         boolean isEmptySearchedMemberByName = memberList.entrySet().stream().anyMatch(entry -> entry.getValue().getName().equals(searchName) && entry.getValue().getPhoneNumber().endsWith(phoneNumLastFour));
 
         if (isEmptySearchedMemberByName) {
-            System.out.println(
-                    "-----------------------------------------------------------------------------");
+            System.out.println("\t+———————————————————————————————————————————————————————————————————+");
             System.out.format("%-8s  %-11s  %-5s  %-9s\n", "아이디", "전화번호", "등급", "포인트");
-            System.out.println(
-                    "-----------------------------------------------------------------------------");
+            System.out.println("\t+———————————————————————————————————————————————————————————————————+");
             memberList.entrySet().stream()
                     .filter(entry -> entry.getValue().getName().equals(searchName))
                     .forEach(entry -> System.out.format("%-10s  %-13s  %-6s  %-10d\n",
@@ -162,7 +187,12 @@ public class MenuAdmin {
     }
 
     private void getAllReservationInfo() {
-        System.out.println("1. 무주점  2. 강촌점");
+        System.out.println("\t+———————————————————————————————————————————————————————————————————+");
+        System.out.println("\t\t\t\t\t\t\t\t1. 무주점" );
+        System.out.println("\t\t\t\t\t\t\t\t2. 강촌점" );
+        System.out.println("\t+———————————————————————————————————————————————————————————————————+");
+        System.out.print("\t\t\t\t\t\t\t\t➤ 입력 : ");
+//        System.out.println("1. 무주점  2. 강촌점");
         String regionPointer = sc.nextLine();
         switch (regionPointer) {
             case "1" : {
@@ -177,60 +207,142 @@ public class MenuAdmin {
                 System.out.println("잘못된 입력"); return;
         }
         if (reservationList != null && !reservationList.isEmpty()) {
-            System.out.println("이름 \t 예약자 아이디 \t 방 번호 \t 예약 금액 \t 예약 날짜 ");
+            System.out.println("이름 \t 아이디 \t 방 번호 \t 예약 금액 \t 체크인 \t 체크아웃 \t 장비 대여 수");
             reservationList.values().forEach(reservation -> {
+                Set<Map.Entry<String, Boolean>> reservationDates = reservation.getRoom().getReservationDates().entrySet();
                 System.out.println(reservation.getMember().getName() + "\t" +
                         reservation.getMember().getUserId() + "\t" +
                         reservation.getRoom().getRoomNumber() + "\t" +
                         reservation.getRoom().getPrice() + "\t" +
-                        reservation.getRoom().getReservationDates());
+                        reservation.getRoom().getReservationDates().entrySet().stream().filter(Map.Entry::getValue).map(Map.Entry::getKey).min(String::compareTo).orElse("예약이 없습니다.") + "\t" +
+                        reservation.getRoom().getReservationDates().entrySet().stream().filter(Map.Entry::getValue).map(Map.Entry::getKey).max(String::compareTo).orElse("예약이 없습니다.") + "\t" +
+                        reservation.getProducts().values().stream().count());
             });
         } else {
             System.out.println("예약 내역이 없습니다.");
         }
     }
 
-    private void getReservationInfoByOneMember() {
-        System.out.print("조회할 이름을 입력하세요 : ");
-        String searchName = sc.nextLine();
-        reservationList = fileIo.reservationListReader("muju");
-        List<Reservation> filteredReservationsByMuju = reservationList.values().stream()
-                .filter(reservation -> reservation.getMember().getName().equals(searchName))
-                .collect(Collectors.toList());
 
-        // 필터링된 예약 목록 출력
-        if (!filteredReservationsByMuju.isEmpty()) {
-            System.out.println("예약자명 \t 전화번호 \t 지점 \t 방 번호 \t 인원수 \t 가격 \t 날짜");
-            filteredReservationsByMuju.forEach(reservation ->
-                    System.out.println(reservation.getMember().getName() + "\t" +
-                            reservation.getMember().getPhoneNumber() + "\t" +
-                            reservation.getRoom().getRegion() + "\t" +
-                            reservation.getRoom().getRoomNumber() + "\t" +
-                            reservation.getRoom().getCapacity() + "\t" +
-                            reservation.getRoom().getPrice() + "\t" +
-                            reservation.getRoom().getReservationDates() + "\t"));
+
+    private void getReservationInfoByOneMember() {
+        validationUtils = new ValidationUtils();
+        String searchInfo = validationUtils.getValidation(sc, AuthValidation.SEARCH_MEMBER_INFO);
+        String [] splitInfo = searchInfo.split("/");
+        String searchName = splitInfo[0].trim();
+        String phoneNumLastFour = splitInfo[1].trim();
+
+        List<Reservation> mujuReservations = loadAndFilterReservations("muju", searchName, phoneNumLastFour);
+        List<Reservation> gangchonReservations = loadAndFilterReservations("gangchon", searchName, phoneNumLastFour);
+
+        printFilteredReservations(mujuReservations, "무주점");
+        printFilteredReservations(gangchonReservations, "강촌점");
+    }
+
+    private void getReservationInfoByDate() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd");
+        sdf.setLenient(false);
+
+        System.out.println("\t+———————————————————————————————————————————————————————————————————+");
+        System.out.println("\t\t\t\t\t\t\t\t1. 무주점" );
+        System.out.println("\t\t\t\t\t\t\t\t2. 강촌점" );
+        System.out.println("\t\t\t\t\t\t숙박 매출을 보고싶은 지점을 입력하세요.");
+        System.out.println("\t+———————————————————————————————————————————————————————————————————+");
+        System.out.print("\t\t\t\t\t\t\t\t➤ 입력 : ");
+        String revenuePointer = sc.nextLine();
+        System.out.println("\t+———————————————————————————————————————————————————————————————————+");
+        String region = null;
+        if(revenuePointer.equals("1")) {
+            region = "muju";
+        } else if (revenuePointer.equals("2")) {
+            region = "gangchon";
         } else {
-            System.out.println(searchName + "님의 무주점 예약 내역이 없습니다.");
+            System.out.println("잘못된 입력");
+            return;
         }
 
-        reservationList = fileIo.reservationListReader("gangchon");
-        List<Reservation> filteredReservationsByGangchon = reservationList.values().stream()
-                .filter(reservation -> reservation.getMember().getName().equals(searchName))
-                .collect(Collectors.toList());
+        try {
+            Calendar startDate = Calendar.getInstance();
+            Calendar endDate = Calendar.getInstance();
+            System.out.println("\t+———————————————————————————————————————————————————————————————————+");
+            System.out.println("\t\t\t\t\t\t\t조회하려는 첫 날짜를 입력하세요.");
+            System.out.println("\t\t\t\t\t\t\t\tyyyy.mm.dd 형식");
+            System.out.print("\t\t\t\t\t\t\t\t➤ 입력 : ");
+            startDate.setTime(sdf.parse(sc.nextLine()));
+            System.out.println("\t\t\t\t\t\t\t조회하려는 끝 날짜를 입력하세요.");
+            System.out.println("\t\t\t\t\t\t\t\tyyyy.mm.dd 형식");
+            System.out.print("\t\t\t\t\t\t\t\t➤ 입력 : ");
+            endDate.setTime(sdf.parse(sc.nextLine()));
+            System.out.println("\t+———————————————————————————————————————————————————————————————————+");
+            if (!startDate.before(endDate)) {
+                System.out.println("시작 날짜가 마지막 날짜보다 뒤에 있습니다. 다시 입력해 주세요.");
+                return;
+            }
+            endDate.add(Calendar.DATE, 1); // 마지막 날짜를 포함 안시켜서 1일 더해줌
+//            reservationList = fileIo.reservationListReader(region);
+            Map<Integer, Reservation> reservationList = fileIo.reservationListReader(region);
+            if (reservationList != null && !reservationList.isEmpty()) {
+                System.out.println("이름\t아이디\t방 번호\t예약 금액\t체크인\t체크아웃\t장비 대여 수");
+                reservationList.values().forEach(reservation -> {
+                    // 예약된 각 날짜에 대해 검사
+                    boolean isOverlap = reservation.getRoom().getReservationDates().entrySet().stream()
+                            .filter(Map.Entry::getValue) // 예약 가능한 날짜만 필터링
+                            .anyMatch(entry -> {
+                                try {
+                                    Calendar reservationDate = Calendar.getInstance();
+                                    reservationDate.setTime(sdf.parse(entry.getKey()));
+                                    return !reservationDate.before(startDate) && reservationDate.before(endDate);
+                                    // 예약 날짜가 시작 날짜와 끝 날짜 사이인지 확인
 
-        // 필터링된 예약 목록 출력
-        if (!filteredReservationsByGangchon.isEmpty()) {
-            System.out.println("예약 ID \t 이름 \t 예약 날짜 \t 예약 시간");
-            filteredReservationsByGangchon.forEach(reservation ->
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    return false;
+                                }
+                            });
+                    if (isOverlap) { // 겹치는 날짜가 있으면, 예약 정보 출력
+                        // 예약 정보 출력 로직
+                        System.out.println(reservation.getMember().getName() + "\t" +
+                                reservation.getMember().getUserId() + "\t" +
+                                reservation.getRoom().getRoomNumber() + "\t" +
+                                reservation.getRoom().getPrice() + "\t" +
+                                reservation.getRoom().getReservationDates().entrySet().stream().filter(Map.Entry::getValue).map(Map.Entry::getKey).min(String::compareTo).orElse("예약이 없습니다.") + "\t" +
+                                reservation.getRoom().getReservationDates().entrySet().stream().filter(Map.Entry::getValue).map(Map.Entry::getKey).max(String::compareTo).orElse("예약이 없습니다.") + "\t" +
+                                reservation.getProducts().values().stream().count());
+                    }
+                });
+            } else {
+                System.out.println("해당 기간에 예약 내역이 없습니다.");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private List<Reservation> loadAndFilterReservations(String location, String searchName, String phoneNumLastFour) {
+        reservationList = fileIo.reservationListReader(location);
+        return reservationList.values().stream()
+                .filter(reservation -> reservation.getMember().getName().equals(searchName) &&
+                        reservation.getMember().getPhoneNumber().endsWith(phoneNumLastFour))
+                .collect(Collectors.toList());
+    }
+
+    private void printFilteredReservations(List<Reservation> filteredReservations, String locationName) {
+        if (!filteredReservations.isEmpty()) {
+            System.out.println("[ "+locationName + " ]");
+            filteredReservations.forEach(reservation ->
                     System.out.println(reservation.getMember().getName() + "\t" +
                             reservation.getMember().getPhoneNumber() + "\t" +
                             reservation.getRoom().getRegion() + "\t" +
                             reservation.getRoom().getRoomNumber() + "\t" +
                             reservation.getRoom().getCapacity() + "\t" +
                             reservation.getRoom().getPrice() + "\t" +
-                            reservation.getRoom().getReservationDates() + "\t"));
+                            reservation.getRoom().getReservationDates().entrySet().stream().filter(Map.Entry::getValue).map(Map.Entry::getKey).min(String::compareTo).orElse("예약이 없습니다.") + "\t" +
+                            reservation.getRoom().getReservationDates().entrySet().stream().filter(Map.Entry::getValue).map(Map.Entry::getKey).max(String::compareTo).orElse("예약이 없습니다.") + "\t" +
+                            reservation.getProducts().values().stream().count()));
         } else {
-            System.out.println(searchName + "님의 강촌점 예약 내역이 없습니다.");
+            System.out.println("[ "+ locationName + " ]");
+            System.out.println("예약 내역이 없습니다.");
         }
     }
 
@@ -244,8 +356,13 @@ public class MenuAdmin {
     }
 
     private void addProduct() {
-        System.out.println("1. 무주 / 2. 강촌");
-        System.out.print("원하는 장비의 지점을 입력하세요 : ");
+        System.out.println("\t+———————————————————————————————————————————————————————————————————+");
+        System.out.println("\t\t\t\t\t\t\t\t1. 무주점" );
+        System.out.println("\t\t\t\t\t\t\t\t2. 강촌점" );
+        System.out.println("\t\t\t\t\t\t원하는 장비 지점을 입력하세요.");
+        System.out.println("\t+———————————————————————————————————————————————————————————————————+");
+        System.out.print("\t\t\t\t\t\t\t\t➤ 입력 : ");
+//        System.out.println("1. 무주 / 2. 강촌");
         String regionInput = sc.nextLine();
         String region = null;
         if( regionInput.equals("1")) {
@@ -256,7 +373,13 @@ public class MenuAdmin {
             System.out.println("잘못된 입력");
             return;
         }
-        System.out.println("1. 헬멧 \t 2. 의류 \t 3. 장비");
+        System.out.println("\t+———————————————————————————————————————————————————————————————————+");
+        System.out.println("\t\t\t\t\t\t\t\t1. 헬멧" );
+        System.out.println("\t\t\t\t\t\t\t\t2. 의류" );
+        System.out.println("\t\t\t\t\t\t\t\t3. 장비" );
+        System.out.println("\t+———————————————————————————————————————————————————————————————————+");
+        System.out.print("\t\t\t\t\t\t\t\t➤ 입력 : ");
+//        System.out.println("1. 헬멧 \t 2. 의류 \t 3. 장비");
         String productPointer = sc.nextLine();
         switch (productPointer) {
             case "1" :{
@@ -276,8 +399,13 @@ public class MenuAdmin {
     }
 
     private void deleteProduct() {
-        System.out.println("1. 무주 / 2. 강촌");
-        System.out.print("원하는 장비의 지점을 입력하세요 : ");
+        System.out.println("\t+———————————————————————————————————————————————————————————————————+");
+        System.out.println("\t\t\t\t\t\t\t\t1. 무주점" );
+        System.out.println("\t\t\t\t\t\t\t\t2. 강촌점" );
+        System.out.println("\t\t\t\t\t\t원하는 장비의 지점을 입력하세요.");
+        System.out.println("\t+———————————————————————————————————————————————————————————————————+");
+        System.out.print("\t\t\t\t\t\t\t\t➤ 입력 : ");
+//        System.out.println("1. 무주 / 2. 강촌");
         String regionInput = sc.nextLine();
         String region = null;
         if( regionInput.equals("1")) {
@@ -288,7 +416,12 @@ public class MenuAdmin {
             System.out.println("잘못된 입력");
             return;
         }
-        System.out.println("1. 헬멧 \t 2. 의류 \t 3. 장비");
+        System.out.println("\t+———————————————————————————————————————————————————————————————————+");
+        System.out.println("\t\t\t\t\t\t\t\t1. 헬멧" );
+        System.out.println("\t\t\t\t\t\t\t\t2. 의류" );
+        System.out.println("\t\t\t\t\t\t\t\t3. 장비" );
+        System.out.println("\t+———————————————————————————————————————————————————————————————————+");
+        System.out.print("\t\t\t\t\t\t\t\t➤ 입력 : ");
         String productPointer = sc.nextLine();
         switch (productPointer) {
             case "1" :{
@@ -309,9 +442,15 @@ public class MenuAdmin {
     }
 
     private void getAllReservationRevenue() {
-        System.out.println("1. 무주점 / 2. 강촌점");
-        System.out.print("숙박 매출을 보고싶은 지점을 입력 : ");
+        System.out.println("\t+———————————————————————————————————————————————————————————————————+");
+        System.out.println("\t\t\t\t\t\t\t\t1. 무주점" );
+        System.out.println("\t\t\t\t\t\t\t\t2. 강촌점" );
+        System.out.println("\t\t\t\t\t\t숙박 매출을 보고싶은 지점을 입력하세요.");
+        System.out.println("\t+———————————————————————————————————————————————————————————————————+");
+        System.out.print("\t\t\t\t\t\t\t\t➤ 입력 : ");
+//        System.out.println("1. 무주점 / 2. 강촌점");
         String revenuePointer = sc.nextLine();
+        System.out.println("\t+———————————————————————————————————————————————————————————————————+");
         String region = null;
         if(revenuePointer.equals("1")) {
             region = "muju";
@@ -321,7 +460,12 @@ public class MenuAdmin {
             System.out.println("잘못된 입력");
             return;
         }
-        System.out.println("1. 3개월 조회 \t 2. 특정 날짜 조회");
+        System.out.println("\t+———————————————————————————————————————————————————————————————————+");
+        System.out.println("\t\t\t\t\t\t\t\t1. 최근 3개월 매출 조회" );
+        System.out.println("\t\t\t\t\t\t\t\t2. 특정 기간 매출 조회" );
+        System.out.println("\t+———————————————————————————————————————————————————————————————————+");
+        System.out.print("\t\t\t\t\t\t\t\t➤ 입력 : ");
+//        System.out.println("1. 3개월 조회 \t 2. 특정 날짜 조회");
         String pointer = sc.nextLine();
         switch (pointer) {
             case "1": {
@@ -358,8 +502,13 @@ public class MenuAdmin {
     }
 
     private void getAllProductRevenue() {
-        System.out.println("1. 무주점 \t 2. 강촌점");
-        System.out.print("숙박 매출을 보고싶은 지점을 입력 : ");
+        System.out.println("\t+———————————————————————————————————————————————————————————————————+");
+        System.out.println("\t\t\t\t\t\t\t\t1. 무주점" );
+        System.out.println("\t\t\t\t\t\t\t\t2. 강촌점" );
+        System.out.print("\t\t\t\t\t\t숙박 매출을 보고싶은 지점을 입력 : ");
+        System.out.println("\t+———————————————————————————————————————————————————————————————————+");
+        System.out.print("\t\t\t\t\t\t\t\t➤ 입력 : ");
+//        System.out.println("1. 무주점 \t 2. 강촌점");
         String revenuePointer = sc.nextLine();
         String region = null;
         if(revenuePointer.equals("1")) {
@@ -402,14 +551,21 @@ public class MenuAdmin {
             int grandTotalRevenue = 0;
             Calendar startDate = Calendar.getInstance();
             Calendar endDate = Calendar.getInstance();
-
-            System.out.println("조회하려는 첫 날짜 입력 2024.04.01");
+            System.out.println("\t+———————————————————————————————————————————————————————————————————+");
+            System.out.println("\t\t\t\t\t\t\t조회하려는 첫 날짜를 입력하세요." );
+            System.out.println("\t\t\t\t\t\t\t\tyyyy.mm.dd 형식" );
+            System.out.print("\t\t\t\t\t\t\t\t➤ 입력 : ");
             startDate.setTime(sdf.parse(sc.nextLine()));
-
-            System.out.println("조회하려는 마지막 날짜 입력 2024.04.03");
+            System.out.println("\t\t\t\t\t\t\t조회하려는 끝 날짜를 입력하세요." );
+            System.out.println("\t\t\t\t\t\t\t\tyyyy.mm.dd 형식" );
+            System.out.print("\t\t\t\t\t\t\t\t➤ 입력 : ");
             endDate.setTime(sdf.parse(sc.nextLine()));
+            System.out.println("\t+———————————————————————————————————————————————————————————————————+");
+//            System.out.println("조회하려는 첫 날짜 입력 2024.04.01");
+//            System.out.println("조회하려는 마지막 날짜 입력 2024.04.03");
+
             if (!startDate.before(endDate)) {
-                System.out.println("시작 날짜가 마지막 날짜보다 뒤에 있습니다. 다시 입력해 주십시오.");
+                System.out.println("시작 날짜가 마지막 날짜보다 뒤에 있습니다. 다시 입력해 주세요.");
                 return; // 함수 종료
             }
             endDate.add(Calendar.DATE, 1); // 마지막 날짜를 포함 안시켜서 1일 더해줌
@@ -468,6 +624,12 @@ public class MenuAdmin {
             fileIo.productListWriter(name,region,new HashMap<String, Boolean>());
             productList = new HashMap<String, Product>();
         }
+
+        if (productList.size() >= 75) {
+            System.out.println("제품의 개수가 75개를 초과할 수 없습니다.");
+            return;
+        }
+
         String size = null;
         int howMany = 0;
         int price = 0;
@@ -489,6 +651,12 @@ public class MenuAdmin {
             System.out.println("잘못된 입력");
             return;
         }
+
+        if (productList.size() + howMany > 75) {
+            System.out.println("제품을 추가할 수 없습니다. 최대 제한을 초과합니다.");
+            return;
+        }
+
         for(int i = 0; i < howMany; i++) {
             productList.put(numberGen(4), new Product(size,price,new HashMap<String, Boolean>()));
         }

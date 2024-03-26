@@ -54,10 +54,10 @@ public class MenuMember {
                     System.out.println(member.getUserId() + "님 로그아웃 되었습니다!");
                     break;
                 case "5":
-//                    tmp_addRoom();
+                    tmp_addRoom();
                     break;
                 case "6":
-//                    tmp_checkRoom();
+                    tmp_checkRoom();
                     break;
 //                case 7:
 //                    deleteMemberInfoSelf(member);
@@ -103,7 +103,7 @@ public class MenuMember {
         }
 
         // 수정이 필요
-//        room = new Room(this.region, reservationRoomNumber,this.capacity,this.roomList.get(reservationRoomNumber).getPrice());
+        room = new Room(this.region, reservationRoomNumber,this.capacity,this.roomList.get(reservationRoomNumber).getPrice());
         Map<String,Product> rental = new HashMap<String,Product>();
         Reservation reservation = new Reservation(this.member, room, rental);
         int randomNumber = random.nextInt(100000000);
@@ -519,33 +519,33 @@ public class MenuMember {
     }
 
     // 나중에 다른곳으로 빠질 애들
-//    public void tmp_addRoom(){
-//        System.out.println("방 만들기 Test");
-//        System.out.print("지역(muju/gangchon) : ");
-//        String region = sc.nextLine();
-//        if(!fileIo.inRegion(region)) return;
-//        System.out.print("몇호(숫자만) : ");
-//        int roomNumber = Integer.parseInt(sc.nextLine());
-//        System.out.print("인원(숫자만) : ");
-//        int capacity = Integer.parseInt(sc.nextLine());
-//        System.out.print("가격(숫자만) : ");
-//        int price = Integer.parseInt(sc.nextLine());
-//
-//        Room room = new Room(region,roomNumber,capacity,price);
-//        roomList = fileIo.roomListReader(region);
-//        roomList.put(roomNumber,room);
-//        fileIo.roomListWriter(region, roomList);
-//    }
-//
-//    public void tmp_checkRoom(){
-//        System.out.println("방 데이터 Test");
-//        System.out.print("지역 : ");
-//        String region = sc.nextLine();
-//        roomList = fileIo.roomListReader(region);
-//        for (Map.Entry mem : roomList.entrySet()){
-//            System.out.println("호수 : " + mem.getKey() + " / " + "방클래스 : " + mem.getValue());
-//        }
-//    }
+    public void tmp_addRoom(){
+        System.out.println("방 만들기 Test");
+        System.out.print("지역(muju/gangchon) : ");
+        String region = sc.nextLine();
+        if(!fileIo.inRegion(region)) return;
+        System.out.print("몇호(숫자만) : ");
+        int roomNumber = Integer.parseInt(sc.nextLine());
+        System.out.print("인원(숫자만) : ");
+        int capacity = Integer.parseInt(sc.nextLine());
+        System.out.print("가격(숫자만) : ");
+        int price = Integer.parseInt(sc.nextLine());
+
+        Room room = new Room(region,roomNumber,capacity,price);
+        roomList = fileIo.roomListReader(region);
+        roomList.put(roomNumber,room);
+        fileIo.roomListWriter(region, roomList);
+    }
+
+    public void tmp_checkRoom(){
+        System.out.println("방 데이터 Test");
+        System.out.print("지역 : ");
+        String region = sc.nextLine();
+        roomList = fileIo.roomListReader(region);
+        for (Map.Entry mem : roomList.entrySet()){
+            System.out.println("호수 : " + mem.getKey() + " / " + "방클래스 : " + mem.getValue());
+        }
+    }
 
 //    private void editMemberInfoSelf(Member member) {
 //        System.out.println("1. 비밀번호 / 2. 전화번호");
