@@ -32,8 +32,13 @@ public class MenuMember {
         this.member = member;
         String pointer = null;
         do{
-            System.out.println("===== 회원 메뉴 =====");
-            System.out.println("1.예약하기, 2.예약취소, 3.예약조회, 4.로그아웃, 5.tmp_방 추가, 6.tmp_방 조회");
+            System.out.println("\t\t\t\t\t\t< 회원 메뉴 >");
+            System.out.println("\t〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓");
+            System.out.println("\t\t\t\t\t\t\t\t1. 회원접속   " );
+            System.out.println("\t\t\t\t\t\t\t\t2. 관리자접속  " );
+            System.out.println("\t\t\t\t\t\t\t\t3. 서비스 종료" );
+            System.out.println("\t〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓");
+            System.out.println("1. 예약하기, 2. 예약취소, 3. 예약조회, 4. 로그아웃 ");
             pointer = sc.nextLine();
             switch (pointer) {
                 case "1":
