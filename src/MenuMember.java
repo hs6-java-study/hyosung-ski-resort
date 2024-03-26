@@ -146,7 +146,7 @@ public class MenuMember {
         fileIo.productListWriter("Helmet",this.region,helmetList);
         fileIo.productListWriter("Clothes",this.region,clothesList);
         fileIo.productListWriter("Equipment",this.region,equipmentList);
-
+        
         // 예약 내역 추가
         reservationList = fileIo.reservationListReader(region);
         reservationList.put(randomNumber,reservation);
@@ -156,6 +156,35 @@ public class MenuMember {
         for(Map.Entry m :reservationList.entrySet()){
             System.out.println(m.getKey() + " / " + m.getValue());
         }
+
+        // 회원 등급에 따른 할인율 적용
+        double discountRate = member.getDiscountRate();
+
+        double discountedRoomPrice = room.getPrice() * (1 - discountRate); // 할인된 방 가격
+        double totalRentalPrice = 0; // 장비 렌탈 가격 초기화
+
+        for(String rentNumber : rentProduct) {
+            Product rentedProduct = ProductList.get(rentNumber);
+            if(rentedProduct != null) {
+                totalRentalPrice += rentedProduct.getPrice() * (1 - discountRate); // 할인된 장비 렌탈 가격
+            }
+        }
+
+        // 최종 결제 금액 계산
+        double totalPayment = discountedRoomPrice + totalRentalPrice;
+
+        // 포인트 업데이트 로직을 실행
+        member.updatePoints((int)totalPayment);
+
+        // 변경된 회원 정보 업데이트
+        memberList.put(member.getUserId(), member);
+        fileIo.memberListWriter(memberList);
+
+        System.out.println("할인율 확인용 콘솔 : 전체 회원 일단 출력쓰");
+        // 확인용 출력
+        memberList.entrySet().stream()
+                .forEach(entry -> System.out.println("[확인용 출력] 회원 ID : " + entry.getKey() + " | member 정보 : " + entry.getValue()));
+
     }
 
     // makeMyReservation 헬퍼 함수
