@@ -157,20 +157,23 @@ public class MenuMember {
         }
 
         // 회원 등급에 따른 할인율 적용
+        List<String> pointDateList = this.manageDate.getStartAndEndDate(); // 기존 리스트
+        Set<String> pointDateSet = new HashSet<>(pointDateList); // 중복 제거
         double discountRate = member.getDiscountRate();
+        double totalPayment = 0;
 
-        double discountedRoomPrice = room.getPrice() * (1 - discountRate); // 할인된 방 가격
-        double totalRentalPrice = 0; // 장비 렌탈 가격 초기화
-
-        for(String rentNumber : rentProduct) {
-            Product rentedProduct = ProductList.get(rentNumber);
-            if(rentedProduct != null) {
-                totalRentalPrice += rentedProduct.getPrice() * (1 - discountRate); // 할인된 장비 렌탈 가격
+        for (int i = 0; i < pointDateSet.size(); i++) {
+            double discountedRoomPrice = room.getPrice() * (1 - discountRate); // 할인된 방 가격
+            double totalRentalPrice = 0; // 날짜마다 초기화
+            for(String rentNumber : rentProduct) {
+                Product rentedProduct = ProductList.get(rentNumber);
+                if(rentedProduct != null) {
+                    totalRentalPrice += rentedProduct.getPrice() * (1 - discountRate); // 할인된 장비 렌탈 가격
+                }
             }
+            // 각 날짜별 결제 금액을 총 결제 금액에 더하기
+            totalPayment += discountedRoomPrice + totalRentalPrice;
         }
-
-        // 최종 결제 금액 계산
-        double totalPayment = discountedRoomPrice + totalRentalPrice;
 
         // 포인트 업데이트 로직을 실행
         member.updatePoints((int)totalPayment);
@@ -516,6 +519,40 @@ public class MenuMember {
         fileIo.productListWriter("Helmet",this.region,helmetList);
         fileIo.productListWriter("Clothes",this.region,clothesList);
         fileIo.productListWriter("Equipment",this.region,equipmentList);
+
+        // 회원 등급에 따른 할인율 적용
+        int deletePointDate = deletedReservation.getRoom().getReservationDates().size();
+        double discountRate = member.getDiscountRate();
+        System.out.println("@@@");
+
+        // 차감해야 할 총 금액 계산
+        double totalRentalPrice = 0;
+        for (int i = 0; i < deletePointDate; i++) {
+            double discountedRoomPrice = room.getPrice() * (1 - discountRate); // 할인된 방 가격
+            double totalRentalDeduction = 0; // 날짜마다 초기화
+            for(String rentNumber : deletedReservation.getProducts().keySet()) { // 수정된 부분
+                Product rentedProduct = ProductList.get(rentNumber);
+                if(rentedProduct != null) {
+                    totalRentalDeduction += rentedProduct.getPrice() * (1 - discountRate); // 할인된 장비 렌탈 가격
+                }
+            }
+            totalRentalPrice += discountedRoomPrice + totalRentalDeduction;
+        }
+
+        // 사용자의 현재 포인트에서 차감
+        int newPoints = member.getPoint() - (int)totalRentalPrice;
+
+        // 포인트 업데이트
+        member.setPoint(newPoints); // 사용자 포인트 직접 설정 또는 적절한 메소드 사용
+
+        // 변경된 회원 정보 업데이트
+        memberList.put(member.getUserId(), member);
+        fileIo.memberListWriter(memberList);
+
+        System.out.println("할인율 확인용 콘솔 : 전체 회원 일단 출력쓰");
+        // 확인용 출력
+        memberList.entrySet().stream()
+                .forEach(entry -> System.out.println("[확인용 출력] 회원 ID : " + entry.getKey() + " | member 정보 : " + entry.getValue()));
     }
 
     // 나중에 다른곳으로 빠질 애들
