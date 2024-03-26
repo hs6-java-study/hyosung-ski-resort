@@ -15,27 +15,25 @@ public class AuthMember {
     }
 
     public void run() {
-        int pointer;
+        String pointer = null;
         do {
             member = null;
             System.out.println("1. 회원 로그인 / 2. 회원 회원가입 / 3. 뒤로");
-            pointer = Integer.parseInt(sc.nextLine());
+            pointer = sc.nextLine();
             switch (pointer) {
-                case 1:
+                case "1":
                     login();
-//                    menuMember = new MenuMember();
-//                    menuMember.run(member);
                     break;
-                case 2:
+                case "2":
                     signup();
                     break;
-                case 3:
+                case "3":
                     System.out.println("뒤로이동");
                     break;
                 default:
                     System.out.println("잘못된입력");
             }
-        } while (pointer != 3);
+        } while (!pointer.equals("3"));
 
     }
 
