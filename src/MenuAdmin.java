@@ -108,8 +108,9 @@ public class MenuAdmin {
         memberList = fileIo.memberListReader();
         System.out.print("검색 하실 회원의 이름: ");
         String searchName = sc.nextLine();
-
-        boolean isEmptySearchedMemberByName = memberList.entrySet().stream().anyMatch(entry -> entry.getValue().getName().equals(searchName));
+        System.out.println("삭제할 회원의 전화번호 뒤 네자리");
+        String phoneNumLastFour = sc.nextLine();
+        boolean isEmptySearchedMemberByName = memberList.entrySet().stream().anyMatch(entry -> entry.getValue().getName().equals(searchName) && entry.getValue().getPhoneNumber().endsWith(phoneNumLastFour));
 
         if (isEmptySearchedMemberByName) {
             System.out.println("ID \t 전화번호 \t 등급 \t 포인트 \t");
@@ -129,9 +130,10 @@ public class MenuAdmin {
     private void deleteOneMember() {
         System.out.print("삭제할 회원의 이름: ");
         String deleteName = sc.nextLine();
+        System.out.println("삭제할 회원의 전화번호 뒤 네자리");
+        String phoneNumLastFour = sc.nextLine();
         memberList = fileIo.memberListReader();
-        boolean removed = memberList.entrySet().removeIf(entry -> entry.getValue().getName().equals(deleteName));
-
+        boolean removed = memberList.entrySet().removeIf(entry -> entry.getValue().getName().equals(deleteName) && entry.getValue().getPhoneNumber().endsWith(phoneNumLastFour));
         if (removed) {
             System.out.println(deleteName + " 회원의 정보가 성공적으로 삭제되었습니다.");
             fileIo.memberListWriter(memberList); // 변경된 회원 목록을 파일에 다시 쓰기
