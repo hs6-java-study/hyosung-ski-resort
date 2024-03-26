@@ -13,5 +13,6 @@ public class FamilyRoom extends RoomTest {
         roomType = "FamilyRoom";
         capacity = 4;
         price = 200_000;
+        roomNumber = makeRoomNumber(region);
     }
 }

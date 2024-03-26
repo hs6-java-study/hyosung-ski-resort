@@ -10,7 +10,6 @@ public class MenuMember {
     private Room room;
     private Map<String,Product> products;
     private Map<Integer,Reservation> reservationList;
-    private int pointer;
     private String region;
     private int capacity;
     private String period;
@@ -29,27 +28,28 @@ public class MenuMember {
 
     public void run(Member member){
         this.member = member;
+        String pointer = null;
         do{
             System.out.println("===== 회원 메뉴 =====");
             System.out.println("1. 예약하기, 2. 예약취소, 3. 예약조회, 4. 로그아웃, 5. tmp_방 추가, 6. tmp_방 조회");
-            this.pointer = Integer.parseInt(sc.nextLine());
+            pointer = sc.nextLine();
             switch (pointer) {
-                case 1:
+                case "1":
                     makeMyReservation(member);
                     break;
-                case 2:
+                case "2":
                     deleteMyReservation();
                     break;
-                case 3:
+                case "3":
                     getMyReservations();
                     break;
-                case 4:
+                case "4":
                     System.out.println(member.getUserId() + "님 로그아웃 되었습니다!");
                     break;
-                case 5:
+                case "5":
                     tmp_addRoom();
                     break;
-                case 6:
+                case "6":
                     tmp_checkRoom();
                     break;
 //                case 7:
@@ -61,7 +61,7 @@ public class MenuMember {
                 default:
                     System.out.println("잘못된입력");
             }
-        }while(pointer != 4);
+        }while(pointer != "4");
     }
 
     public void makeMyReservation(Member member){
@@ -264,28 +264,30 @@ public class MenuMember {
         return this.roomList;
     }
 
-    // makeMyReservation 헬퍼 함수
+    // makeMyReservation 헬퍼 함수 : 사라질 수도 있는 함수
     private String choiceRegion (){
+        String pointer =  null;
         do{
-            System.out.print("지점 => 1. 무주 , 2. 하이원 >>> 번호입력 : ");
-            pointer = Integer.parseInt(sc.nextLine());
+            System.out.print("지점 => 1. 무주 , 2. 하이원 , 3. 뒤로가기 >>> 번호입력 : ");
+            pointer = sc.nextLine();
             switch (pointer){
-                case 1:
+                case "1":
                     region = "muju";
                     break;
-                case 2:
+                case "2":
                     region = "gangchon";
                     break;
-                case 3:
-
+                case "3":
+                    region = "";
+                    break;
                 default:
                     System.out.println("잘못된입력");
             }
-        }while(pointer >= 3);
+        }while(pointer != "3");
         return region;
     }
 
-    // makeMyReservation 헬퍼 함수
+    // makeMyReservation 헬퍼 함수 : 사라질 수도 있는 함수
     private int choiceCapacity(){
         do{
             System.out.print("인원 => (1 ~ 6) >>> 번호입력 : ");
@@ -299,7 +301,6 @@ public class MenuMember {
 
     // makeMyReservation 헬퍼 함수
     private String choosePeriod(){
-        // 유효성 검사 필요
         System.out.print("시작날짜 => ex) 2024.04.26 >>> 번호입력 : ");
         String start = sc.nextLine();
         System.out.print("종료날짜 => ex) 2024.04.26 >>> 번호입력 : ");

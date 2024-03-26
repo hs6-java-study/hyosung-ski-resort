@@ -18,12 +18,12 @@ public abstract class RoomTest {
 
     RoomTest(){
         this.Dates = new HashMap<Date,Boolean>();
-        this.roomNumber = setRoomNumber();
     }
     abstract void prepare();
 
     // 자동으로 호수 안겹치게 설정해주는 logic 필요
-    private int setRoomNumber(){
+    public int makeRoomNumber(String region){
+
         return 8;
     }
 }

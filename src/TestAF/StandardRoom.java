@@ -12,5 +12,6 @@ public class StandardRoom extends RoomTest {
         roomType = "StandardRoom";
         capacity = 2;
         price = 100_000;
+        roomNumber = makeRoomNumber(region);
     }
 }
