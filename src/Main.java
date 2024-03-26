@@ -1,7 +1,6 @@
 import TestAF.BuildGangChonRoom;
 import TestAF.BuildMuJuRoom;
 import TestAF.BuildRoom;
-import TestAF.RoomTest;
 
 public class Main {
     public static void main(String[] args) {

@@ -13,6 +13,6 @@ public class FamilyRoom extends RoomTest {
         roomType = "TestAF.FamilyRoom";
         capacity = 4;
         price = 200_000;
-        roomNumber = makeRoomNumber(region);
+//        roomNumber = makeRoomNumber(region);
     }
 }

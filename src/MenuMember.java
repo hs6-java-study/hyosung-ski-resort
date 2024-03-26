@@ -1,4 +1,3 @@
-import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -50,10 +49,10 @@ public class MenuMember {
                     System.out.println(member.getUserId() + "님 로그아웃 되었습니다!");
                     break;
                 case "5":
-                    tmp_addRoom();
+//                    tmp_addRoom();
                     break;
                 case "6":
-                    tmp_checkRoom();
+//                    tmp_checkRoom();
                     break;
 //                case 7:
 //                    deleteMemberInfoSelf(member);
@@ -64,7 +63,7 @@ public class MenuMember {
                 default:
                     System.out.println("잘못된입력");
             }
-        }while(pointer != "4");
+        }while(!pointer.equals("4"));
     }
 
     public void makeMyReservation(){
@@ -98,7 +97,8 @@ public class MenuMember {
             break;
         }
 
-        room = new Room(this.region, reservationRoomNumber,this.capacity,this.roomList.get(reservationRoomNumber).getPrice());
+        // 수정이 필요
+//        room = new Room(this.region, reservationRoomNumber,this.capacity,this.roomList.get(reservationRoomNumber).getPrice());
         Map<String,Product> rental = new HashMap<String,Product>();
         Reservation reservation = new Reservation(this.member, room, rental);
         int randomNumber = random.nextInt(100000000);
@@ -178,7 +178,6 @@ public class MenuMember {
         // 확인용 출력
         memberList.entrySet().stream()
                 .forEach(entry -> System.out.println("[확인용 출력] 회원 ID : " + entry.getKey() + " | member 정보 : " + entry.getValue()));
-
     }
 
     // makeMyReservation 헬퍼 함수
@@ -441,9 +440,18 @@ public class MenuMember {
             System.out.print((i + 1) + ". " );
             System.out.println(reservationNumberList.get(i) + " / " + totalReservations.get(reservationNumberList.get(i)).toString());
         }
-        System.out.print("삭제할 번호 입력 : ");
-        int order = Integer.parseInt(sc.nextLine());
 
+        int order = 0;
+        boolean validInput = false;
+        do {
+            try {
+                System.out.print("삭제할 번호 입력 : ");
+                order = Integer.parseInt(sc.nextLine());
+                validInput = true;
+            } catch (NumberFormatException e) {
+                System.out.println("잘못된 입력입니다. 숫자를 입력해주세요.");
+            }
+        } while (!validInput);
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
         String today = dateFormat.format(new Date());
@@ -503,37 +511,36 @@ public class MenuMember {
         fileIo.productListWriter("Helmet",this.region,helmetList);
         fileIo.productListWriter("Clothes",this.region,clothesList);
         fileIo.productListWriter("Equipment",this.region,equipmentList);
-
     }
 
     // 나중에 다른곳으로 빠질 애들
-    public void tmp_addRoom(){
-        System.out.println("방 만들기 Test");
-        System.out.print("지역(muju/gangchon) : ");
-        String region = sc.nextLine();
-        if(!fileIo.inRegion(region)) return;
-        System.out.print("몇호(숫자만) : ");
-        int roomNumber = Integer.parseInt(sc.nextLine());
-        System.out.print("인원(숫자만) : ");
-        int capacity = Integer.parseInt(sc.nextLine());
-        System.out.print("가격(숫자만) : ");
-        int price = Integer.parseInt(sc.nextLine());
-
-        Room room = new Room(region,roomNumber,capacity,price);
-        roomList = fileIo.roomListReader(region);
-        roomList.put(roomNumber,room);
-        fileIo.roomListWriter(region, roomList);
-    }
-
-    public void tmp_checkRoom(){
-        System.out.println("방 데이터 Test");
-        System.out.print("지역 : ");
-        String region = sc.nextLine();
-        roomList = fileIo.roomListReader(region);
-        for (Map.Entry mem : roomList.entrySet()){
-            System.out.println("호수 : " + mem.getKey() + " / " + "방클래스 : " + mem.getValue());
-        }
-    }
+//    public void tmp_addRoom(){
+//        System.out.println("방 만들기 Test");
+//        System.out.print("지역(muju/gangchon) : ");
+//        String region = sc.nextLine();
+//        if(!fileIo.inRegion(region)) return;
+//        System.out.print("몇호(숫자만) : ");
+//        int roomNumber = Integer.parseInt(sc.nextLine());
+//        System.out.print("인원(숫자만) : ");
+//        int capacity = Integer.parseInt(sc.nextLine());
+//        System.out.print("가격(숫자만) : ");
+//        int price = Integer.parseInt(sc.nextLine());
+//
+//        Room room = new Room(region,roomNumber,capacity,price);
+//        roomList = fileIo.roomListReader(region);
+//        roomList.put(roomNumber,room);
+//        fileIo.roomListWriter(region, roomList);
+//    }
+//
+//    public void tmp_checkRoom(){
+//        System.out.println("방 데이터 Test");
+//        System.out.print("지역 : ");
+//        String region = sc.nextLine();
+//        roomList = fileIo.roomListReader(region);
+//        for (Map.Entry mem : roomList.entrySet()){
+//            System.out.println("호수 : " + mem.getKey() + " / " + "방클래스 : " + mem.getValue());
+//        }
+//    }
 
 //    private void editMemberInfoSelf(Member member) {
 //        System.out.println("1. 비밀번호 / 2. 전화번호");
