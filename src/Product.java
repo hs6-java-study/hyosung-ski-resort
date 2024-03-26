@@ -11,22 +11,18 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Product implements Serializable {
-    private int serialNum;
     private String size;
     private int price;
     private Map<String,Boolean> rentalDates;
 
-    public Product(int serialNum, String size, int price) {
-        this.serialNum = serialNum;
+    public Product(String size, int price) {
         this.size = size;
         this.price = price;
         this.rentalDates = new HashMap<String,Boolean>();
     }
     @Override
     public String toString() {
-        return "Product{" +
-                "serialNum='" + serialNum + '\'' +
-                ", size='" + size + '\'' +
+        return "Product{ size='" + size + '\'' +
                 ", price=" + price +
                 ", rentalDates=" + rentalDates +
                 '}';

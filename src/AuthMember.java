@@ -20,11 +20,11 @@ public class AuthMember {
             member = null;
             System.out.println("\n");
             System.out.println(AnsiColor.line("\t\t\t\t\t\t\t\t< 회원 접속 >"));
-            System.out.println("\t〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓");
+            System.out.println("\t+———————————————————————————————————————————————————————————————————+");
             System.out.println("\t\t\t\t\t\t\t\t1. 회원 로그인   " );
             System.out.println("\t\t\t\t\t\t\t\t2. 회원 회원가입  " );
             System.out.println("\t\t\t\t\t\t\t\t3. 뒤로 이동" );
-            System.out.println("\t〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓");
+            System.out.println("\t+———————————————————————————————————————————————————————————————————+");
             System.out.print("\t\t\t\t\t\t\t\t➤ 입력 : ");
             pointer = sc.nextLine();
             switch (pointer) {

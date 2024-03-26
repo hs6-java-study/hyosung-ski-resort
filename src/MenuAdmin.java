@@ -490,7 +490,7 @@ public class MenuAdmin {
             return;
         }
         for(int i = 0; i < howMany; i++) {
-            productList.put(numberGen(4), new Product(Integer.parseInt(numberGen(4)),size,price,new HashMap<String, Boolean>()));
+            productList.put(numberGen(4), new Product(size,price,new HashMap<String, Boolean>()));
         }
         fileIo.productListWriter(name, region, productList);
     }

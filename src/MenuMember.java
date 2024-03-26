@@ -219,7 +219,7 @@ public class MenuMember {
 
         for(Map.Entry<String,Product> product : this.products.entrySet()){
             if(!this.manageDate.isPossibleReservation((product.getValue()).getRentalDates())) {
-                System.out.println((product.getValue()).getSerialNum() + "는 예약 불가능 " + kind);
+                System.out.println(product.getKey() + "는 예약 불가능 " + kind);
                 continue;
             }
             if ((product.getValue()).getSize().equals("S") && counts[0] != 0){

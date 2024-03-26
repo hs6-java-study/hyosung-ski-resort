@@ -7,8 +7,8 @@ import java.util.Map;
 
 public class Helmet extends Product implements Serializable {
 
-    Helmet(int serialNum, String size,int price, Map<String,Boolean> rentalDates){
-        super(serialNum, size,price,rentalDates);
+    Helmet(String size,int price, Map<String,Boolean> rentalDates){
+        super(size,price,rentalDates);
     }
 
     @Override
