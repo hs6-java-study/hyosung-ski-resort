@@ -33,7 +33,7 @@ public class ManageDate {
                 Integer.parseInt(tmpEnd[0]),
                 Integer.parseInt(tmpEnd[1])-1,
                 Integer.parseInt(tmpEnd[2])-1);
-//
+
         Calendar currentDate = (Calendar) startDate.clone();
         while (!currentDate.after(endDate)) {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd");

@@ -11,6 +11,7 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Product implements Serializable {
+    private static final long serialVersionUID = 6741273514427688155L; // Room 클래스의 serialVersionUID 사용
     private String size;
     private int price;
     private Map<String,Boolean> rentalDates;

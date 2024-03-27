@@ -3,8 +3,9 @@ import lombok.AllArgsConstructor;
 import java.io.Serializable;
 
 @AllArgsConstructor
-public class AF_DeluxeRoom extends Room implements Serializable {
-    AF_RoomOptionFactory optionFactory;
+public class DeluxeRoom extends Room implements Serializable {
+    private static final long serialVersionUID = 6741273514427688155L; // Room 클래스의 serialVersionUID 사용
+    RoomOptionFactory optionFactory;
 
     public void prepare(){
         Bed = optionFactory.BuyBed();
