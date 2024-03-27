@@ -18,7 +18,7 @@ public class Menu {
                 "\t╚═╝  ╚═╝╚══════╝    ╚═╝  ╚═╝╚══════╝╚══════╝ ╚═════╝ ╚═╝  ╚═╝   ╚═╝   ");
         System.out.println(AnsiColor.line("\t\t\t\t\t\t< 효성 리조트에 오신것을 환영합니다 >"));
         do{
-            System.out.println("\t+———————————————————————————————————————————————————————————————————+");
+            System.out.println("\n\n\t+———————————————————————————————————————————————————————————————————+");
             System.out.println("\t\t\t\t\t\t\t\t1. 회원접속   " );
             System.out.println("\t\t\t\t\t\t\t\t2. 관리자접속  " );
             System.out.println("\t\t\t\t\t\t\t\t3. 서비스 종료" );
@@ -35,10 +35,10 @@ public class Menu {
                     manageAdmin.run();
                     break;
                 case 3:
-                    System.out.println("서비스 종료");
+                    System.out.println(AnsiColor.line("\t\t\t\t\t\t\t\t< 서비스 종료 >"));
                     break;
                 default:
-                    System.out.println("잘못된입력");
+                    System.out.println(AnsiColor.red("\t\t\t\t\t\t\t\t잘못된 입력입니다."));
             }
         }while(pointer != 3);
     }
