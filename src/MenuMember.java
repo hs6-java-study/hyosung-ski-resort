@@ -32,14 +32,19 @@ public class MenuMember {
         this.member = member;
         String pointer = null;
         do{
-            System.out.println("\t\t\t\t\t\t< 회원 메뉴 >");
-            System.out.println(AnsiColor.line("\t〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓"));
-            System.out.println("\t\t\t\t\t\t\t\t1. 회원접속   " );
-            System.out.println("\t\t\t\t\t\t\t\t2. 관리자접속  " );
-            System.out.println("\t\t\t\t\t\t\t\t3. 서비스 종료" );
-            System.out.println(AnsiColor.line("\t〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓"));
-            System.out.println("1. 예약하기, 2. 예약취소, 3. 예약조회, 4. 로그아웃 ");
+            System.out.println(AnsiColor.line("\n\t\t\t\t\t\t\t\t< 회원 메뉴 >"));
+            System.out.println("\t+———————————————————————————————————————————————————————————————————+");
+            System.out.println("\t\t\t\t\t\t\t\t1. 숙소 예약" );
+            System.out.println("\t\t\t\t\t\t\t\t2. 예약 취소" );
+            System.out.println("\t\t\t\t\t\t\t\t3. 예약 조회" );
+            System.out.println("\t\t\t\t\t\t\t\t4. 로그 아웃" );
+            System.out.println("\t\t\t\t\t\t\t\t5. 방생성 (임시)" );
+            System.out.println("\t\t\t\t\t\t\t\t6. 방확인 (임시)" );
+            System.out.println("\t+———————————————————————————————————————————————————————————————————+");
+            System.out.print("\t\t\t\t\t\t\t\t➤ 입력 : ");
             pointer = sc.nextLine();
+            System.out.println(AnsiColor.yellow("\t\t\t\t\t\t-뒤로가려면 \"X\"를 입력해주세요-"));
+
             switch (pointer) {
                 case "1":
                     makeMyReservation();
@@ -54,17 +59,12 @@ public class MenuMember {
                     System.out.println(member.getUserId() + "님 로그아웃 되었습니다!");
                     break;
                 case "5":
-                    tmp_addRoom();
+//                    tmp_addRoom();
+                    AF_addRoom();
                     break;
                 case "6":
                     tmp_checkRoom();
                     break;
-//                case 7:
-//                    deleteMemberInfoSelf(member);
-//                    break;
-//                case 8:
-//                    deleteMemberInfoSelf(member);
-//                    break;
                 default:
                     System.out.println("잘못된입력");
             }
@@ -73,23 +73,46 @@ public class MenuMember {
 
     public void makeMyReservation(){
         // 숙박 예약 로직
-        System.out.println("==== 지점, 인원, 기간을 입력해 주세요 ====");
+        System.out.println("\n\t\t\t\t\t\t지점, 인원, 기간을 입력해 주세요.");
 
-        this.region = chooseRegion();
-        this.capacity = chooseCapacity();
-        this.period = choosePeriod();
+        this.region = chooseRegion(); if(this.region.equals("X")) return;
+        this.capacity = chooseCapacity(); if(this.capacity == 0) return;
+        this.period = choosePeriod(); if(this.period.equals("X")) return;
         this.roomList = getRoomList(this.region, this.capacity, this.period);
 
-        System.out.println("==== 예약 가능한 객실 목록 ====");
-        for (Integer roomNumber : roomList.keySet()){
-            System.out.println(roomList.get(roomNumber).toString());
-        }
-        int reservationRoomNumber = chooseReservationRoomNumber();
+        System.out.println();
+        System.out.println(AnsiColor.yellow("\t\t\t\t\t\t\t\t< 내용 확인 >"));
+        System.out.println("\t\t\t\t\t\t\t지점 : " + (this.region.equals("muju") ? "무주점 리조트" : "강촌점 리조트" ));
+        System.out.println("\t\t\t\t\t\t\t인원 : " + this.capacity + "명");
+        System.out.println("\t\t\t\t\t\t\t기간 : " + this.period);
 
+        System.out.println("\n\t\t\t\t\t\t\t [ 예약 가능한 객실 목록 ] ");
+
+        System.out.format("\t\t\t+——————————————————+————————————+————————+————————————+%n");
+        System.out.format("\t\t\t|      방 종류      |    호실    |   인원  |    가격    |%n");
+        System.out.format("\t\t\t+——————————————————+————————————+————————+————————————+%n");
+        for (Integer roomNumber : roomList.keySet()){
+            Room roomInfo = roomList.get(roomNumber);
+            System.out.format("\t\t\t|  %-14s  |    %-4d    |   %-2d   |  %,8d  |%n",
+                    roomInfo.roomType, roomInfo.roomNumber, roomInfo.capacity, roomInfo.price);
+            System.out.format("\t\t\t+——————————————————+————————————+————————+————————————+%n");
+        }
+
+        int reservationRoomNumber = chooseReservationRoomNumber();
         // 장비 렌탈 로직
         this.rentProduct = new ArrayList<>();
+
+
         while(true){
-            System.out.println("==== 장비렌탈 ====");
+            System.out.print("\n\t\t\t\t\t\t장비를 대여 하시겠나요 ? (O / X) : ");
+            String pointer = sc.nextLine();
+            if (pointer.equals("X") || pointer.equals("x")) {
+                System.out.println(AnsiColor.green("\t\t\t\t\t\t숙박 예약이 완료되었습니다."));
+                break;
+            }else if (!pointer.equals("O") && !pointer.equals("o")) {
+                System.out.println(AnsiColor.red("\t\t\t\t\t\t잘못된 입력입니다."));
+                continue;
+            }
             while(true){
                 if(rentHelmetOrClothes("Helmet")) break ;
             }
@@ -103,7 +126,7 @@ public class MenuMember {
         }
 
         // 수정이 필요
-        room = new Room(this.region, reservationRoomNumber,this.capacity,this.roomList.get(reservationRoomNumber).getPrice());
+        room = this.roomList.get(reservationRoomNumber);
         Map<String,Product> rental = new HashMap<String,Product>();
         Reservation reservation = new Reservation(this.member, room, rental);
         int randomNumber = random.nextInt(100000000);
@@ -194,12 +217,18 @@ public class MenuMember {
         this.products = fileIo.productListReader(kind, this.region);
 
         // 장비 보여주는 출력
-        System.out.println("\n==== 장비 목록 ====");
-        for(Map.Entry<String,Product> p : this.products.entrySet()){
-            System.out.println(p.getKey() + " / " + p.getValue());
+        String kindKoreaName = (kind.equals("Helmet") ? "헬멧" : "의류");
+        System.out.println("\n\t\t\t\t\t\t\t\t [ " + kindKoreaName + " 목록 ]");
+        System.out.format("\t\t\t+——————————————————+——————————+————————+————————————+%n");
+        System.out.format("\t\t\t|   제품 고유번호   |  제품 종류 | 사이즈 |     가격    |%n");
+        System.out.format("\t\t\t+——————————————————+——————————+————————+————————————+%n");
+        for(Map.Entry<String,Product> product : this.products.entrySet()){
+            System.out.format("\t\t\t|  %-14s  |  %-4s  |   %-2s   |  %,8d  |%n",
+                    product.getKey(),kindKoreaName,product.getValue().getSize(),product.getValue().getPrice());
+            System.out.format("\t\t\t+——————————————————+——————————+————————+————————————+%n");
         }
 
-        System.out.print(kind + AuthValidation.EQUIPMENT_COUNT.getInputMessage());
+        System.out.print("\t\t\t\t\t " + kindKoreaName + " - " + AuthValidation.EQUIPMENT_COUNT.getInputMessage());
         String count = sc.nextLine();
         int[] counts = new int[3];
         if (!count.matches(AuthValidation.EQUIPMENT_COUNT.getRegex())) {
@@ -216,7 +245,7 @@ public class MenuMember {
         }
 
         if (totalProductCount > this.capacity) {
-            System.out.println(kind +" 개수가 인원을 초과");
+            System.out.println(AnsiColor.red("\t\t\t\t\t신청한 " + kind + " 개수가 인원을 초과했습니다."));
             return false;
         }
 
@@ -238,17 +267,17 @@ public class MenuMember {
                 counts[2]--;
             }
             else if (counts[0] == 0 && counts[1] == 0 && counts[2] == 0){
-                System.out.println("장비대여가능");
+                System.out.println(AnsiColor.green("\t\t\t\t\t장비를 대여할 수 있습니다."));
                 rentProduct.addAll(selectedProductNumbers);
                 return true;
             }
         }
         if (counts[0] == 0 && counts[1] == 0 && counts[2] == 0){
-            System.out.println("장비대여가능");
+            System.out.println(AnsiColor.green("\t\t\t\t\t장비를 대여할 수 있습니다."));
             rentProduct.addAll(selectedProductNumbers);
             return true;
         }
-        System.out.println("장비부족 못빌림");
+        System.out.println(AnsiColor.red("\t\t\t\t\t장비가 부족하여 빌릴 수 없습니다."));
         return false;
     }
 
@@ -300,7 +329,7 @@ public class MenuMember {
 
         // 인원 수 필터
         this.roomList = this.roomList.entrySet().stream()
-                .filter(room -> room.getValue().getCapacity() == capacity)
+                .filter(room -> room.getValue().getCapacity() >= capacity)
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
         // 기간 필터
@@ -318,7 +347,7 @@ public class MenuMember {
     private String chooseRegion (){
         String pointer =  null;
         do{
-            System.out.print("지점 => 1.무주 , 2.강촌 >>> 번호입력 : ");
+            System.out.print("\t\t\t\t\t\t지점 >> [ 1. 무주 / 2. 강촌 ] : ");
             pointer = sc.nextLine();
             switch (pointer){
                 case "1":
@@ -327,8 +356,12 @@ public class MenuMember {
                 case "2":
                     region = "gangchon";
                     break;
+                case "X":
+                    return "X";
+                case "x":
+                    return "X";
                 default:
-                    System.out.println("지점이 없습니다.");
+                    System.out.println(AnsiColor.red("\t\t\t\t\t\t지점이 없습니다."));
             }
         }while(!pointer.equals("1") && !pointer.equals("2"));
         return region;
@@ -340,17 +373,18 @@ public class MenuMember {
         int capacity = 0;
         boolean validInput = false;
         do{
-            System.out.print("인원 => (1 ~ 6) >>> 번호입력 : ");
+            System.out.print("\t\t\t\t\t\t인원 >> [  1 ~ 6 번호 입력  ] : ");
             pointer = sc.nextLine();
             try{
+                if (pointer.equals("X") || pointer.equals("x") ) return 0;
                 capacity = (Integer.parseInt(pointer));
                 if (capacity < 1 || capacity  > 6 ) {
-                    System.out.println("인원 수 부적합");
+                    System.out.println(AnsiColor.red("\t\t\t\t\t\t인원 수 부적합"));
                 }else{
                     validInput = true;
                 }
             } catch (NumberFormatException e){
-                System.out.println("잘못된 입력: 숫자를 입력하세요.");
+                System.out.println(AnsiColor.red("\t\t\t\t\t\t잘못된 입력: 숫자를 입력해주세요."));
             }
         }while (!validInput);
         return capacity;
@@ -365,27 +399,30 @@ public class MenuMember {
         String end = null;
         do {
             // 시작 날짜 확인
-            System.out.print("시작날짜 => " + AuthValidation.DATE.getInputMessage());
+            System.out.print("\t\t\t\t\t\t시작날짜 >> " + AuthValidation.DATE.getInputMessage());
             start = sc.nextLine();
+            if (start.equals("X") || start.equals("x") ) return "X";
+
             if (!isValidDate(start) || !start.matches(AuthValidation.DATE.getRegex())) {
                 System.out.println(AuthValidation.DATE.getFailureMessage());continue;
             }
             if( start.compareTo(today) <= 0) {
-                System.out.println("시작 날짜는 오늘 날짜보다 늦어야 합니다.");continue;
+                System.out.println(AnsiColor.red("\t\t\t\t\t\t이미 지난 날입니다."));continue;
             }
             break;
         } while (true);
 
         do{
             // 종료 날짜 확인
-            System.out.print("종료날짜 => " + AuthValidation.DATE.getInputMessage());
+            System.out.print("\t\t\t\t\t\t종료날짜 >> " + AuthValidation.DATE.getInputMessage());
             end = sc.nextLine();
+            if (end.equals("X") || end.equals("x") ) return "X";
 
             if (!isValidDate(end) || !end.matches(AuthValidation.DATE.getRegex())) {
                 System.out.println(AuthValidation.DATE.getFailureMessage()); continue;
             }
             if (end.compareTo(start) <= 0){
-                System.out.println("종료 날짜는 시작 날짜보다 늦어야 합니다."); continue;
+                System.out.println(AnsiColor.red("\t\t\t\t\t\t종료 날이 시작 날보다 빠릅니다.")); continue;
             }
             break;
         } while (true);
@@ -396,15 +433,16 @@ public class MenuMember {
         int reservationRoomNumber = 0;
         do {
             try {
-                System.out.print("호실 : ");
+                System.out.print("\t\t\t\t\t\t\t\t호실 입력 : ");
                 reservationRoomNumber = Integer.parseInt(sc.nextLine());
                 if (this.roomList.containsKey(reservationRoomNumber)) {
+                    System.out.println(AnsiColor.green("\t\t\t\t\t\t\t 예약이 가능합니다."));
                     return reservationRoomNumber;
                 } else {
-                    System.out.println("존재하지 않는 방");
+                    System.out.println(AnsiColor.red("\t\t\t\t\t\t  존재하지 않는 방입니다."));
                 }
             } catch (NumberFormatException e) {
-                System.out.println("잘못된 입력입니다. 숫자를 입력해주세요.");
+                System.out.println(AnsiColor.red("\t\t\t\t\t잘못된 입력입니다. 숫자를 입력해주세요."));
             }
         } while (true);
     }
@@ -555,23 +593,30 @@ public class MenuMember {
                 .forEach(entry -> System.out.println("[확인용 출력] 회원 ID : " + entry.getKey() + " | member 정보 : " + entry.getValue()));
     }
 
-    // 나중에 다른곳으로 빠질 애들
-    public void tmp_addRoom(){
-        System.out.println("방 만들기 Test");
-        System.out.print("지역(muju/gangchon) : ");
-        String region = sc.nextLine();
-        if(!fileIo.inRegion(region)) return;
-        System.out.print("몇호(숫자만) : ");
-        int roomNumber = Integer.parseInt(sc.nextLine());
-        System.out.print("인원(숫자만) : ");
-        int capacity = Integer.parseInt(sc.nextLine());
-        System.out.print("가격(숫자만) : ");
-        int price = Integer.parseInt(sc.nextLine());
+    public void AF_addRoom(){
+        System.out.print("1.무주 / 2.강촌 : ");
+        String where = sc.nextLine();
+        System.out.println("standard/deluxe/Family");
+        String RoomType = sc.nextLine();
+        Room room = null;
 
-        Room room = new Room(region,roomNumber,capacity,price);
-        roomList = fileIo.roomListReader(region);
-        roomList.put(roomNumber,room);
-        fileIo.roomListWriter(region, roomList);
+        switch (where){
+            case "1":
+                AF_BuildRoom mjBuild = new AF_BuildMuJuRoom();
+                room = mjBuild.orderRoom(RoomType);
+                break;
+            case "2":
+                AF_BuildRoom gcBuild = new AF_BuildGangChonRoom();
+                room = gcBuild.orderRoom(RoomType);
+                break;
+            default:
+                System.out.println("잘못된 입력");
+        }
+
+        where = (where.equals("1") ? "muju" : "gangchon");
+        roomList = fileIo.roomListReader(where);
+        roomList.put(room.getRoomNumber(),room);
+        fileIo.roomListWriter(where, roomList);
     }
 
     public void tmp_checkRoom(){

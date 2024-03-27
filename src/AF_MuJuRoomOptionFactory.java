@@ -1,6 +1,6 @@
-package TestAF;
+import java.io.Serializable;
 
-public class MuJuRoomOptionFactory implements  RoomOptionFactory {
+public class AF_MuJuRoomOptionFactory implements AF_RoomOptionFactory, Serializable {
     public String BuyTv() {
         return "SamsungTV";
     }
