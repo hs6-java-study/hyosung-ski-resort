@@ -38,8 +38,6 @@ public class MenuMember {
             System.out.println("\t\t\t\t\t\t\t\t2. 예약 취소" );
             System.out.println("\t\t\t\t\t\t\t\t3. 예약 조회" );
             System.out.println("\t\t\t\t\t\t\t\t4. 로그 아웃" );
-            System.out.println("\t\t\t\t\t\t\t\t5. 방생성 (임시)" );
-            System.out.println("\t\t\t\t\t\t\t\t6. 방확인 (임시)" );
             System.out.println("\t+———————————————————————————————————————————————————————————————————+");
             System.out.print("\t\t\t\t\t\t\t\t➤ 입력 : ");
             pointer = sc.nextLine();

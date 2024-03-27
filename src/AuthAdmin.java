@@ -47,7 +47,7 @@ public class AuthAdmin {
         String userId;
         do {
             System.out.println("\n\n\t+———————————————————————————————————————————————————————————————————+");
-            System.out.println("\t\t\t\t\t\t\t\t효성 리조트 관리자 회원 가입   " );
+            System.out.println("\t\t\t\t\t\t\t 효성 리조트 관리자 회원 가입" );
             System.out.println(AnsiColor.yellow("\t\t\t\t\t\t\t-뒤로가려면 \"X\"를 입력해주세요-"));
             System.out.println("\t+———————————————————————————————————————————————————————————————————+");
 
@@ -80,7 +80,7 @@ public class AuthAdmin {
 
         System.out.println("\n\n\t+———————————————————————————————————————————————————————————————————+");
         System.out.println("\t\t\t\t\t\t\t\t효성 리조트 관리자 로그인   " );
-        System.out.println(AnsiColor.yellow("\t\t\t\t\t\t\t-뒤로가려면 \"X\"를 입력해주세요-"));
+        System.out.println(AnsiColor.yellow("\t\t\t\t\t\t\t -뒤로가려면 \"X\"를 입력해주세요-"));
         System.out.println("\t+———————————————————————————————————————————————————————————————————+");
 
         while (true) {
