@@ -35,7 +35,6 @@ public class MenuAdmin {
             System.out.println("\t\t\t\t\t\t\t\t7. 로그 아웃" );
             System.out.println("\t+———————————————————————————————————————————————————————————————————+");
             System.out.print("\t\t\t\t\t\t\t\t➤ 입력 : ");
-//            System.out.println( "1. 회원 관리, 2. 예약 내역 관리, 3. 장비 관리, 4. 매출 조회, 5. 로그아웃" );
             pointer = sc.nextLine();
             switch (pointer) {
                 // 회원 관리
@@ -44,10 +43,8 @@ public class MenuAdmin {
                     System.out.println("\t+———————————————————————————————————————————————————————————————————+");
                     System.out.println("\t\t\t\t\t\t\t\t1. 전체 회원 조회" );
                     System.out.println("\t\t\t\t\t\t\t\t2. 특정 회원 조회" );
-                    System.out.println("\t\t\t\t\t\t\t\t3. 회원 탈퇴 처리" );
                     System.out.println("\t+———————————————————————————————————————————————————————————————————+");
                     System.out.print("\t\t\t\t\t\t\t\t➤ 입력 : ");
-//                    System.out.println("1. 회원 전체 조회, 2. 회원 정보 검색, 3. 회원 탈퇴 처리");
                     String pointerMemberManage = sc.nextLine();
                     if (pointerMemberManage.equals("1")) {
                         // 전체 회원 조회
@@ -151,13 +148,13 @@ public class MenuAdmin {
                 }
 
                 case "7": {
-                    System.out.println(AnsiColor.green(admin.getUserId() + "님 로그아웃 되었습니다!"));
+                    System.out.println(AnsiColor.green("\t\t\t\t\t\t"+admin.getUserId() + "님 로그아웃 되었습니다!"));
                     break;
                 }
                 default:
                     System.out.println(AnsiColor.red("\t\t\t\t\t\t\t\t  잘못된 입력"));
             }
-        } while (!pointer.equals("5"));
+        } while (!pointer.equals("7"));
     }
 
     // 전체 회원 목록
@@ -165,7 +162,7 @@ public class MenuAdmin {
         memberList = fileIo.memberListReader();
         if (memberList != null) {
             System.out.println("\t+———————————————————————————————————————————————————————————————————————————————————————+");
-            System.out.format("\t%-7s \t %-9s \t %-15s \t %-7s \t %-10s \t %s\n", "이름", "아이디" , "전화번호", "등급", "포인트", "총 예약 건수");
+            System.out.format("\t%-7s \t %-9s \t %-15s \t %-7s \t %-10s \t %s\n", "이름", "아이디" , "전화번호", "등급", "누적 지출", "총 예약 건수");
             System.out.println("\t+———————————————————————————————————————————————————————————————————————————————————————+");
             // 회원 정보 출력
             memberList.entrySet().stream()
@@ -198,7 +195,7 @@ public class MenuAdmin {
         if (isEmptySearchedMemberByName) {
             // 정보 출력 테이블
             System.out.println("\t+———————————————————————————————————————————————————————————————————+");
-            System.out.format("\t\t\t\t%-8s  %-11s  %-5s  %-9s\n", "아이디", "전화번호", "등급", "포인트");
+            System.out.format("\t\t\t\t%-8s  %-11s  %-5s  %-9s\n", "아이디", "전화번호", "등급", "누적 지출");
             System.out.println("\t+———————————————————————————————————————————————————————————————————+");
             memberList.entrySet().stream()
                     .filter(entry -> entry.getValue().getName().equals(searchName))
@@ -889,11 +886,11 @@ public class MenuAdmin {
             Room room = null;
             switch (where){
                 case "1":
-                    AF_BuildRoom mjBuild = new AF_BuildMuJuRoom();
+                    BuildRoom mjBuild = new BuildMuJuRoom();
                     room = mjBuild.orderRoom(roomType);
                     break;
                 case "2":
-                    AF_BuildRoom gcBuild = new AF_BuildGangChonRoom();
+                    BuildRoom gcBuild = new BuildGangChonRoom();
                     room = gcBuild.orderRoom(roomType);
                     break;
                 default:
