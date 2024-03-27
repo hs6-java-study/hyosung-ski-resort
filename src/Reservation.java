@@ -11,4 +11,7 @@ public class Reservation implements Serializable {
     private Member member;
     private Room room;
     private Map<String,Product> products;
+
+    public void forEach(Object o) {
+    }
 }
