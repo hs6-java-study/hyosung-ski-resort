@@ -53,7 +53,7 @@ public class MenuMember {
                     getMyReservations();
                     break;
                 case "4":
-                    System.out.println(member.getUserId() + "님 로그아웃 되었습니다!");
+                    System.out.println(AnsiColor.green("\t\t\t\t\t\t" + member.getUserId() + "님 로그아웃 되었습니다!"));
                     break;
                 default:
                     System.out.println("잘못된입력");
