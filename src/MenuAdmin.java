@@ -152,7 +152,7 @@ public class MenuAdmin {
             System.out.println("\t+———————————————————————————————————————————————————————————————————————————————————————+");
             // 회원 정보 출력
             memberList.entrySet().stream()
-                    .forEach(entry -> System.out.format("\t%-7s \t %-13s \t %-15s \t %-7s \t %-10d \t %s\n",
+                    .forEach(entry -> System.out.format("\t%-7s \t %-13s \t %-15s \t %-7s \t %-,10d \t %s\n",
                             entry.getValue().getName(),
                             entry.getValue().getUserId(),
                             entry.getValue().getPhoneNumber(),
@@ -185,7 +185,7 @@ public class MenuAdmin {
             System.out.println("\t+———————————————————————————————————————————————————————————————————+");
             memberList.entrySet().stream()
                     .filter(entry -> entry.getValue().getName().equals(searchName))
-                    .forEach(entry -> System.out.format("\t\t\t\t%-10s  %-13s  %-6s  %-10d\n",
+                    .forEach(entry -> System.out.format("\t\t\t\t%-10s  %-13s  %-6s  %-,10d\n",
                             entry.getKey(),
                             entry.getValue().getPhoneNumber(),
                             entry.getValue().getGrade(),
@@ -219,11 +219,11 @@ public class MenuAdmin {
             // 정보 출력 테이블
             System.out.println("\t+———————————————————————————————————————————————————————————————————————————————————————————————————+");
             System.out.format("\t%-7s \t %-10s \t %-4s \t %-9s \t %-10s \t %-10s \t %-7s%n",
-                    "이름", "아이디", "방 번호", "예약 금액", "체크인", "체크아웃", "장비 대여 수");
+                    "이름", "아이디", "방 번호", "1일 예약 금액", "체크인", "체크아웃", "장비 대여 수");
             System.out.println("\t+———————————————————————————————————————————————————————————————————————————————————————————————————+");
             reservationList.values().forEach(reservation -> {
 //                Set<Map.Entry<String, Boolean>> reservationDates = reservation.getRoom().getReservationDates().entrySet();
-            System.out.format("\t%-7s \t %-10s \t %-8s \t %-13d \t %-10s \t %-10s \t %-7d%n",
+            System.out.format("\t%-7s \t %-10s \t %-8s \t %-,13d \t %-10s \t %-10s \t %-7d%n",
                         reservation.getMember().getName(),
                         reservation.getMember().getUserId(),
                         reservation.getRoom().getRoomNumber(),
@@ -301,7 +301,7 @@ public class MenuAdmin {
             Map<Integer, Reservation> reservationList = fileIo.reservationListReader(region);
             if (reservationList != null && !reservationList.isEmpty()) {
                 System.out.println("\t+———————————————————————————————————————————————————————————————————————————————————————————————————+");
-                System.out.format("\t%-7s\t%-8s\t%-8s\t%-12s\t%-10s\t%-10s\t%-15s%n", "이름", "아이디", "방 번호", "예약 금액", "체크인", "체크아웃", "장비 대여 수");
+                System.out.format("\t%-7s\t%-8s\t%-8s\t%-12s\t%-10s\t%-10s\t%-15s%n", "이름", "아이디", "방 번호", "1일 예약 금액", "체크인", "체크아웃", "장비 대여 수");
                 System.out.println("\t+———————————————————————————————————————————————————————————————————————————————————————————————————+");
                 reservationList.values().forEach(reservation -> {
                     // 예약된 각 날짜에 대해 검사
@@ -322,7 +322,7 @@ public class MenuAdmin {
                     if (isOverlap) {
                         // 겹치는 날짜가 있으면, 예약 정보 출력
                         // 정보 출력
-                        System.out.format("\t%-7s\t%-10s\t%-8s\t%-12s\t%-15s\t%-15s\t%-15d%n",
+                        System.out.format("\t%-7s\t%-10s\t%-8s\t%-,12d\t%-15s\t%-15s\t%-15d%n",
                                 reservation.getMember().getName(), // 이름
                                 reservation.getMember().getUserId(), // 아이디
                                 reservation.getRoom().getRoomNumber(), // 방 번호
@@ -356,10 +356,10 @@ public class MenuAdmin {
             System.out.println("\t\t\t\t\t\t\t\t [ "+locationName + " ]");
             System.out.println("\t+———————————————————————————————————————————————————————————————————————————————————————————————————————————————+");
             System.out.format("\t%-7s\t%-10s\t%-8s\t%-9s\t%-10s\t%-7s\t%-10s\t%-12s\n",
-                    "이름", "전화번호", "방 번호", "수용 인원", "가격", "체크인", "체크아웃", "장비 대여 수");
+                    "이름", "전화번호", "방 번호", "수용 인원", "1일 예약 가격", "체크인", "체크아웃", "장비 대여 수");
             System.out.println("\t+———————————————————————————————————————————————————————————————————————————————————————————————————————————————+");
             filteredReservations.forEach(reservation ->
-                    System.out.format("\t%-7s\t%-15s\t%-10d\t%-9d\t%-10d\t%-10s\t%-13s\t%-5d%n",
+                    System.out.format("\t%-7s\t%-15s\t%-10d\t%-9d\t%-,13d\t%-10s\t%-13s\t%-5d%n\n",
                             reservation.getMember().getName(),
                             reservation.getMember().getPhoneNumber(),
                             reservation.getRoom().getRoomNumber(),
