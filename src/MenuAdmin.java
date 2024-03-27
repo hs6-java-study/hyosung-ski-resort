@@ -771,7 +771,7 @@ public class MenuAdmin {
             }
 
             if (productList.size() + howMany > 75) {
-                System.out.println(AnsiColor.red("\t\t\t\t\t제품을 추가할 수 없습니다. 최대 제한을 초과합니다."));
+                System.out.println(AnsiColor.red("\t\t\t\t\t제품을 추가할 수 없습니다. 최대 75개 제한을 초과합니다."));
                 return;
             }
 
