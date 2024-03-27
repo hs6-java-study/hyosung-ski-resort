@@ -136,7 +136,6 @@ public class MenuAdmin {
                     }
                     break;
                 }
-                // 로그아웃
                 case "5": {
                     AF_addRoom();
                     break;
@@ -236,7 +235,6 @@ public class MenuAdmin {
                     "이름", "아이디", "방 번호", "1일 예약 금액", "체크인", "체크아웃", "장비 대여 수");
             System.out.println("\t+———————————————————————————————————————————————————————————————————————————————————————————————————+");
             reservationList.values().forEach(reservation -> {
-//                Set<Map.Entry<String, Boolean>> reservationDates = reservation.getRoom().getReservationDates().entrySet();
             System.out.format("\t%-7s \t %-10s \t %-8s \t %-,13d \t %-10s \t %-10s \t %-7d%n",
                         reservation.getMember().getName(),
                         reservation.getMember().getUserId(),
@@ -712,75 +710,85 @@ public class MenuAdmin {
 
     // 물품 추가 통합 메서드
     private void combineAddProduct(String region ,String name) {
-        productList = fileIo.productListReader(name,region);
-        if(productList != null && !productList.isEmpty()){
-            System.out.println("\t+—————————————————————————————————————————————————————————+");
-            System.out.format("\t%-7s\t%-9s\t%-10s\t%-7s\n",
-                    "고유번호", "사이즈", "가격", "대여 날짜");
-            System.out.println("\t+—————————————————————————————————————————————————————————+");
-            productList.entrySet().stream().forEach(entry->
-                    System.out.format("\t%-9s\t%-9s\t%-7s\t%-8s\t\n",
-                            entry.getKey(),
-                            entry.getValue().getSize(),
-                            entry.getValue().getPrice(),
-                            entry.getValue().getRentalDates().keySet().stream().map(Object::toString) // Map의 키(날짜)를 문자열로 변환
-                                    .collect(Collectors.joining(", "))
-                    ));
-        } else {
-            fileIo.productListWriter(name,region,new HashMap<String, Boolean>());
-            productList = new HashMap<String, Product>();
-        }
+        boolean exitAddProduct = false;
+        do {
+            productList = fileIo.productListReader(name, region);
+            if (productList != null && !productList.isEmpty()) {
+                System.out.println("\t\t+—————————————————————————————————————————————————————————+");
+                System.out.format("\t\t%-7s\t%-9s\t%-10s\t%-7s\n",
+                        "고유번호", "사이즈", "가격", "대여 날짜");
+                System.out.println("\t\t+—————————————————————————————————————————————————————————+");
+                productList.entrySet().stream().forEach(entry ->
+                        System.out.format("\t\t%-9s\t%-9s\t%-7s\t%-8s\t\n",
+                                entry.getKey(),
+                                entry.getValue().getSize(),
+                                entry.getValue().getPrice(),
+                                entry.getValue().getRentalDates().keySet().stream().map(Object::toString) // Map의 키(날짜)를 문자열로 변환
+                                        .collect(Collectors.joining(", "))
+                        ));
+            } else {
+                fileIo.productListWriter(name, region, new HashMap<String, Boolean>());
+                productList = new HashMap<String, Product>();
+            }
 
-        // 물품 추가 최대 75개 까지
-        if (productList.size() >= 75) {
-            System.out.println(AnsiColor.red("\t\t\t\t\t\t\t\t제품의 개수가 75개를 초과할 수 없습니다."));
-            return;
-        }
+            // 물품 추가 최대 75개 까지
+            if (productList.size() >= 75) {
+                System.out.println(AnsiColor.red("\t\t\t\t\t\t\t\t제품의 개수가 75개를 초과할 수 없습니다."));
+                return;
+            }
 
-        String size = null;
-        String feat = null;
-        int howMany = 0;
-        int price = 0;
+            String size = null;
+            String feat = null;
+            int howMany = 0;
+            int price = 0;
 
-        validationUtils = new ValidationUtils();
+            validationUtils = new ValidationUtils();
 
-        // 장비 일 때
-        if(name.equals("Equipment")) {
+            // 장비 일 때
+            if (name.equals("Equipment")) {
                 // 장비 입력 검증
                 // 개수 / 가격
                 String searchInfo = validationUtils.getValidation(sc, AuthValidation.EQUIPMENT_ADD);
-                String [] productInput = searchInfo.split("/");
+                String[] productInput = searchInfo.split("/");
                 howMany = Integer.parseInt(productInput[0].trim());
                 price = Integer.parseInt(productInput[1].trim());
                 size = "Free";
                 feat = "장비";
 
-        // 헬멧 || 의류 일 때
-        } else if(name.equals("Helmet") || name.equals("Clothes")){
+                // 헬멧 || 의류 일 때
+            } else if (name.equals("Helmet") || name.equals("Clothes")) {
                 // 헬멧 || 의류 입력 검증
                 // 사이즈 / 개수 / 가격
                 String searchInfo = validationUtils.getValidation(sc, AuthValidation.HELMET_CLOTHES_ADD);
-                String [] productInput = searchInfo.split("/");
+                String[] productInput = searchInfo.split("/");
                 size = productInput[0].trim().toUpperCase();
                 howMany = Integer.parseInt(productInput[1].trim());
                 price = Integer.parseInt(productInput[2].trim());
                 feat = name.equals("Helmet") ? "헬멧" : "의류";
-        } else {
-            System.out.println(AnsiColor.red("\t\t\t\t\t\t\t\t  잘못된 입력"));
-            return;
-        }
+            } else {
+                System.out.println(AnsiColor.red("\t\t\t\t\t\t\t\t  잘못된 입력"));
+                return;
+            }
 
-        if (productList.size() + howMany > 75) {
-            System.out.println(AnsiColor.red("\t\t\t\t\t제품을 추가할 수 없습니다. 최대 제한을 초과합니다."));
-            return;
-        }
+            if (productList.size() + howMany > 75) {
+                System.out.println(AnsiColor.red("\t\t\t\t\t제품을 추가할 수 없습니다. 최대 75개 제한을 초과합니다."));
+                return;
+            }
 
-        for(int i = 0; i < howMany; i++) {
-            productList.put(numberGen(4), new Product(size,price,new HashMap<String, Boolean>()));
+            for (int i = 0; i < howMany; i++) {
+                productList.put(numberGen(4), new Product(size, price, new HashMap<String, Boolean>()));
+            }
+            fileIo.productListWriter(name, region, productList);
+            System.out.println(AnsiColor.green("\t\t\t\t\t  " + feat + " " + size + "/" + price + "원/" + howMany + "개 추가되었습니다."));
+            System.out.println("\t\t\t\t\t     계속 하시려면 0, 나가려면 엔터");
+            System.out.print("\t\t\t\t\t\t\t\t➤ 입력 : ");
+            if(sc.nextLine().equals("0")) {
+                exitAddProduct = false; // 계속
+            } else {
+                exitAddProduct = true; // while문 탈출
+            }
+        } while (!exitAddProduct);
         }
-        fileIo.productListWriter(name, region, productList);
-        System.out.println(AnsiColor.green("\t\t\t\t\t  "+feat + " " + size + "/" + price + "원/" + howMany + "개 추가되었습니다."));
-    }
 
     // 물품 삭제 통합 메서드
     private void combineDeleteProduct(String region, String name) {
@@ -825,6 +833,7 @@ public class MenuAdmin {
                     fileIo.productListWriter(name, region, productList);
                     System.out.println(AnsiColor.green("\t\t\t\t\t\t"+inputSerialNum + " / " + name + " 삭제되었습니다."));
                     System.out.println("\t\t\t\t\t     계속 하시려면 0, 나가려면 엔터");
+                    System.out.print("\t\t\t\t\t\t\t\t➤ 입력 : ");
                     if(sc.nextLine().equals("0")) {
                         exitDeleteProduct = true; // 계속
                     } else {
@@ -892,6 +901,7 @@ public class MenuAdmin {
                 case "2":
                     BuildRoom gcBuild = new BuildGangChonRoom();
                     room = gcBuild.orderRoom(roomType);
+                    System.out.println(AnsiColor.green("\t\t\t\t\t\t강촌 "+roomType+" 방이 생성되었습니다."));
                     break;
                 default:
                     System.out.println(AnsiColor.red("\t\t\t\t\t\t\t\t잘못된 입력입니다."));

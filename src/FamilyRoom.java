@@ -13,7 +13,7 @@ public class FamilyRoom extends Room implements Serializable {
         region = optionFactory.Region();
         roomType = "FamilyRoom";
         capacity = 4;
-        price = 200_000;
+        price = 5_000_000;
         roomNumber = makeRoomNumber(region);
     }
 }
