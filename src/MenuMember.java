@@ -41,7 +41,7 @@ public class MenuMember {
             System.out.println("\t\t\t\t\t\t\t\t5. 방생성 (임시)" );
             System.out.println("\t\t\t\t\t\t\t\t6. 방확인 (임시)" );
             System.out.println("\t+———————————————————————————————————————————————————————————————————+");
-            System.out.print("\t\t\t\t\t\t\t\t➤ 입력 : ");
+            System.out.print("\t\t\t\t\t\t\t\t➤ 방입력 : ");
             pointer = sc.nextLine();
             System.out.println(AnsiColor.yellow("\t\t\t\t\t\t-뒤로가려면 \"X\"를 입력해주세요-"));
 
@@ -57,13 +57,6 @@ public class MenuMember {
                     break;
                 case "4":
                     System.out.println(member.getUserId() + "님 로그아웃 되었습니다!");
-                    break;
-                case "5":
-//                    tmp_addRoom();
-                    AF_addRoom();
-                    break;
-                case "6":
-                    tmp_checkRoom();
                     break;
                 default:
                     System.out.println("잘못된입력");
@@ -591,42 +584,6 @@ public class MenuMember {
         // 확인용 출력
         memberList.entrySet().stream()
                 .forEach(entry -> System.out.println("[확인용 출력] 회원 ID : " + entry.getKey() + " | member 정보 : " + entry.getValue()));
-    }
-
-    public void AF_addRoom(){
-        System.out.print("1.무주 / 2.강촌 : ");
-        String where = sc.nextLine();
-        System.out.println("standard/deluxe/Family");
-        String RoomType = sc.nextLine();
-        Room room = null;
-
-        switch (where){
-            case "1":
-                AF_BuildRoom mjBuild = new AF_BuildMuJuRoom();
-                room = mjBuild.orderRoom(RoomType);
-                break;
-            case "2":
-                AF_BuildRoom gcBuild = new AF_BuildGangChonRoom();
-                room = gcBuild.orderRoom(RoomType);
-                break;
-            default:
-                System.out.println("잘못된 입력");
-        }
-
-        where = (where.equals("1") ? "muju" : "gangchon");
-        roomList = fileIo.roomListReader(where);
-        roomList.put(room.getRoomNumber(),room);
-        fileIo.roomListWriter(where, roomList);
-    }
-
-    public void tmp_checkRoom(){
-        System.out.println("방 데이터 Test");
-        System.out.print("지역 : ");
-        String region = sc.nextLine();
-        roomList = fileIo.roomListReader(region);
-        for (Map.Entry mem : roomList.entrySet()){
-            System.out.println("호수 : " + mem.getKey() + " / " + "방클래스 : " + mem.getValue());
-        }
     }
 
 //    private void editMemberInfoSelf(Member member) {

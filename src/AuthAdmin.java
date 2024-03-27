@@ -73,10 +73,6 @@ public class AuthAdmin {
         adminList.put(userId, admin);
         fileIo.adminListWriter(adminList);
         System.out.println(AnsiColor.green("\n\t\t\t\t안녕하세요! " + name + "님 효성 리조트 관리자 계정 가입이 완료되었습니다.\n"));
-
-        // 확인용 출력
-        adminList.entrySet().stream()
-                .forEach(entry -> System.out.println("[확인용 출력] 관리자 ID : " + entry.getKey() + "  | admin 정보 : " + entry.getValue()));
     }
 
     public void login() {
@@ -88,7 +84,6 @@ public class AuthAdmin {
         System.out.println("\t\t\t\t\t\t\t\t효성 리조트 관리자 로그인   " );
         System.out.println(AnsiColor.yellow("\t\t\t\t\t\t\t-뒤로가려면 \"X\"를 입력해주세요-"));
         System.out.println("\t+———————————————————————————————————————————————————————————————————+");
-        System.out.print("\t\t\t\t\t\t\t\t➤ 입력 : ");
 
         while (true) {
             System.out.print("\t\t\t\t\t\t\t\t➤ ID 입력 : ");
@@ -107,8 +102,8 @@ public class AuthAdmin {
             }
         }
 
-        // 현재 로그인한 관리자 정보 출력(확인용)
-        System.out.println("현재 로그인한 관리자 정보 출력 : " + admin.toString());
+        // 로그인 성공!
+        System.out.println(AnsiColor.green("\n\t\t\t\t\t\t안녕하세요! " + userId + "님 로그인이 완료되었습니다.\n"));
 
         menuAdmin = new MenuAdmin();
         menuAdmin.run(admin);
