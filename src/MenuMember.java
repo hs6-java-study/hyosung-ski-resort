@@ -655,15 +655,8 @@ public class MenuMember {
         ProductList.putAll(clothesList);
         ProductList.putAll(equipmentList);
 
-        for (Map.Entry<String, Product> p : ProductList.entrySet()) {
-            System.out.println(p.getKey() + " / " + p.getValue().getRentalDates());
-        }
-
         for (Map.Entry<String, Product> p : products.entrySet()) {
-            System.out.println(p.getKey() + " / " + p.getValue().getRentalDates());
             for (Map.Entry<String, Boolean> date : p.getValue().getRentalDates().entrySet()) {
-                System.out.println("date" + date.getKey());
-                System.out.println("productlist" + ProductList.get(p.getKey()).getRentalDates());
                 ProductList.get(p.getKey()).getRentalDates().remove(date.getKey());
             }
         }
