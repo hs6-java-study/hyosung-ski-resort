@@ -851,7 +851,7 @@ public class MenuAdmin {
             System.out.println("\n\t+———————————————————————————————————————————————————————————————————+");
             System.out.println("\t\t\t\t\t\t\t\t1. 무주" );
             System.out.println("\t\t\t\t\t\t\t\t2. 강촌" );
-            System.out.println(AnsiColor.yellow("\t\t\t\t\t\t\t원하는 방 지점의 번호를 입력하세요. ('x'를 입력하면 상위 메뉴로 돌아갑니다)"));
+            System.out.println(AnsiColor.yellow("\t\t\t\t원하는 방 지점의 번호를 입력하세요. ('x'를 입력하면 상위 메뉴로 돌아갑니다)"));
             System.out.println("\t+———————————————————————————————————————————————————————————————————+");
             System.out.print("\t\t\t\t\t\t\t\t➤ 입력 : ");
             String where = sc.nextLine();
@@ -867,7 +867,7 @@ public class MenuAdmin {
                 System.out.println("\t\t\t\t\t\t\t\tstandard");
                 System.out.println("\t\t\t\t\t\t\t\tdeluxe" );
                 System.out.println("\t\t\t\t\t\t\t\tFamily" );
-                System.out.println(AnsiColor.yellow("\t\t\t\t\t생성할 방의 타입을 입력하세요. ('x'를 입력하면 상위 메뉴로 돌아갑니다)"));
+                System.out.println(AnsiColor.yellow("\t\t\t\t생성할 방의 타입을 입력하세요. ('x'를 입력하면 상위 메뉴로 돌아갑니다)"));
                 System.out.println("\t+———————————————————————————————————————————————————————————————————+");
                 System.out.print("\t\t\t\t\t\t\t\t➤ 입력 : ");
                 roomType = sc.nextLine();
@@ -916,7 +916,7 @@ public class MenuAdmin {
     public void tmp_checkRoom(){
         while (true) {
             System.out.println("\n\t+———————————————————————————————————————————————————————————————————+");
-            System.out.println(AnsiColor.yellow("\t\t조회할 방 지점의 번호를 입력하세요. ('x'를 입력하면 상위 메뉴로 돌아갑니다)"));
+            System.out.println(AnsiColor.yellow("\t\t\t\t조회할 방 지점을 입력하세요. ('x'를 입력하면 상위 메뉴로 돌아갑니다)"));
             System.out.println("\t+———————————————————————————————————————————————————————————————————+");
             System.out.print("\t\t\t\t\t\t\t\t➤ 입력 : ");
             String region = sc.nextLine().trim(); // 입력 값의 앞뒤 공백 제거
@@ -938,14 +938,14 @@ public class MenuAdmin {
 
 
             // 테이블 헤더 출력
-            System.out.format("\t%-8s %-12s %-10s %-12s %-20s %-15s %-20s\n",
+            System.out.format("\t%-8s %-12s %-10s %-12s %-20s %-10s %-20s\n",
                     "지점", "방 호수", "인원 수", "가격", "방 종류", "Tv", "Bed");
             System.out.println("\t—————————————————————————————————————————————————————————————————————————————————————————————————————");
 
             // 테이블 내용 출력 부분에 적용
             for (Map.Entry mem : roomList.entrySet()) {
                 Room room = (Room) mem.getValue();
-                System.out.format("\t%-8s %-12d %-10d %-12d %-20s %-15s %-20s\n",
+                System.out.format("\t%-8s %-14d %-10d %-12d %-22s %-10s %-20s\n",
                         room.getRegion(),
                         room.getRoomNumber(),
                         room.getCapacity(),
