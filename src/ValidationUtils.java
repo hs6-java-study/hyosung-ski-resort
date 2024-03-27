@@ -6,14 +6,14 @@ public class ValidationUtils {
 
         String input;
         while (true) {
-            System.out.print(validation.getInputMessage());
+            System.out.print(AnsiColor.yellow("\t\t➤ "+validation.getInputMessage()));
             input = sc.nextLine();
-            if ("취소".equals(input)) {
-                System.out.println(validation.getCancellationMessage());
+            if ("x".equalsIgnoreCase(input) || input.trim().replace(" ", "").equals("")) {
+                System.out.println(AnsiColor.red("\t\t➤ "+validation.getCancellationMessage()));
                 return null;
             }
             if (!input.matches(validation.getRegex())) {
-                System.out.println(validation.getFailureMessage());
+                System.out.println(AnsiColor.red("\t\t➤ "+validation.getFailureMessage()));
                 continue;
             }
             break;
