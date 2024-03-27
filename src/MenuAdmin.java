@@ -381,10 +381,10 @@ public class MenuAdmin {
             System.out.println(AnsiColor.red("\t\t\t\t\t\t  장비 목록이 존재하지 않습니다."));
         }
         // 확인용 출력
-        System.out.println("\t+———————————————————————————————————————————————————————————————————————————————————————————————————————————————+");
+        System.out.println("\t+————————————————————————————————————————————————————————————————+");
         System.out.format("\t%-2s\t%-3s\t%-3s\t%-8s\t%-7s\t%-7s\n",
                 "지점", "분류" , "번호" , "사이즈", "가격", "대여 날짜");
-        System.out.println("\t+———————————————————————————————————————————————————————————————————————————————————————————————————————————————+");
+        System.out.println("\t+————————————————————————————————————————————————————————————————+");
         productList.entrySet().stream().forEach(entry->
             System.out.format("\t%-6s\t%-9s\t%-9s\t%-8s\t\n",
                     entry.getKey(),
@@ -509,10 +509,10 @@ public class MenuAdmin {
             case "1": {
                 int grandTotalRevenue = 0;
                 Calendar currentDate = Calendar.getInstance();
-                System.out.println("\t+———————————————————————————+");
-                System.out.format("\t%-11s\t%-3s\n",
+                System.out.println("\t\t\t\t\t\t+———————————————————————————+");
+                System.out.format("\t\t\t\t\t\t%-11s\t%-3s\n",
                         "월", "매출" );
-                System.out.println("\t+———————————————————————————+");
+                System.out.println("\t\t\t\t\t\t+———————————————————————————+");
                 // 3개월만, 이번달 기준 +- 1개월씩 3번
                 for(int i = 0; i < 3; i++) {
                     int totalRevenue = 0;
@@ -533,14 +533,14 @@ public class MenuAdmin {
                     // 3개월 총합 저장
                     grandTotalRevenue += totalRevenue;
 //                    System.out.println(yearMonth + " : " + totalRevenue);
-                    System.out.format("\t%-12s\t%,d\n",
+                    System.out.format("\t\t\t\t\t\t%-12s\t%,d\n",
                             yearMonth, totalRevenue );
                     // -1개월 해주기
                     currentDate.add(Calendar.MONTH, -1);
                 }
                 if(grandTotalRevenue != 0) {
-                    System.out.println("\t+———————————————————————————+");
-                    System.out.format("\t%-10s\t%,d\n",
+                    System.out.println("\t\t\t\t\t\t+———————————————————————————+");
+                    System.out.format("\t\t\t\t\t\t%-10s\t%,d\n",
                             "숙박 매출 총합", grandTotalRevenue );
                 } else {
                     System.out.println(AnsiColor.red("\t\t\t\t\t\t\t예약 내역이 없습니다."));
@@ -579,10 +579,10 @@ public class MenuAdmin {
         Calendar currentDate = Calendar.getInstance();
         Map<Integer, Reservation> reservationList = fileIo.reservationListReader(region);
 
-        System.out.println("\t+———————————————————————————+");
-        System.out.format("\t%-11s\t%-3s\n",
+        System.out.println("\t\t\t\t\t\t+———————————————————————————+");
+        System.out.format("\t\t\t\t\t\t%-11s\t%-3s\n",
                 "월", "매출" );
-        System.out.println("\t+———————————————————————————+");
+        System.out.println("\t\t\t\t\t\t+———————————————————————————+");
 
         // 개월수를 더 늘리고 싶다면 i < 3을 원하는 개월 수 만큼 증가
         // currentData.get(Calendar.Month + 원하는 개월 수 만큼 증가)
@@ -599,15 +599,15 @@ public class MenuAdmin {
                 }
             }
             monthlyRevenueMap.put(yearMonth, totalRevenue);
-            System.out.format("\t%-12s\t%,d\n",
+            System.out.format("\t\t\t\t\t\t%-12s\t%,d\n",
                     yearMonth, totalRevenue );
 
             currentDate.add(Calendar.MONTH, -1);
         }
         int grandTotalRevenue = monthlyRevenueMap.values().stream().mapToInt(Integer::intValue).sum();
         if(grandTotalRevenue != 0) {
-            System.out.println("\t+———————————————————————————+");
-            System.out.format("\t%-10s\t%,d\n",
+            System.out.println("\t\t\t\t\t\t+———————————————————————————+");
+            System.out.format("\t\t\t\t\t\t%-10s\t%,d\n",
                     "장비 매출 총합", grandTotalRevenue );
         } else {
             System.out.println(AnsiColor.red("\t\t\t\t\t\t\t예약 내역이 없습니다."));
