@@ -76,10 +76,7 @@ public class AuthMember {
         memberList.put(userId, member);
         fileIo.memberListWriter(memberList);
         System.out.println(AnsiColor.green("\n\t\t\t\t안녕하세요! " + name + "님 효성 리조트 회원 가입이 완료되었습니다.\n"));
-
-        // 확인용 출력
-        memberList.entrySet().stream()
-                .forEach(entry -> System.out.println("[확인용 출력] 회원 ID : " + entry.getKey() + " | member 정보 : " + entry.getValue()));
+        System.out.println(AnsiColor.green("\n\t\t\t\t이름 : " + name + " ID : " + userId + " 핸드폰 번호 : " + phoneNumber + "\n"));
     }
 
     public void login() {
@@ -109,8 +106,8 @@ public class AuthMember {
             }
         }
 
-        // 현재 로그인한 회원 정보 출력(확인용)
-        System.out.println("현재 로그인한 회원 정보 출력 : " + member.toString());
+        // 로그인 성공!
+        System.out.println(AnsiColor.green("\n\t\t\t\t\t\t안녕하세요! " + userId + "님 로그인이 완료되었습니다.\n"));
 
         menuMember = new MenuMember();
         menuMember.run(member);

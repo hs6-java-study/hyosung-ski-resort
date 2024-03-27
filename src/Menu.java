@@ -19,8 +19,8 @@ public class Menu {
         System.out.println(AnsiColor.line("\t\t\t\t\t\t< 효성 리조트에 오신것을 환영합니다 >"));
         do{
             System.out.println("\n\n\t+———————————————————————————————————————————————————————————————————+");
-            System.out.println("\t\t\t\t\t\t\t\t1. 회원접속   " );
-            System.out.println("\t\t\t\t\t\t\t\t2. 관리자접속  " );
+            System.out.println("\t\t\t\t\t\t\t\t1. 회원 접속   " );
+            System.out.println("\t\t\t\t\t\t\t\t2. 관리자 접속  " );
             System.out.println("\t\t\t\t\t\t\t\t3. 서비스 종료" );
             System.out.println("\t+———————————————————————————————————————————————————————————————————+");
             System.out.print("\t\t\t\t\t\t\t\t➤ 입력 : ");

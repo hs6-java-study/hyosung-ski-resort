@@ -14,6 +14,8 @@ public class MenuAdmin {
 
     Map<String, Product> productList;
 
+    private Map<Integer, Room> roomList;
+
     MenuAdmin() {
         sc = new Scanner(System.in);
         fileIo = new FileIO();
@@ -28,7 +30,9 @@ public class MenuAdmin {
             System.out.println("\t\t\t\t\t\t\t\t2. 예약 관리" );
             System.out.println("\t\t\t\t\t\t\t\t3. 장비 관리" );
             System.out.println("\t\t\t\t\t\t\t\t4. 매출 조회" );
-            System.out.println("\t\t\t\t\t\t\t\t5. 로그 아웃" );
+            System.out.println("\t\t\t\t\t\t\t\t5. 방 생성" );
+            System.out.println("\t\t\t\t\t\t\t\t6. 방 확인" );
+            System.out.println("\t\t\t\t\t\t\t\t7. 로그 아웃" );
             System.out.println("\t+———————————————————————————————————————————————————————————————————+");
             System.out.print("\t\t\t\t\t\t\t\t➤ 입력 : ");
 //            System.out.println( "1. 회원 관리, 2. 예약 내역 관리, 3. 장비 관리, 4. 매출 조회, 5. 로그아웃" );
@@ -114,11 +118,21 @@ public class MenuAdmin {
                 }
 
                 case "5": {
-                    System.out.println(admin.getUserId() + "님 로그아웃 되었습니다!");
+                    AF_addRoom();
+                    break;
+                }
+
+                case "6": {
+                    tmp_checkRoom();
+                    break;
+                }
+
+                case "7": {
+                    System.out.println(AnsiColor.green(admin.getUserId() + "님 로그아웃 되었습니다!"));
                     break;
                 }
                 default:
-                    System.out.println("잘못된 입력");
+                    System.out.println(AnsiColor.red("\t\t\t\t\t\t\t\t잘못된 입력입니다."));
             }
         } while (!pointer.equals("5"));
     }
@@ -708,4 +722,119 @@ public class MenuAdmin {
             }
         } while (exitDeleteProduct);
     }
+
+
+    public void AF_addRoom(){
+        while (true){
+            System.out.println("\n\t+———————————————————————————————————————————————————————————————————+");
+            System.out.println("\t\t\t\t\t\t\t\t1. 무주" );
+            System.out.println("\t\t\t\t\t\t\t\t2. 강촌" );
+            System.out.println(AnsiColor.yellow("\t\t\t\t\t\t\t원하는 방 지점의 번호를 입력하세요. ('x'를 입력하면 상위 메뉴로 돌아갑니다)"));
+            System.out.println("\t+———————————————————————————————————————————————————————————————————+");
+            System.out.print("\t\t\t\t\t\t\t\t➤ 입력 : ");
+            String where = sc.nextLine();
+
+            if ("x".equalsIgnoreCase(where)) {
+                return; // "x" 입력 시 메소드 종료 (상위 메뉴로 돌아감)
+            }
+
+            String roomType = "";
+            boolean isValidRoomType = false;
+            while (!isValidRoomType) {
+                System.out.println("\t+———————————————————————————————————————————————————————————————————+");
+                System.out.println("\t\t\t\t\t\t\t\tstandard");
+                System.out.println("\t\t\t\t\t\t\t\tdeluxe" );
+                System.out.println("\t\t\t\t\t\t\t\tFamily" );
+                System.out.println(AnsiColor.yellow("\t\t\t\t\t생성할 방의 타입을 입력하세요. ('x'를 입력하면 상위 메뉴로 돌아갑니다)"));
+                System.out.println("\t+———————————————————————————————————————————————————————————————————+");
+                System.out.print("\t\t\t\t\t\t\t\t➤ 입력 : ");
+                roomType = sc.nextLine();
+
+                if ("x".equalsIgnoreCase(roomType)) {
+                    return; // "x" 입력 시 메소드 종료
+                }
+
+                if (roomType.equalsIgnoreCase("standard") || roomType.equalsIgnoreCase("deluxe") || roomType.equalsIgnoreCase("Family")) {
+                    isValidRoomType = true;
+                } else {
+                    System.out.println(AnsiColor.red("\t\t\t\t\t\t\t\t잘못된 방 타입입니다. 다시 입력해 주세요."));
+                }
+            }
+
+            Room room = null;
+            switch (where){
+                case "1":
+                    AF_BuildRoom mjBuild = new AF_BuildMuJuRoom();
+                    room = mjBuild.orderRoom(roomType);
+                    break;
+                case "2":
+                    AF_BuildRoom gcBuild = new AF_BuildGangChonRoom();
+                    room = gcBuild.orderRoom(roomType);
+                    break;
+                default:
+                    System.out.println(AnsiColor.red("\t\t\t\t\t\t\t\t잘못된 입력입니다."));
+                    continue; // 잘못된 입력 시 처음부터 다시 시작
+            }
+
+            if (room == null) {
+                System.out.println(AnsiColor.red("\t\t\t\t\t\t\t\t잘못된 방 타입입니다."));
+                continue; // 방 생성 실패 시 처음부터 다시 시작
+            }
+
+            where = (where.equals("1") ? "muju" : "gangchon");
+            roomList = fileIo.roomListReader(where);
+            roomList.put(room.getRoomNumber(), room);
+            fileIo.roomListWriter(where, roomList);
+            break; // 방 추가 후 루프 종료
+        }
+    }
+
+
+
+    public void tmp_checkRoom(){
+        while (true) {
+            System.out.println("\n\t+———————————————————————————————————————————————————————————————————+");
+            System.out.println(AnsiColor.yellow("\t\t조회할 방 지점의 번호를 입력하세요. ('x'를 입력하면 상위 메뉴로 돌아갑니다)"));
+            System.out.println("\t+———————————————————————————————————————————————————————————————————+");
+            System.out.print("\t\t\t\t\t\t\t\t➤ 입력 : ");
+            String region = sc.nextLine().trim(); // 입력 값의 앞뒤 공백 제거
+
+            if ("x".equalsIgnoreCase(region)) {
+                return; // "x" 입력 시 메서드 종료 (상위 메뉴로 돌아감)
+            }
+
+            if (!region.equalsIgnoreCase("muju") && !region.equalsIgnoreCase("gangchon")) {
+                System.out.println(AnsiColor.red("\t\t\t\t\t잘못된 입력입니다. 'muju' 또는 'gangchon'을 입력해주세요."));
+                continue; // 잘못된 입력 시 다시 입력 받음
+            }
+
+            roomList = fileIo.roomListReader(region);
+            if (roomList == null || roomList.isEmpty()) {
+                System.out.println(AnsiColor.red("\t\t\t\t\t해당 지점에 등록된 방이 없습니다."));
+                return; // 방이 없는 경우 메서드 종료
+            }
+
+
+            // 테이블 헤더 출력
+            System.out.format("\t%-8s %-12s %-10s %-12s %-20s %-15s %-20s\n",
+                    "지점", "방 호수", "인원 수", "가격", "방 종류", "Tv", "Bed");
+            System.out.println("\t—————————————————————————————————————————————————————————————————————————————————————————————————————");
+
+            // 테이블 내용 출력 부분에 적용
+            for (Map.Entry mem : roomList.entrySet()) {
+                Room room = (Room) mem.getValue();
+                System.out.format("\t%-8s %-12d %-10d %-12d %-20s %-15s %-20s\n",
+                        room.getRegion(),
+                        room.getRoomNumber(),
+                        room.getCapacity(),
+                        room.getPrice(),
+                        room.getRoomType(),
+                        room.getTv() == null ? "없음" : room.getTv(),
+                        room.getBed());
+            }
+            System.out.println("\t—————————————————————————————————————————————————————————————————————————————————————————————————————");
+            return; // 정보 출력 후 메서드 종료
+        }
+    }
+
 }
