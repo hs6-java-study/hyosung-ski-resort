@@ -6,6 +6,7 @@ import java.util.Map;
 
 @Data
 public abstract class Room implements Serializable {
+    private static final long serialVersionUID = 6741273514427688155L; // Room 클래스의 serialVersionUID 사용
     String region;
     int roomNumber;
     int capacity;

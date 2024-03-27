@@ -11,7 +11,6 @@ public class MenuAdmin {
     Map<String, Member> memberList;
     Map<Integer, Reservation> reservationList;
     ValidationUtils validationUtils;
-
     Map<String, Product> productList;
 
     private Map<Integer, Room> roomList;

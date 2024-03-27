@@ -1,6 +1,7 @@
 import java.io.Serializable;
 
-public class AF_MuJuRoomOptionFactory implements AF_RoomOptionFactory, Serializable {
+public class MuJuRoomOptionFactory implements RoomOptionFactory, Serializable {
+    private static final long serialVersionUID = 6741273514427688155L; // Room 클래스의 serialVersionUID 사용
     public String BuyTv() {
         return "SamsungTV";
     }

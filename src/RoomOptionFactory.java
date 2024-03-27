@@ -1,4 +1,4 @@
-public interface AF_RoomOptionFactory {
+public interface RoomOptionFactory {
     public String BuyTv();
     public String BuyBed();
     public String Region();
